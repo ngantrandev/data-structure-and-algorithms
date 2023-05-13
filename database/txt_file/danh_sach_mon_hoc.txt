@@ -1,0 +1,82 @@
+27
+BKTG
+Duong Qua
+1 1
+MH00
+Boi Cu Ly 1000m
+2 1
+MH01
+Ke Chuyen Ma
+1 1
+MH1
+Toan Lop 5
+1 2
+MH10
+Toan Cao Cap
+4 4
+MH11
+Lap Trinh Java
+3 3
+MH12
+Lap Trinh C
+3 3
+MH13
+Cau Truc Du Lieu
+3 3
+MH15
+Sinh Hoc
+3 3
+MH16
+Triet Hoc
+2 2
+MH17
+Vat Ly
+2 1
+MH19
+Marathon Km
+1 1
+MH2
+Xo So Kien Thiet
+3 2
+MH20
+Kien Truc May Tinh
+3 2
+MH21
+Sinh Hoc Phan Tu
+2 2
+MH4
+Anh Van
+2 3
+MH42
+Thiet Ke Tuong Tac Dpt
+2 2
+MH45
+Ly Thuyet Can Bang
+1 1
+MH5
+Cau Ca
+2 2
+MH50
+Boi 1000 Met
+1 1
+MH6
+Dia Ly
+3 2
+MH7
+Lich Su Loai Nguoi
+2 4
+MH79
+Hiha
+1 1
+MH8
+Toan Roi Rac
+3 3
+MH88
+Tieng Han
+4 4
+MH9
+Lap Trinh Web
+4 4
+TVN
+Hai Dang
+5 5

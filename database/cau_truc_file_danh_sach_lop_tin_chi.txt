@@ -1,0 +1,10 @@
+so lop tin chi
+int MALOPTC ;  // ma lop tin chi
+char MAMH[length_MAMH]; // ma mon hoc
+char NIENKHOA[length_NIENKHOA] ; // khoa hoc
+int HOCKY, NHOM, SOSVMIN, SOSVMAX; //
+bool HUYLOP = false; // bieu dien bang 0 1
+sosinhvienDK
+ma_sv1
+diem
+huy dang ky // bieu dien bang 0 1

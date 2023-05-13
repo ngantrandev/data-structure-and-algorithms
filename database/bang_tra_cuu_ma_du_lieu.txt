@@ -1,0 +1,102 @@
+char them_lop_tin_chi[7][100] = {
+						"Ma mon hoc       : ", mã 1
+						"Nien khoa        : ", mã 2
+	nhóm 1				"Hoc ky           : ", mã 3
+						"Nhom             : ", mã 4
+						"So sinh vien MIN : ", mã 5
+						"So sinh vien MAX : "  mã 6
+					};
+
+char sua_lop_tin_chi[7][100] = {
+						"Ma mon hoc       : ", mã 1
+						"Nien khoa        : ", mã 2
+						"Hoc ky           : ", mã 3
+						"Nhom             : ", mã 4
+	nhóm 2				"So sinh vien MIN : ", mã 5
+						"So sinh vien MAX : ", mã 6
+						"Huy lop (0/1)    : "  mã 7
+					};
+
+char nhap_ma_lop[2][100] = {
+						"Nhap ma lop tin chi(so nguyen): "mã 1
+	nhóm 3    		};
+
+
+
+char nhap_ma_lop_hoc[2][100] = {
+						"Nhap ma lop hoc(chuoi ky tu): " mã 1
+	nhóm 4			};
+
+char nhap_MALH_NIENKHOA[2][100] = {
+					"Nhap ma lop hoc(chuoi ky tu): ",
+	nhom 20			"Nhap nien khoa              :"
+				};
+
+
+
+
+char nhap_mssv[2][100] = 			{ //TH nhap de kiem tra
+								"Nhap ma sinh vien: " mã 1
+	nhóm 5// đối với TH nhap để kiẻm tra};
+	nhóm 10 // đối với TH nhập để thêm sinh viên
+
+
+
+
+char nhap_ma_mon_hoc[2][100] = {
+						"Nhap ma mon hoc: " mã 1
+	nhóm 6			};
+
+
+
+
+char question_g[3][100] = {
+					"Nhap nien khoa: ", mã 1
+	nhóm 7			"Nhap hoc ky   : "  mã 2
+					};
+
+
+char cau_2[5][100] = {
+					"Nhap nien khoa  : ", mã 1
+					"Nhap hoc ky     : ", mã 2
+	nhóm 8			"Nhap nhom       : ", mã 3
+					"Nhap ma mon hoc : "  mã 4
+					};
+
+;
+
+char nhap_thong_tin_mon_hoc[5][100] = {
+					"Nhap ma mon hoc   : ", mã 1
+					"Nhap ten mon hoc  : ", mã 2
+nhóm 9: nhap MH moi	"Nhap STCLT        : ", mã 3
+nhom 12: SUa		"Nhap STCTH        : "  mã 4
+				};
+
+char sua_thong_tin_SV_dang_ky[5][100] = {
+					"Ma so sinh vien : ",
+					"Diem            : ",
+	nhóm 11			"Huy dang ky(0/1): "
+					};
+
+char thong_tin_sinh_vien[7][100] = {
+					"Ma sinh vien   : ",
+					"Ho             : ",
+nhoms 14: them		"Ten            : ",
+					"Gioi tinh      : ",
+					"So dien thoai  : ",
+					"Ma lop hoc     : "};
+
+
+nhoms 100 	nhap diem cho bang diem (so thuc float)
+
+
+
+
+
+
+
+
+
+
+
+

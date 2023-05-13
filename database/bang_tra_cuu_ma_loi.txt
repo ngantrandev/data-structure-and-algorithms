@@ -1,0 +1,66 @@
+﻿                                          Bảng tra cứu mã lỗi
+
+Mã lỗi | THÔNG TIN LỖI
+
+0    	Không có lỗi
+101	Sai cu phap
+
+// KIEM TRA SU TON TAI
+
+1	Sinh viên khong ton tai
+
+2   Lop tin chi khong ton tai
+
+3   Môn hoc khong ton tai
+ 
+4   Lop hoc khong ton tai
+
+5	Sinh viên tồn tại
+
+6	Lop tin chi ton tai
+
+7	Mon hoc ton tai
+
+
+
+// KIEM TRA LOI NGU PHAP
+
+8	Chuoi rong
+
+9	Vuot qua gioi han ky tu
+
+		// du lieu LTC
+
+10	Nien khoa khong hop le
+
+11	Nhom khong hop le // qua nho hoac qua lon
+
+12	STCLT khong hop le
+
+13	STCTH khong hop le
+
+14	Hoc ky khong hop le (qua lonws \\ qua nho)
+
+15	So sinh vien MIN khong hop le
+
+16	So sinh vien MAX khong hop le
+
+17	Ma lop tin chi khong hop le
+
+		// du lieu lop hoc
+
+18	Ma lop hoc khong hop le
+
+19	So sinh vien max < so sinh vien min
+
+20	Diem phai >= 0
+
+21  Ten mon hoc trung lap
+
+
+
+
+
+
+
+
