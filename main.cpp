@@ -12,16 +12,8 @@ int main() {
     m[6] = "six";
     m[7] = "one";
 
-    //find all key value pairs with value equal "one"
-    for (auto it = m.begin(); it != m.end(); ++it) {
-        if (it->second == "one") {
-            std::cout << it->first << " " << it->second << std::endl;
-        }
-    }
-    //another way
-    for (auto it = m.begin(); it != m.end(); ++it) {
-        if ((*it).second == "one") {
-            std::cout << (*it).first << " " << (*it).second << std::endl;
-        }
-    }
+std::string s = "hello";
+std::string p = "world";
+    std::cout <<s + p;
+
 }

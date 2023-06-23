@@ -1,6 +1,5 @@
 #include "data_manager.h"
 
-
 // load data from file
 
 // nhap thong tin tung mon hoc tu file
@@ -203,10 +202,6 @@ LIST_LTC loadStudentCreditClassList(char *File_Name)
     return creditClassList;
 }
 
-
-
-
-
 // SAVE DATA
 void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString])
 {
@@ -219,7 +214,7 @@ void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString
     }
 
     PTRSV p = FirstSv;
-    int so_sinh_vien_DSSV = Reccount_SV(FirstSv);
+    int so_sinh_vien_DSSV = countLinkedList(FirstSv);
 
     fprintf(fileout, "%d", so_sinh_vien_DSSV);
 
@@ -245,24 +240,24 @@ void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString
     fclose(fileout);
 }
 
-void xuatDanhSachMonHoc_LNR_File_Txt(PTRMH Tree_monhoc, FILE *fileout)
+void xuatDanhSachMonHoc_LNR_File_Txt(PTRMH treeMH, FILE *fileout)
 {
-    if (Tree_monhoc != NULL)
+    if (treeMH != NULL)
     {
 
-        xuatDanhSachMonHoc_LNR_File_Txt(Tree_monhoc->pLeft, fileout);
+        xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pLeft, fileout);
 
         fputs("\n", fileout);
-        fputs(Tree_monhoc->course.courceCode, fileout);
+        fputs(treeMH->course.courceCode, fileout);
         fputs("\n", fileout);
-        fputs(Tree_monhoc->course.courceName, fileout);
+        fputs(treeMH->course.courceName, fileout);
         fputs("\n", fileout);
-        fprintf(fileout, "%d %d", Tree_monhoc->course.STCLT, Tree_monhoc->course.STCTH);
+        fprintf(fileout, "%d %d", treeMH->course.STCLT, treeMH->course.STCTH);
 
-        xuatDanhSachMonHoc_LNR_File_Txt(Tree_monhoc->pRight, fileout);
+        xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pRight, fileout);
     }
 }
-void xuatDanhSachMonHoc_File_Txt(PTRMH Tree_monhoc, char File_Name[50])
+void xuatDanhSachMonHoc_File_Txt(PTRMH treeMH, char File_Name[50])
 {
     FILE *fileout = NULL;
     fileout = fopen(File_Name, "w");
@@ -273,11 +268,11 @@ void xuatDanhSachMonHoc_File_Txt(PTRMH Tree_monhoc, char File_Name[50])
     }
 
     int so_mon_hoc_DSMH = 0;
-    Reccount_MH(Tree_monhoc, so_mon_hoc_DSMH);
+    count_MH(treeMH, so_mon_hoc_DSMH);
 
     fprintf(fileout, "%d", so_mon_hoc_DSMH); // in so luong vao file
 
-    xuatDanhSachMonHoc_LNR_File_Txt(Tree_monhoc, fileout);
+    xuatDanhSachMonHoc_LNR_File_Txt(treeMH, fileout);
 
     fclose(fileout);
 }
@@ -285,7 +280,7 @@ void xuatDanhSachMonHoc_File_Txt(PTRMH Tree_monhoc, char File_Name[50])
 void xuatDanhSachSVDK_File_Txt(PTRDK First_DSSVDK, FILE *fileout)
 {
 
-    fprintf(fileout, "%d", Reccount_DSDK(First_DSSVDK));
+    fprintf(fileout, "%d", countLinkedList(First_DSSVDK));
 
     PTRDK p = First_DSSVDK;
     while (p != NULL)
@@ -324,7 +319,7 @@ void xuatDanhSachLopTinChi_File_Txt(LIST_LTC dsLTC, char File_Name[maxLengthStri
         return;
     }
 
-    int so_lop_hien_tai_LTC = Reccount_CreditClass(dsLTC);
+    int so_lop_hien_tai_LTC = count_CreditClass(dsLTC);
 
     fprintf(fileout, "%d %d", so_lop_hien_tai_LTC, dsLTC.currentIndex);
 
@@ -352,7 +347,7 @@ void xuatDanhSachSinhVien_File_Csv(PTRSV FirstSv, char File_Name[maxLengthString
 
     PTRSV p = FirstSv;
 
-    fprintf(fileout, "%d\n", Reccount_SV(FirstSv));
+    fprintf(fileout, "%d\n", countLinkedList(FirstSv));
     fputs("Ma sinh vien,Ho,Ten,Gioi tinh,Ma lop,So dien thoai", fileout);
 
     while (p != NULL)
@@ -378,23 +373,23 @@ void xuatDanhSachSinhVien_File_Csv(PTRSV FirstSv, char File_Name[maxLengthString
 
     fclose(fileout);
 }
-void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH Tree_monhoc, FILE *fileout)
+void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH treeMH, FILE *fileout)
 {
-    if (Tree_monhoc != NULL)
+    if (treeMH != NULL)
     {
-        xuatDanhSachMonHoc_LNR_File_Csv(Tree_monhoc->pLeft, fileout);
+        xuatDanhSachMonHoc_LNR_File_Csv(treeMH->pLeft, fileout);
         fputs("\n", fileout);
 
-        fputs(Tree_monhoc->course.courceCode, fileout);
+        fputs(treeMH->course.courceCode, fileout);
         fputs(",", fileout);
-        fputs(Tree_monhoc->course.courceName, fileout);
+        fputs(treeMH->course.courceName, fileout);
         fputs(",", fileout);
-        fprintf(fileout, "%d,%d", Tree_monhoc->course.STCLT, Tree_monhoc->course.STCTH);
+        fprintf(fileout, "%d,%d", treeMH->course.STCLT, treeMH->course.STCTH);
 
-        xuatDanhSachMonHoc_LNR_File_Csv(Tree_monhoc->pRight, fileout);
+        xuatDanhSachMonHoc_LNR_File_Csv(treeMH->pRight, fileout);
     }
 }
-void xuatDanhSachMonHoc_File_Csv(PTRMH Tree_monhoc, char File_Name[50])
+void xuatDanhSachMonHoc_File_Csv(PTRMH treeMH, char File_Name[50])
 {
     FILE *fileout = NULL;
     fileout = fopen(File_Name, "w");
@@ -406,15 +401,13 @@ void xuatDanhSachMonHoc_File_Csv(PTRMH Tree_monhoc, char File_Name[50])
 
     int soLuongMonHoc = 0;
 
-    Reccount_MH(Tree_monhoc, soLuongMonHoc); // dem so luong mon hoc
+    count_MH(treeMH, soLuongMonHoc);         // dem so luong mon hoc
     fprintf(fileout, "%d\n", soLuongMonHoc); // in so luong vao file
     fputs("Ma mon hoc,Ten mon hoc,STCLT,STCTH", fileout);
-    xuatDanhSachMonHoc_LNR_File_Csv(Tree_monhoc, fileout);
+    xuatDanhSachMonHoc_LNR_File_Csv(treeMH, fileout);
 
     fclose(fileout);
 }
-
-
 
 // thao tac data bo nho trong
 
@@ -451,11 +444,11 @@ int getTreeHeight(PTRMH tree)
     }
 }
 
-void addCourseToList(PTRMH &Tree_monhoc, Course monhoc)
+void addCourseToList(PTRMH &treeMH, Course monhoc)
 {
-    // strcmp(monhoc.MAMH, Tree_monhoc->monhoc.MAMH) < 0
+    // strcmp(monhoc.MAMH, treeMH->monhoc.MAMH) < 0
 
-    if (Tree_monhoc == NULL)
+    if (treeMH == NULL)
     {
         PTRMH p = new CourseNode;
 
@@ -463,48 +456,48 @@ void addCourseToList(PTRMH &Tree_monhoc, Course monhoc)
         p->pLeft = NULL;
         p->pRight = NULL;
 
-        Tree_monhoc = p;
+        treeMH = p;
     }
     else
     {
-        if (strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) < 0)
+        if (strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
         {
-            addCourseToList(Tree_monhoc->pLeft, monhoc);
+            addCourseToList(treeMH->pLeft, monhoc);
         }
-        else if (strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) > 0)
+        else if (strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
         {
-            addCourseToList(Tree_monhoc->pRight, monhoc);
+            addCourseToList(treeMH->pRight, monhoc);
         }
     }
 
-    int Balance_Value = getTreeHeight(Tree_monhoc->pLeft) - getTreeHeight(Tree_monhoc->pRight);
+    int Balance_Value = getTreeHeight(treeMH->pLeft) - getTreeHeight(treeMH->pRight);
 
     // Xoay cay de can bang cay
 
     // TH1: left left
-    if (Balance_Value > 1 && strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) < 0)
+    if (Balance_Value > 1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
     {
-        rightRotate(Tree_monhoc);
+        rightRotate(treeMH);
         return;
     }
     // TH2: right right
-    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) > 0)
+    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
     {
-        leftRotate(Tree_monhoc);
+        leftRotate(treeMH);
         return;
     }
     // TH3: left right
-    else if (Balance_Value > 1 && strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) > 0)
+    else if (Balance_Value > 1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
     {
-        leftRotate(Tree_monhoc->pLeft);
-        rightRotate(Tree_monhoc);
+        leftRotate(treeMH->pLeft);
+        rightRotate(treeMH);
         return;
     }
     // TH4: right left
-    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, Tree_monhoc->course.courceCode) < 0)
+    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
     {
-        rightRotate(Tree_monhoc->pRight);
-        leftRotate(Tree_monhoc);
+        rightRotate(treeMH->pRight);
+        leftRotate(treeMH);
         return;
     }
 }
@@ -671,9 +664,9 @@ void addStudentToRegisList(PTRDK &First_DSSVDK, Registration dangky)
     }
 }
 
-void addCourseByName(PTRMH &Tree_monhoc, Course monhoc)
+void addCourseByName(PTRMH &treeMH, Course monhoc)
 {
-    if (Tree_monhoc == NULL)
+    if (treeMH == NULL)
     {
         PTRMH p = new CourseNode;
 
@@ -681,14 +674,83 @@ void addCourseByName(PTRMH &Tree_monhoc, Course monhoc)
         p->pLeft = NULL;
         p->pRight = NULL;
 
-        Tree_monhoc = p;
+        treeMH = p;
     }
     else
     {
-        if (strcmp(monhoc.courceName, Tree_monhoc->course.courceName) < 0)
-            addCourseByName(Tree_monhoc->pLeft, monhoc);
+        if (strcmp(monhoc.courceName, treeMH->course.courceName) < 0)
+            addCourseByName(treeMH->pLeft, monhoc);
 
-        else if (strcmp(monhoc.courceName, Tree_monhoc->course.courceName) >= 0)
-            addCourseByName(Tree_monhoc->pRight, monhoc);
+        else
+            addCourseByName(treeMH->pRight, monhoc);
+    }
+}
+
+void cvtTree(PTRMH treeMH, std::vector<Course> &arrMH)
+{
+    if (treeMH != NULL)
+    {
+        arrMH.push_back(treeMH->course);
+        cvtTree(treeMH->pLeft, arrMH);
+        cvtTree(treeMH->pRight, arrMH);
+    }
+}
+std::vector<Course> cvtTreeTreeToVector(PTRMH treeMH)
+{
+    int size = 0;
+    count_MH(treeMH, size);
+    std::vector<Course> arrMH(size);
+
+    cvtTree(treeMH, arrMH);
+
+    return arrMH;
+}
+
+// xu ly nghiep vu chuong trinh
+
+// dsAnhXaMaLTCMaMH la danh sach lop tin chi ung voi maMH dang xet
+void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::vector<int> dsAnhXaMaLTCMaMH)
+{
+    auto it = anhXaMSSV_dsLTC.find(mssv);
+
+    if (it == anhXaMSSV_dsLTC.end())
+    {
+        anhXaMSSV_dsLTC[mssv] = std::to_string(loptinchi->creditCode) + ",";
+    }
+    else
+    {
+        std::string dsLTC = it->second;
+
+        // kiem tra xem dsLTC cua sinh vien co chua ma lop tin chi cua mon hoc dang xet khong
+        for (int i = 0; i < dsAnhXaMaLTCMaMH.size(); i++)
+        {
+            size_t index = dsLTC.find(std::to_string(dsAnhXaMaLTCMaMH[i]));
+            // tim thay, va maLTC duoc tim thay khac voi maLTC sinh vien dang xet => hoc lai
+            if ((index != std::string::npos) && (dsAnhXaMaLTCMaMH[i] != loptinchi->creditCode))
+            {
+                // so sanh diem cua 2 lop tin chi
+                PTRDK nodeDK1 = timSinhVien_DSSVDK(listLTC.nodes[i]->firstListRegister, mssv);
+                PTRDK nodeDK2 = timSinhVien_DSSVDK(loptinchi->firstListRegister, mssv);
+
+                if (nodeDK2->regis.point >= nodeDK1->regis.point)
+                {
+                    it->second.replace(index, std::to_string(loptinchi->creditCode).length(), std::to_string(loptinchi->creditCode));
+                    return;
+                }
+            }
+        }
+
+        // khong tim thay ma lop tin chi cua mon hoc dang xet trong dsLTC cua sinh vien => chua hoc
+        it->second += std::to_string(loptinchi->creditCode) + ",";
+    }
+}
+
+void mappingMaLTC_MaMH(std::map<char *, char *> &anhXaLTC_MH, char *maLTC, char *maMH)
+{
+    auto it = anhXaLTC_MH.find(maLTC);
+
+    if (it == anhXaLTC_MH.end())
+    {
+        anhXaLTC_MH[maLTC] = maMH;
     }
 }

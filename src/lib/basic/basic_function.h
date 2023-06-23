@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <direct.h>
+#include <algorithm>
+#include <math.h>
 #include <string.h>
 #include "struct.h" // cac caaus truc du lieu
 #include "console_function.h"
@@ -23,12 +25,12 @@ enum status
 };
 
 int stringTo_Int(std::string num_a);
-int charToInt(char * a);
+int charToInt(char *a);
 status GetKey(int z);
 int CompareSourseCode(char *a, char *b);
-char * ConvertStringToChar(std::string a);
+char *ConvertStringToChar(std::string a);
 std::string convertCharToString(char *a);
-char * loaiBoDauXuongDong(char *a);
+char *loaiBoDauXuongDong(char *a);
 std::string DeleteCharacter(std::string text, int index);
 char ToLower(char a);
 char ToUpper(char a);

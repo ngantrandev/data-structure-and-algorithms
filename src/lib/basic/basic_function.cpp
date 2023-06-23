@@ -150,6 +150,7 @@ bool IsFloatNumber(std::string num)
 	return true;
 }
 
+
 std::string getStandardizedName(std::string text)
 {
 	if (text.length() == 0)
