@@ -49,3 +49,761 @@ std::vector<Course> cvtTreeTreeToVector(PTRMH treeMH);
 // xu ly nghiep vu chuong trinh
 void mappingMaLTC_MaMH(std::map<char *, char *> &anhXaLTC_MH, char *maLTC, char *maMH);
 void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::vector<int> dsAnhXaMaLTCMaMH);
+
+
+
+
+// load data from file
+
+// nhap thong tin tung mon hoc tu file
+Course loadCourseInfo(FILE *filein)
+{
+    Course monhoc;
+
+    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
+    fgets(monhoc.courceCode, maxLengthString, filein);
+    fgets(monhoc.courceName, maxLengthString, filein);
+    fgets(temp_line, maxLengthString, filein);
+
+    sscanf(temp_line, "%d %d", &monhoc.STCLT, &monhoc.STCTH);
+
+    loaiBoDauXuongDong(monhoc.courceCode);
+    loaiBoDauXuongDong(monhoc.courceName);
+
+    return monhoc;
+}
+// nhap danh sach mon hoc tu file vao chuong trinh
+PTRMH loadCourseList(char *File_Name)
+{
+    FILE *filein = fopen(File_Name, "r");
+    if (filein == NULL)
+    {
+        std::cout << "Mo file danh sach mon hoc that bai\n";
+        return;
+    }
+
+    PTRMH treeCourse = NULL;
+
+    Course monhoc;
+    int soMonHoc = 0;
+    char temp_line[maxLengthString]; // chua chuoi nhap tu file ddeer xu ly
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &soMonHoc);
+
+    for (int i = 1; i <= soMonHoc; i++)
+    {
+        monhoc = loadCourseInfo(filein);
+        addCourseToList(treeCourse, monhoc);
+    }
+
+    return treeCourse;
+}
+
+Student loadStudentInfo(FILE *filein)
+{
+    Student sinhvien;
+    fgets(sinhvien.studentID, maxLengthString, filein);
+    fgets(sinhvien.firstName, maxLengthString, filein);
+    fgets(sinhvien.name, maxLengthString, filein);
+    fgets(sinhvien.sex, maxLengthString, filein);
+    fgets(sinhvien.classID, maxLengthString, filein);
+    fgets(sinhvien.phoneNum, maxLengthString, filein);
+
+    loaiBoDauXuongDong(sinhvien.studentID);
+    loaiBoDauXuongDong(sinhvien.firstName);
+    loaiBoDauXuongDong(sinhvien.name);
+    loaiBoDauXuongDong(sinhvien.sex);
+    loaiBoDauXuongDong(sinhvien.phoneNum);
+    loaiBoDauXuongDong(sinhvien.classID);
+
+    return sinhvien;
+}
+
+// nhap danh sach sinh vien tu file vao chuong trinh
+PTRSV loadStudentList(char *File_Name)
+{
+    FILE *filein = NULL;
+    filein = fopen(File_Name, "r");
+    if (filein == NULL)
+    {
+        std::cout << "Mo file danh sach sinh vien that bai\n";
+        return;
+    }
+
+    PTRSV firstStudent = NULL;
+
+    Student sinhvien;
+    int soSinhVien = 0;
+    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
+
+    fgets(temp_line, maxLengthString, filein); // lay thong tin so luong sinh vien
+    sscanf(temp_line, "%d", &soSinhVien);
+
+    for (int i = 1; i <= soSinhVien; i++)
+    {
+        sinhvien = loadStudentInfo(filein);
+        addStudentToList(firstStudent, sinhvien);
+    }
+
+    return firstStudent;
+}
+
+PTRLH loadClassList(char *File_Name)
+{
+    FILE *filein = NULL;
+    filein = fopen(File_Name, "r");
+    if (filein == NULL)
+    {
+        std::cout << "Mo file ma lop hoc that bai\n";
+        return;
+    }
+
+    PTRLH firstCourseList = NULL;
+    int somaLopHoc = 0;
+    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
+
+    fgets(temp_line, maxLengthString, filein); // lay thong tin so luong sinh vien
+    sscanf(temp_line, "%d", &somaLopHoc);
+
+    for (int i = 1; i <= somaLopHoc; i++)
+    {
+        fgets(temp_line, maxLengthString, filein);
+        loaiBoDauXuongDong(temp_line);
+
+        addNewClassID(firstCourseList, temp_line);
+    }
+
+    return firstCourseList;
+}
+
+PTRDK loadRegisStudentList(FILE *filein)
+{
+    PTRDK firstRegisStudent = NULL;
+    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
+    int soSVDK = 0;
+    Registration dangky;
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &soSVDK);
+
+    for (int i = 1; i <= soSVDK; i++)
+    {
+        fgets(dangky.studentID, maxLengthString, filein);
+
+        fgets(temp_line, maxLengthString, filein); // nhap dong chua DIEM
+        sscanf(temp_line, "%f", &dangky.point);
+
+        fgets(temp_line, maxLengthString, filein); // nhap dong chua bien TRUE/FALSE ( ma hoa owr dang 0 / 1);
+        sscanf(temp_line, "%d", &dangky.isRegistered);
+
+        loaiBoDauXuongDong(dangky.studentID);
+
+        addStudentToRegisList(firstRegisStudent, dangky);
+    }
+
+    return firstRegisStudent;
+}
+
+Credit *loadCreditClassInfo(FILE *filein)
+{
+    Credit *creditClass = new Credit;
+    char temp_line[maxLengthString];
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &creditClass->creditCode);
+
+    fgets(creditClass->courseCode, maxLengthString, filein);
+    fgets(creditClass->schoolYear, maxLengthString, filein);
+    loaiBoDauXuongDong(creditClass->courseCode);
+    loaiBoDauXuongDong(creditClass->schoolYear);
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d %d %d %d", &creditClass->semester, &creditClass->group, &creditClass->studentMin, &creditClass->studentMax);
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &creditClass->enable);
+
+    creditClass->firstListRegister = loadRegisStudentList(filein);
+    return creditClass;
+}
+// Chuc nang: nhap danh sach lop tin chi tu file vao chuong trinh
+LIST_LTC loadStudentCreditClassList(char *File_Name)
+{
+    FILE *filein = fopen(File_Name, "r");
+    if (filein == NULL)
+    {
+        std::cout << "Mo file danh sach lop tin chi that bai\n";
+        return;
+    }
+
+    LIST_LTC creditClassList;
+    char temp_line[maxLengthString];
+    int index = 0;
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d %d", &creditClassList.currentIndex);
+
+    for (int i = 1; i <= creditClassList.currentIndex; i++)
+    {
+        Credit *loptinchi = NULL; // cap phat bo nho cho node moi
+        loptinchi = loadCreditClassInfo(filein);
+        index = loptinchi->creditCode; // index store credit code
+        creditClassList.nodes[index] = loptinchi;
+    }
+
+    return creditClassList;
+}
+
+// SAVE DATA
+void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString])
+{
+    FILE *fileout = NULL;
+    fileout = fopen(File_Name, "w");
+    if (fileout == NULL)
+    {
+        std::cout << "Mo file danh sach sinh vien that bai\n";
+        return;
+    }
+
+    PTRSV p = FirstSv;
+    int so_sinh_vien_DSSV = countLinkedList(FirstSv);
+
+    fprintf(fileout, "%d", so_sinh_vien_DSSV);
+
+    while (p != NULL)
+    {
+
+        fputs("\n", fileout);
+        fputs(p->student.studentID, fileout);
+        fputs("\n", fileout);
+        fputs(p->student.firstName, fileout);
+        fputs("\n", fileout);
+        fputs(p->student.name, fileout);
+        fputs("\n", fileout);
+        fputs(p->student.sex, fileout);
+        fputs("\n", fileout);
+        fputs(p->student.classID, fileout);
+        fputs("\n", fileout);
+        fputs(p->student.phoneNum, fileout);
+
+        p = p->next;
+    }
+
+    fclose(fileout);
+}
+
+void xuatDanhSachMonHoc_LNR_File_Txt(PTRMH treeMH, FILE *fileout)
+{
+    if (treeMH != NULL)
+    {
+
+        xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pLeft, fileout);
+
+        fputs("\n", fileout);
+        fputs(treeMH->course.courceCode, fileout);
+        fputs("\n", fileout);
+        fputs(treeMH->course.courceName, fileout);
+        fputs("\n", fileout);
+        fprintf(fileout, "%d %d", treeMH->course.STCLT, treeMH->course.STCTH);
+
+        xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pRight, fileout);
+    }
+}
+void xuatDanhSachMonHoc_File_Txt(PTRMH treeMH, char File_Name[50])
+{
+    FILE *fileout = NULL;
+    fileout = fopen(File_Name, "w");
+    if (fileout == NULL)
+    {
+        std::cout << "Luu file danh sach mon hoc that bai";
+        return;
+    }
+
+    int so_mon_hoc_DSMH = 0;
+    count_MH(treeMH, so_mon_hoc_DSMH);
+
+    fprintf(fileout, "%d", so_mon_hoc_DSMH); // in so luong vao file
+
+    xuatDanhSachMonHoc_LNR_File_Txt(treeMH, fileout);
+
+    fclose(fileout);
+}
+
+void xuatDanhSachSVDK_File_Txt(PTRDK First_DSSVDK, FILE *fileout)
+{
+
+    fprintf(fileout, "%d", countLinkedList(First_DSSVDK));
+
+    PTRDK p = First_DSSVDK;
+    while (p != NULL)
+    {
+        fputs("\n", fileout);
+        fputs(p->regis.studentID, fileout);
+        fputs("\n", fileout);
+        fprintf(fileout, "%0.6f", p->regis.point);
+        fputs("\n", fileout);
+        fprintf(fileout, "%d", p->regis.isRegistered);
+        p = p->next;
+    }
+}
+void xuatThongTinLopTinChi_File_Txt(Credit *loptinchi, FILE *fileout)
+{
+    fprintf(fileout, "%d", loptinchi->creditCode);
+    fputs("\n", fileout);
+    fputs(loptinchi->courseCode, fileout);
+    fputs("\n", fileout);
+    fputs(loptinchi->schoolYear, fileout);
+    fputs("\n", fileout);
+    fprintf(fileout, "%d %d %d %d", loptinchi->semester, loptinchi->group, loptinchi->studentMin, loptinchi->studentMax);
+    fputs("\n", fileout);
+    fprintf(fileout, "%d", loptinchi->enable);
+    fputs("\n", fileout);
+
+    xuatDanhSachSVDK_File_Txt(loptinchi->firstListRegister, fileout);
+}
+void xuatDanhSachLopTinChi_File_Txt(LIST_LTC dsLTC, char File_Name[maxLengthString])
+{
+    FILE *fileout = fopen(File_Name, "w");
+    if (fileout == NULL)
+    {
+        std::cout << "Mo file danh sach lop tin chi that bai\n";
+        system("pause");
+        return;
+    }
+
+    int so_lop_hien_tai_LTC = count_CreditClass(dsLTC);
+
+    fprintf(fileout, "%d %d", so_lop_hien_tai_LTC, dsLTC.currentIndex);
+
+    for (int i = 1; i <= dsLTC.currentIndex; i++)
+    {
+        if (dsLTC.nodes[i] != NULL)
+        {
+            fputs("\n", fileout);
+            xuatThongTinLopTinChi_File_Txt(dsLTC.nodes[i], fileout);
+        }
+    }
+
+    fclose(fileout);
+}
+
+void xuatDanhSachSinhVien_File_Csv(PTRSV FirstSv, char File_Name[maxLengthString])
+{
+    FILE *fileout = NULL;
+    fileout = fopen(File_Name, "w");
+    if (fileout == NULL)
+    {
+        std::cout << "Mo file danh sach sinh vien that bai\n";
+        return;
+    }
+
+    PTRSV p = FirstSv;
+
+    fprintf(fileout, "%d\n", countLinkedList(FirstSv));
+    fputs("Ma sinh vien,Ho,Ten,Gioi tinh,Ma lop,So dien thoai", fileout);
+
+    while (p != NULL)
+    {
+
+        fputs("\n", fileout);
+
+        fputs(p->student.studentID, fileout);
+        fputs(",", fileout);
+        fputs(p->student.firstName, fileout);
+        fputs(",", fileout);
+        fputs(p->student.name, fileout);
+        fputs(",", fileout);
+        fputs(p->student.sex, fileout);
+        fputs(",", fileout);
+        fputs(p->student.classID, fileout);
+        fputs(",", fileout);
+
+        fputs(p->student.phoneNum, fileout);
+
+        p = p->next;
+    }
+
+    fclose(fileout);
+}
+void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH treeMH, FILE *fileout)
+{
+    if (treeMH != NULL)
+    {
+        xuatDanhSachMonHoc_LNR_File_Csv(treeMH->pLeft, fileout);
+        fputs("\n", fileout);
+
+        fputs(treeMH->course.courceCode, fileout);
+        fputs(",", fileout);
+        fputs(treeMH->course.courceName, fileout);
+        fputs(",", fileout);
+        fprintf(fileout, "%d,%d", treeMH->course.STCLT, treeMH->course.STCTH);
+
+        xuatDanhSachMonHoc_LNR_File_Csv(treeMH->pRight, fileout);
+    }
+}
+void xuatDanhSachMonHoc_File_Csv(PTRMH treeMH, char File_Name[50])
+{
+    FILE *fileout = NULL;
+    fileout = fopen(File_Name, "w");
+    if (fileout == NULL)
+    {
+        std::cout << "Luu file danh sach mon hoc that bai";
+        return;
+    }
+
+    int soLuongMonHoc = 0;
+
+    count_MH(treeMH, soLuongMonHoc);         // dem so luong mon hoc
+    fprintf(fileout, "%d\n", soLuongMonHoc); // in so luong vao file
+    fputs("Ma mon hoc,Ten mon hoc,STCLT,STCTH", fileout);
+    xuatDanhSachMonHoc_LNR_File_Csv(treeMH, fileout);
+
+    fclose(fileout);
+}
+
+// thao tac data bo nho trong
+
+void leftRotate(PTRMH &tree)
+{ // chuc nang: xoay cay sang trai
+    if (tree == NULL)
+        return;
+
+    PTRMH x = tree->pRight;
+    tree->pRight = x->pLeft;
+    x->pLeft = tree;
+    tree = x;
+}
+void rightRotate(PTRMH &tree)
+{ // chuc nang: xoay cay sang phai
+
+    if (tree == NULL)
+        return;
+
+    PTRMH x = tree->pLeft;
+    tree->pLeft = x->pRight;
+    x->pRight = tree;
+    tree = x;
+}
+
+int getTreeHeight(PTRMH tree)
+{ // chuc nang: tinh chieu cao cua node
+    if (tree != NULL)
+    {
+        int left = getTreeHeight(tree->pLeft) + 1;
+        int right = getTreeHeight(tree->pRight) + 1;
+
+        return left > right ? left : right;
+    }
+}
+
+void addCourseToList(PTRMH &treeMH, Course monhoc)
+{
+    // strcmp(monhoc.MAMH, treeMH->monhoc.MAMH) < 0
+
+    if (treeMH == NULL)
+    {
+        PTRMH p = new CourseNode;
+
+        p->course = monhoc;
+        p->pLeft = NULL;
+        p->pRight = NULL;
+
+        treeMH = p;
+    }
+    else
+    {
+        if (strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
+        {
+            addCourseToList(treeMH->pLeft, monhoc);
+        }
+        else if (strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
+        {
+            addCourseToList(treeMH->pRight, monhoc);
+        }
+    }
+
+    int Balance_Value = getTreeHeight(treeMH->pLeft) - getTreeHeight(treeMH->pRight);
+
+    // Xoay cay de can bang cay
+
+    // TH1: left left
+    if (Balance_Value > 1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
+    {
+        rightRotate(treeMH);
+        return;
+    }
+    // TH2: right right
+    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
+    {
+        leftRotate(treeMH);
+        return;
+    }
+    // TH3: left right
+    else if (Balance_Value > 1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) > 0)
+    {
+        leftRotate(treeMH->pLeft);
+        rightRotate(treeMH);
+        return;
+    }
+    // TH4: right left
+    else if (Balance_Value < -1 && strcmp(monhoc.courceCode, treeMH->course.courceCode) < 0)
+    {
+        rightRotate(treeMH->pRight);
+        leftRotate(treeMH);
+        return;
+    }
+}
+
+void addStudentToList(PTRSV &FirstSV, Student sv)
+{
+    PTRSV p = new StudentNode;
+    PTRSV q = NULL;
+    p->student = sv;
+
+    if (FirstSV == NULL)
+    {
+        FirstSV = p;
+        FirstSV->next = NULL;
+    }
+    else if (FirstSV->next == NULL)
+    { // co mot phan tu
+        if (strcmp(p->student.studentID, FirstSV->student.studentID) < 0)
+        {
+            p->next = FirstSV;
+            FirstSV = p;
+        }
+        else if (strcmp(p->student.studentID, FirstSV->student.studentID) > 0)
+        {
+            FirstSV->next = p;
+            p->next = NULL;
+        }
+        return; // ket thuc thuat toan
+    }
+    else
+    { // truong hop danh sach da co it nhat 2 phan tu
+
+        if (strcmp(p->student.studentID, FirstSV->student.studentID) < 0)
+        {
+            p->next = FirstSV;
+            FirstSV = p;
+            return;
+        }
+
+        q = FirstSV;
+
+        while (q->next != NULL)
+        {
+            if (strcmp(p->student.studentID, q->student.studentID) > 0 && strcmp(p->student.studentID, q->next->student.studentID) < 0)
+            {
+                p->next = q->next;
+                q->next = p;
+                return; // ket thuc thuat toan
+            }
+            q = q->next;
+        }
+
+        // TH q da di chuyen ve cuoi danh sach
+        q->next = p;
+        p->next = NULL;
+    }
+}
+
+void addNewClassID(PTRLH &FirstLH, char maLopHoc[ClassID_Length])
+{
+    PTRLH p = new ClassNode;
+    PTRLH q = NULL;
+    strcpy(p->classID, maLopHoc);
+
+    if (FirstLH == NULL)
+    {
+        FirstLH = p;
+        FirstLH->next = NULL;
+    }
+    else if (FirstLH->next == NULL)
+    { // co mot phan tu
+        if (strcmp(p->classID, FirstLH->classID) < 0)
+        {
+            p->next = FirstLH;
+            FirstLH = p;
+        }
+        else if (strcmp(p->classID, FirstLH->classID) > 0)
+        {
+            FirstLH->next = p;
+            p->next = NULL;
+        }
+        return; // ket thuc thuat toan
+    }
+    else
+    { // truong hop danh sach da co it nhat 2 phan tu
+
+        if (strcmp(p->classID, FirstLH->classID) < 0)
+        {
+            p->next = FirstLH;
+            FirstLH = p;
+            return;
+        }
+
+        q = FirstLH;
+
+        while (q->next != NULL)
+        {
+            if (strcmp(p->classID, q->classID) > 0 && strcmp(p->classID, q->next->classID) < 0)
+            {
+                p->next = q->next;
+                q->next = p;
+                return; // ket thuc thuat toan
+            }
+            q = q->next;
+        }
+
+        // TH q da di chuyen ve cuoi danh sach
+        q->next = p;
+        p->next = NULL;
+    }
+}
+
+// chuc nang: them thong tin dang ky vao DSLKD danh dang ky lop tin chi co sap xep
+void addStudentToRegisList(PTRDK &First_DSSVDK, Registration dangky)
+{
+    PTRDK p = new RegisNode;
+    PTRDK q;
+    p->regis = dangky;
+
+    if (First_DSSVDK == NULL)
+    {
+        First_DSSVDK = p;
+        First_DSSVDK->next = NULL;
+    }
+    else if (First_DSSVDK->next == NULL)
+    {
+
+        if (strcmp(p->regis.studentID, First_DSSVDK->regis.studentID) < 0)
+        {
+            p->next = First_DSSVDK;
+            First_DSSVDK = p;
+        }
+        else if (strcmp(p->regis.studentID, First_DSSVDK->regis.studentID) > 0)
+        {
+            First_DSSVDK->next = p;
+            p->next = NULL;
+        }
+    }
+    else
+    { // truong hop danh sach co it nhat 2 phan tu
+
+        if (strcmp(p->regis.studentID, First_DSSVDK->regis.studentID) < 0)
+        {
+            p->next = First_DSSVDK;
+            First_DSSVDK = p;
+            return;
+        }
+
+        q = First_DSSVDK;
+
+        while (q->next != NULL)
+        {
+            if (strcmp(p->regis.studentID, q->regis.studentID) > 0 && strcmp(p->regis.studentID, q->next->regis.studentID) < 0)
+            {
+                p->next = q->next;
+                q->next = p;
+                return; // ket thuc thuat toan
+            }
+            q = q->next;
+        }
+        // TH q da di chuyen ve cuoi danh sach
+        p->next = NULL;
+        q->next = p;
+    }
+}
+
+void addCourseByName(PTRMH &treeMH, Course monhoc)
+{
+    if (treeMH == NULL)
+    {
+        PTRMH p = new CourseNode;
+
+        p->course = monhoc;
+        p->pLeft = NULL;
+        p->pRight = NULL;
+
+        treeMH = p;
+    }
+    else
+    {
+        if (strcmp(monhoc.courceName, treeMH->course.courceName) < 0)
+            addCourseByName(treeMH->pLeft, monhoc);
+
+        else
+            addCourseByName(treeMH->pRight, monhoc);
+    }
+}
+
+void cvtTree(PTRMH treeMH, std::vector<Course> &arrMH)
+{
+    if (treeMH != NULL)
+    {
+        arrMH.push_back(treeMH->course);
+        cvtTree(treeMH->pLeft, arrMH);
+        cvtTree(treeMH->pRight, arrMH);
+    }
+}
+std::vector<Course> cvtTreeTreeToVector(PTRMH treeMH)
+{
+    int size = 0;
+    count_MH(treeMH, size);
+    std::vector<Course> arrMH(size);
+
+    cvtTree(treeMH, arrMH);
+
+    return arrMH;
+}
+
+// xu ly nghiep vu chuong trinh
+
+// dsAnhXaMaLTCMaMH la danh sach lop tin chi ung voi maMH dang xet
+void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::vector<int> dsAnhXaMaLTCMaMH)
+{
+    auto it = anhXaMSSV_dsLTC.find(mssv);
+
+    if (it == anhXaMSSV_dsLTC.end())
+    {
+        anhXaMSSV_dsLTC[mssv] = std::to_string(loptinchi->creditCode) + ",";
+    }
+    else
+    {
+        std::string dsLTC = it->second;
+
+        // kiem tra xem dsLTC cua sinh vien co chua ma lop tin chi cua mon hoc dang xet khong
+        for (int i = 0; i < dsAnhXaMaLTCMaMH.size(); i++)
+        {
+            size_t index = dsLTC.find(std::to_string(dsAnhXaMaLTCMaMH[i]));
+            // tim thay, va maLTC duoc tim thay khac voi maLTC sinh vien dang xet => hoc lai
+            if ((index != std::string::npos) && (dsAnhXaMaLTCMaMH[i] != loptinchi->creditCode))
+            {
+                // so sanh diem cua 2 lop tin chi
+                PTRDK nodeDK1 = timSinhVien_DSSVDK(listLTC.nodes[i]->firstListRegister, mssv);
+                PTRDK nodeDK2 = timSinhVien_DSSVDK(loptinchi->firstListRegister, mssv);
+
+                if (nodeDK2->regis.point >= nodeDK1->regis.point)
+                {
+                    it->second.replace(index, std::to_string(loptinchi->creditCode).length(), std::to_string(loptinchi->creditCode));
+                    return;
+                }
+            }
+        }
+
+        // khong tim thay ma lop tin chi cua mon hoc dang xet trong dsLTC cua sinh vien => chua hoc
+        it->second += std::to_string(loptinchi->creditCode) + ",";
+    }
+}
+
+void mappingMaLTC_MaMH(std::map<char *, char *> &anhXaLTC_MH, char *maLTC, char *maMH)
+{
+    auto it = anhXaLTC_MH.find(maLTC);
+
+    if (it == anhXaLTC_MH.end())
+    {
+        anhXaLTC_MH[maLTC] = maMH;
+    }
+}
