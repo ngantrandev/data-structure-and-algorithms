@@ -1,19 +1,13 @@
 #include <iostream>
 #include <map>
+// #include "./src/lib/view/menu.h"
+#include "./src/lib/view/UI_function.h"
 
 int main() {
-    std::map<int, std::string> m;
-
-    m[1] = "one";
-    m[2] = "two";
-    m[3] = "three";
-    m[4] = "four";
-    m[5] = "five";
-    m[6] = "six";
-    m[7] = "one";
-
-std::string s = "hello";
-std::string p = "world";
-    std::cout <<s + p;
-
+    int out = 0;
+    int pos = 0;
+    // menu(10,10,10,them_lop_tin_chi, 7,out,pos);
+    // drawBox(10, 10, 10, 7);
+    std::cout<<"hello world";
+    getch();
 }

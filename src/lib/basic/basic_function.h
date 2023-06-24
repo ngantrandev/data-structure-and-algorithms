@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <math.h>
 #include <string.h>
-#include "struct.h" // cac caaus truc du lieu
-#include "console_function.h"
+#include "../struct.h" // cac caaus truc du lieu
+#include "../view/console_function.h"
 
 enum status
 {

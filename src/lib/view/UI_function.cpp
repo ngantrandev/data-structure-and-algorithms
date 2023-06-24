@@ -719,42 +719,42 @@ void drawBox(int x, int y, int w, int h)
             if (i == x && j == y)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(201)); // top left
+                std::printf("+"); // top left
             }
             else if (i == x && j == y + h)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(200)); // bot left
+                std::printf("+"); // bottom left
             }
             else if (i == x + w && j == y)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(187)); // top right
+                std::printf("+"); // top right
             }
             else if (i == x + w && j == y + h)
             {
                 gotoxy(x + w, y + h);
-                std::printf("%c", char(188)); // bot right
+                std::printf("+"); // bot right
             }
             else if (j == y)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(205));
+                std::printf("="); // bien tren
             }
             else if (j == y + h)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(205));
+                std::printf("="); // bien duoi
             }
             else if (i == x)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(186));
+                std::printf("||"); // bien trai
             }
             else if (i == x + w)
             {
                 gotoxy(i, j);
-                std::printf("%c", char(186));
+                std::printf("||"); // bien phai
             }
             else
                 continue;

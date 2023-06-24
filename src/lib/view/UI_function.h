@@ -5,8 +5,7 @@
 #include <stdlib.h>
 #include <direct.h>
 #include <string.h>
-#include "console_function.h" // ham dinh dang console
-#include "struct.h"           // cac caaus truc du lieu
+#include "./console_function.h"
 
 void ShowProgramName(int x_program_name, int y_program_name, int sleep_time);
 void Show_Loading_Time(int x = 59, int y = 8);

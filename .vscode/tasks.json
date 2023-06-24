@@ -23,7 +23,26 @@
 				"isDefault": true
 			},
 			"detail": "compiler: C:\\MinGW\\bin\\g++.exe",
-			
+		},
+		{
+			"label": "Build all definition .cpp files",
+			"type": "shell",
+			"command": "for /r . %f in (*.cpp) do if not \"%f\" == \"${file}\" C:\\MinGW\\bin\\g++.exe -fdiagnostics-color=always -g \"%f\" -o \"%~dpnf.exe\"",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build definition file and active file",
+			"dependsOn": [
+				"Build all definition .cpp files",
+				"C/C++: g++.exe build active file"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		}
 	]
 }

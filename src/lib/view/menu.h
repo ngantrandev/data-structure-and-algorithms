@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <conio.h>
-#include "UI_function.h"
-#include "basic_function.h"
+#include "./UI_function.h"
+#include "../basic/basic_function.h"
 
 // path: lib\basic\menu.h
 
@@ -23,9 +23,9 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 			{
 				SetColor(241); // blue
 				if (i + 1 < 10)
-					std::printf("%d   %c%s \n", i + 1, char(16), menuName[i]);
+					std::printf("%d   %c%s \n", i + 1, ">", menuName[i]);
 				else
-					std::printf("%d  %c%s \n", i + 1, char(16), menuName[i]);
+					std::printf("%d  %c%s \n", i + 1, ">", menuName[i]);
 			}
 			else
 			{
@@ -39,7 +39,7 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 
 		SetColor(23);
 		gotoxy((2 * x + w - 62) / 2 + 4, y + size + 5);
-		std::printf("[SELECT:ENTER]     [EXIT:ESC]     [UP:%c/%c]     [DOWN:%c/%c]", char(30), char(17), char(31), char(16));
+		std::printf("[SELECT:ENTER]     [EXIT:ESC]     [UP: UP ARROW]     [DOWN: DOWN ARROW]");
 
 		int key_hit = getch();
 		status stt = GetKey(key_hit);
@@ -78,9 +78,9 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 	// 		{
 	// 			SetColor(241); // blue
 	// 			if (i + 1 < 10)
-	// 				std::printf("%d   %c%s \n", i + 1, char(16), menuName[i]);
+	// 				std::printf("%d   %c%s \n", i + 1, ">", menuName[i]);
 	// 			else
-	// 				std::printf("%d  %c%s \n", i + 1, char(16), menuName[i]);
+	// 				std::printf("%d  %c%s \n", i + 1, ">", menuName[i]);
 	// 		}
 	// 		else
 	// 		{
@@ -113,9 +113,9 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 // 			{
 // 				SetColor(241); // blue
 // 				if (i + 1 < 10)
-// 					std::printf("%d   %c%s \n", i + 1, char(16), menuName[i]);
+// 					std::printf("%d   %c%s \n", i + 1, ">", menuName[i]);
 // 				else
-// 					std::printf("%d  %c%s \n", i + 1, char(16), menuName[i]);
+// 					std::printf("%d  %c%s \n", i + 1, ">", menuName[i]);
 // 			}
 // 			else
 // 			{
@@ -129,7 +129,7 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 
 // 		SetColor(23);
 // 		gotoxy((2 * x + w - 62) / 2 + 4, y + size + 5);
-// 		std::printf("[SELECT:ENTER]     [EXIT:ESC]     [UP:%c/%c]     [DOWN:%c/%c]", char(30), char(17), char(31), char(16));
+// 		std::printf("[SELECT:ENTER]     [EXIT:ESC]     [UP:%c/%c]     [DOWN:%c/%c]", char(30), char(17), char(31), ">");
 
 // 		int key_hit = getch();
 // 		status stt = GetKey(key_hit);
