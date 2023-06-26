@@ -1,58 +1,55 @@
 #pragma once
-#include<iostream>
+#include <iostream>
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <direct.h>
 #include <string.h>
+#include <windows.h>
 #include "./console_function.h"
+#include "../basic/basic_function.h"
 
-void ShowProgramName(int x_program_name, int y_program_name, int sleep_time);
+void ShowProgramName(int x, int y, int w, int h, int sleep_time);
 void Show_Loading_Time(int x = 59, int y = 8);
-void ShowMessage(int x_origin, int y_origin, std::string message, int duration);
+void ShowMessage(int x, int y, std::string message, int duration);
 void Show_Error(int error_code);
 
-void showCourceList(int tabx, int taby, int tabw, int tabh);
-void showStudentList(int tabx, int taby, int tabh);
-void showCreditClassList(int tabx, int taby, int tabw, int tabh);
-void showCreditClassStatus(int tabx, int taby, int tabw, int tabh);
-void showPointList(int tabx, int taby, int tabw, int tabh);
 void drawBox(int x, int y, int w, int h);
-void drawScoreBoard(int tabx, int taby, int tabw, int tabh);
-void vebangtongketdiem(int x, int y, int step, int soSV, int so_mon_hoc, std::string maMH[1000]);
+void showCourceListBox(int tabx, int taby, int size);
+void showStudentList(int tabx, int taby, int size);
+void showCreditClassList(int tabx, int taby, int size);
+void showCreditClassStatus(int tabx, int taby, int size);
+void showPointList(int tabx, int taby, int size);
+void drawScoreBoard(int tabx, int taby, int size);
+void vebangtongketdiem(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000]);
 
 void clearScreen(int x_origin, int y_origin, int width, int height);
-
 int XacNhan(int x_origin, int y_origin, std::string title, std::string luachon_1, std::string luachon_2);
 
-
-
-
-
-void ShowProgramName(int x_program_name, int y_program_name, int sleep_time)
+// sleep time: mini second
+void ShowProgramName(int x, int y, int w, int h, int sleep_time)
 {
 
     std::string program_name = "CHUONG TRINH QUAN LY SINH VIEN";
-    std::string lable1 = "GIAO VIEN HUONG DAN: THAY LUU NGUYEN KY THU";
-    std::string label2 = "NHOM 10";
+    std::string teacherName = "GIAO VIEN HUONG DAN: THAY LUU NGUYEN KY THU";
+    std::string groupName = "NHOM 10";
 
-    const int color_sum = 15;
-    int x = 0; // dung de random mang
+    const int colorSize = 15;
+    int x_random = 0; // dung de random mang
     int pressed_key = 0;
 
-    int x_1 = 42, x_2 = 60, x_3 = 48;
-    int x_box = 40;
-    int y_box = y_program_name - 2;
-    int width = 46, height = 6; // set size_box
-
-    int a[color_sum + 1] = {0};
-    for (int i = 1; i <= color_sum; i++) // set default value
+    int a[colorSize + 1] = {0};
+    for (int i = 1; i <= colorSize; i++)
+    { // set default value
+        if (i == 8)
+            a[i] = 5;
         a[i] = i;
+    }
 
-    drawBox(x_box, y_box, width, height);
+    drawBox(x, y, w, h);
 
     // // show enter button
-    gotoxy(52, y_box + height + 2);
+    gotoxy(x + 15, y + h + 2);
     std::cout << "NHAN ENTER DE BAT DAU";
 
     ShowCur(0); // tat hien thi con tro
@@ -60,65 +57,80 @@ void ShowProgramName(int x_program_name, int y_program_name, int sleep_time)
     while (true)
     {
 
-        if (kbhit())
+        if (_kbhit())
         {
-            pressed_key = getch();
-            if (pressed_key == 13)
+
+            gotoxy(0, 0);
+            std::cout << "hello world";
+            status st = GetKey(getch());
+            if (st == ENTER)
             {
+                gotoxy(0, 0);
+                std::cout << "hello world";
                 SetColor(15); // set white color
                 ShowCur(1);   // hien thi con tro
                 return;
             }
         }
 
-        for (int i = 1; i <= color_sum; i++)
+        for (int i = 1; i <= colorSize; i++)
         {
-            x = i + rand() % (color_sum - i + 1);
+            x_random = i + rand() % (colorSize - i + 1);
             std::swap(a[i], a[x]);
         }
 
-        for (int i = 1; i <= color_sum; i++)
+        for (int i = 1; i <= colorSize; i++)
         {
-            clearScreen(x_box + 1, y_box + 1, width - 2, height - 2);
+            clearScreen(x + 1, y + 1, w - 2, h - 2);
 
-            gotoxy(x_program_name, y_program_name - 1);
-
+            gotoxy(x + 1 + (w - 2 - program_name.length()) / 2, y + 1);
             for (int j = 0; j < program_name.length(); j++)
             {
                 i += 2;
-                if (i < color_sum)
+                if (i < colorSize)
                 {
                     SetColor(a[i]);
                     std::cout << program_name[j];
                 }
                 else
+                {
                     i = 1;
+                    SetColor(a[i]);
+                    std::cout << program_name[j];
+                }
             }
-
-            gotoxy(x_1, y_program_name + 1);
-            for (int j = 0; j < lable1.length(); j++)
+            gotoxy(x + 1 + (w - 2 - teacherName.length()) / 2, y + 2);
+            for (int j = 0; j < teacherName.length(); j++)
             {
                 i += 2;
-                if (i < color_sum)
+                if (i < colorSize)
                 {
                     SetColor(a[i]);
-                    std::cout << lable1[j];
+                    std::cout << teacherName[j];
                 }
                 else
+                {
                     i = 1;
+                    SetColor(a[i]);
+                    std::cout << teacherName[j];
+                }
             }
-            gotoxy(x_2, y_program_name + 3);
-            for (int j = 0; j < label2.length(); j++)
+            gotoxy(x + 1 + (w - 2 - groupName.length()) / 2, y + 3);
+            for (int j = 0; j < groupName.length(); j++)
             {
 
                 i += 2;
-                if (i < color_sum)
+                if (i < colorSize)
                 {
                     SetColor(a[i]);
-                    std::cout << label2[j];
+                    std::cout << groupName[j];
                 }
                 else
+                {
                     i = 1;
+                    SetColor(a[i]);
+                    std::cout << groupName[j];
+                }
             }
 
             Sleep(sleep_time);
@@ -154,9 +166,9 @@ void Show_Loading_Time(int x, int y)
 
     ShowCur(1); // mowr con tro
 }
-void ShowMessage(int x_origin, int y_origin, std::string message, int duration)
+void ShowMessage(int x, int y, std::string message, int duration)
 {
-    gotoxy(x_origin, y_origin);
+    gotoxy(x, y);
     SetColor(4);
     std::cout << message;
     SetColor(39);
@@ -211,558 +223,30 @@ void Show_Error(int error_code)
         std::cout << "Sai cu phap!";
 }
 
-void showCourceList(int tabx, int taby, int tabw, int tabh)
-{
-
-    // draw border
-    drawBox(tabx, taby, tabw, tabh);
-
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
-    {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
-    }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
-
-    // STT
-    gotoxy(tabx + 4, taby + 1);
-    std::cout << "STT";
-    gotoxy(tabx + 10, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 10, taby + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(tabx + 10, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 10, taby + tabh);
-    std::cout << char(202);
-
-    // MA MON HOC
-    gotoxy(tabx + 13, taby + 1);
-    std::cout << "MA MON HOC";
-    gotoxy(tabx + 25, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 25, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 25, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 25, taby + tabh);
-    std::cout << char(202);
-
-    // HO SINHVIEN
-    gotoxy(tabx + 36, taby + 1);
-    std::cout << "TEN MON HOC";
-    gotoxy(tabx + 57, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 57, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 57, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 57, taby + tabh);
-    std::cout << char(202);
-
-    // TEN SINHVIEN
-    gotoxy(tabx + 61, taby + 1);
-    std::cout << "STCLT";
-    gotoxy(tabx + 69, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 69, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 69, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 69, taby + tabh);
-    std::cout << char(202);
-
-    // DIEM
-    gotoxy(tabx + 73, taby + 1);
-    std::cout << "STCTH";
-}
-void showStudentList(int tabx, int taby, int tabh)
-{
-    int tabw = 102;
-    // draw border
-    drawBox(tabx, taby, tabw, tabh);
-
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
-    {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
-    }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
-
-    // STT
-    gotoxy(tabx + 3, taby + 1);
-    std::cout << "STT";
-    gotoxy(tabx + 8, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 8, taby + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(tabx + 8, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 8, taby + tabh);
-    std::cout << char(202);
-
-    // MSSV
-    gotoxy(tabx + 14, taby + 1);
-    std::cout << "MSSV";
-    gotoxy(tabx + 23, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 23, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 23, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 23, taby + tabh);
-    std::cout << char(202);
-
-    // HO SINHVIEN
-    gotoxy(tabx + 32, taby + 1);
-    std::cout << "HO";
-    gotoxy(tabx + 45, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 45, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 45, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 45, taby + tabh);
-    std::cout << char(202);
-
-    // TEN SINHVIEN
-    gotoxy(tabx + 51, taby + 1);
-    std::cout << "TEN";
-    gotoxy(tabx + 59, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 59, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 59, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 59, taby + tabh);
-    std::cout << char(202);
-
-    // GIOI TINH
-    gotoxy(tabx + 61, taby + 1);
-    std::cout << "GIOI TINH";
-    gotoxy(tabx + 71, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 71, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 71, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 71, taby + tabh);
-    std::cout << char(202);
-
-    // MA LOP
-    gotoxy(tabx + 76, taby + 1);
-    std::cout << "MA LOP";
-    gotoxy(tabx + 86, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 86, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 86, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 86, taby + tabh);
-    std::cout << char(202);
-
-    // SO DIEN THOAI
-    gotoxy(tabx + 88, taby + 1);
-    std::cout << "SO DIEN THOAI";
-}
-void showCreditClassList(int tabx, int taby, int tabw, int tabh)
-{ //  Hoat dong
-    //|  STT  |  MA LOP  |   MA MON   | NIENKHOA | HOC KY | NHOM | SOSVMIN | SOSVMAX |  TINH TRANG  |
-    //  0  2    6  8       15 18       2627       3537     4345   50
-    // draw border
-    drawBox(tabx, taby, tabw, tabh);
-
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
-    {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
-    }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
-
-    // STT
-    gotoxy(tabx + 2, taby + 1);
-    std::cout << "STT";
-    gotoxy(tabx + 6, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 6, taby + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(tabx + 6, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 6, taby + tabh);
-    std::cout << char(202);
-
-    // MA LOP
-    gotoxy(tabx + 8, taby + 1);
-    std::cout << "MA LOP";
-    gotoxy(tabx + 15, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 15, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 15, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 15, taby + tabh);
-    std::cout << char(202);
-
-    // MA MON
-    gotoxy(tabx + 18, taby + 1);
-    std::cout << "MA MON";
-    gotoxy(tabx + 26, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 26, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 26, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 26, taby + tabh);
-    std::cout << char(202);
-
-    // NIEN KHOA
-    gotoxy(tabx + 28, taby + 1);
-    std::cout << "NIEN KHOA";
-    gotoxy(tabx + 38, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 38, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 38, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 38, taby + tabh);
-    std::cout << char(202);
-
-    // HOC KY
-    gotoxy(tabx + 40, taby + 1);
-    std::cout << "HOC KY";
-    gotoxy(tabx + 47, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 47, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 47, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 47, taby + tabh);
-    std::cout << char(202);
-
-    // NHOM
-    gotoxy(tabx + 50, taby + 1);
-    std::cout << "NHOM";
-    gotoxy(tabx + 56, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 56, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 56, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 56, taby + tabh);
-    std::cout << char(202);
-
-    // SOSV MIN
-    gotoxy(tabx + 58, taby + 1);
-    std::cout << "SOSVMIN";
-    gotoxy(tabx + 66, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 66, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 66, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 66, taby + tabh);
-    std::cout << char(202);
-
-    // SOSV MAX
-    gotoxy(tabx + 68, taby + 1);
-    std::cout << "SOSVMAX";
-    gotoxy(tabx + 76, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 76, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 76, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 76, taby + tabh);
-    std::cout << char(202);
-
-    // TINH TRANG
-    gotoxy(tabx + 79, taby + 1);
-    std::cout << "TINH TRANG";
-}
-void showCreditClassStatus(int tabx, int taby, int tabw, int tabh)
-{
-    //"STT", "MA LOP", "MA MON", "TEN MON", "NHOM", "SLOT DANG KY", "SLOT CON LAI
-    //|  STT  |  MA LOP  |   MA MON   | NIENKHOA | HOC KY | NHOM | SOSVMIN | SOSVMAX |  TINH TRANG  |
-    //  0  2    6  8       15 18       2627       3537     4345   50
-    // draw border
-    drawBox(tabx, taby, tabw, tabh);
-
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
-    {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
-    }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
-
-    // STT
-    gotoxy(tabx + 2, taby + 1);
-    std::cout << "STT";
-    gotoxy(tabx + 6, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 6, taby + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(tabx + 6, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 6, taby + tabh);
-    std::cout << char(202);
-
-    // MA LOP
-    gotoxy(tabx + 8, taby + 1);
-    std::cout << "MA LOP";
-    gotoxy(tabx + 15, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 15, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 15, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 15, taby + tabh);
-    std::cout << char(202);
-
-    // MA MON
-    gotoxy(tabx + 18, taby + 1);
-    std::cout << "MA MON";
-    gotoxy(tabx + 26, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 26, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 26, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 26, taby + tabh);
-    std::cout << char(202);
-
-    // TEN MON
-    gotoxy(tabx + 38, taby + 1);
-    std::cout << "TEN MON";
-    gotoxy(tabx + 58, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 58, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 58, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 58, taby + tabh);
-    std::cout << char(202);
-
-    // NHOM
-    gotoxy(tabx + 62, taby + 1);
-    std::cout << "NHOM";
-    gotoxy(tabx + 68, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 68, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 68, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 68, taby + tabh);
-    std::cout << char(202);
-
-    // SLOT DK
-    gotoxy(tabx + 70, taby + 1);
-    std::cout << "SLOT DANG KY";
-    gotoxy(tabx + 83, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 83, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 83, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 83, taby + tabh);
-    std::cout << char(202);
-
-    // SLOT CON LAI
-    gotoxy(tabx + 85, taby + 1);
-    std::cout << "SLOT CON LAI";
-}
-void showPointList(int tabx, int taby, int tabw, int tabh)
-{
-
-    // draw border
-    drawBox(tabx, taby, tabw, tabh);
-
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
-    {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
-    }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
-
-    // STT
-    gotoxy(tabx + 4, taby + 1);
-    std::cout << "STT";
-    gotoxy(tabx + 10, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 10, taby + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(tabx + 10, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 10, taby + tabh);
-    std::cout << char(202);
-
-    // MSSV
-    gotoxy(tabx + 16, taby + 1);
-    std::cout << "MSSV";
-    gotoxy(tabx + 25, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 25, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 25, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 25, taby + tabh);
-    std::cout << char(202);
-
-    // HO SINHVIEN
-    gotoxy(tabx + 36, taby + 1);
-    std::cout << "HO";
-    gotoxy(tabx + 48, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 48, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 48, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 48, taby + tabh);
-    std::cout << char(202);
-
-    // TEN SINHVIEN
-    gotoxy(tabx + 56, taby + 1);
-    std::cout << "TEN";
-    gotoxy(tabx + 66, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 66, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 66, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 66, taby + tabh);
-    std::cout << char(202);
-
-    // DIEM
-    gotoxy(tabx + 72, taby + 1);
-    std::cout << "DIEM TB";
-}
 void drawBox(int x, int y, int w, int h)
 {
-    for (int i = x; i <= x + w; i++)
+    for (int i = x; i < x + w; i++)
     {
-        for (int j = y; j <= y + h; j++)
+        for (int j = y; j < y + h; j++)
         {
             if (i == x && j == y)
             {
                 gotoxy(i, j);
                 std::printf("+"); // top left
             }
-            else if (i == x && j == y + h)
+            else if (i == x && j == y + h - 1)
             {
                 gotoxy(i, j);
                 std::printf("+"); // bottom left
             }
-            else if (i == x + w && j == y)
+            else if (i == x + w - 1 && j == y)
             {
                 gotoxy(i, j);
                 std::printf("+"); // top right
             }
-            else if (i == x + w && j == y + h)
+            else if (i == x + w - 1 && j == y + h - 1)
             {
-                gotoxy(x + w, y + h);
+                gotoxy(i, j);
                 std::printf("+"); // bot right
             }
             else if (j == y)
@@ -770,7 +254,7 @@ void drawBox(int x, int y, int w, int h)
                 gotoxy(i, j);
                 std::printf("="); // bien tren
             }
-            else if (j == y + h)
+            else if (j == y + h - 1)
             {
                 gotoxy(i, j);
                 std::printf("="); // bien duoi
@@ -778,211 +262,851 @@ void drawBox(int x, int y, int w, int h)
             else if (i == x)
             {
                 gotoxy(i, j);
-                std::printf("||"); // bien trai
+                std::printf("|"); // bien trai
             }
-            else if (i == x + w)
+            else if (i == x + w - 1)
             {
                 gotoxy(i, j);
-                std::printf("||"); // bien phai
+                std::printf("|"); // bien phai
             }
             else
                 continue;
         }
     }
 }
-void drawScoreBoard(int tabx, int taby, int tabw, int tabh)
+void showCourceListBox(int tabx, int taby, int size)
 {
+    /*
+                  x1             x2                        x3        x4
+        +=========+==============+=========================+=========+=========+
+        |   STT   |  MA MON HOC  |       TEN MON HOC       |  STCLT  |  STCTH  |
+     y1 +=========+==============+=========================+=========+=========+
+        |         |              |                         |         |         |
+        |         |              |                         |         |         |
+        +=========+==============+=========================+=========+=========+
+    */
+    int tabw = 71;
+    int tabh = size + 4;
+    int x1 = tabx + 10;
+    int x2 = x1 + 15;
+    int x3 = x2 + 26;
+    int x4 = x3 + 10;
+    int y1 = taby + 2;
 
     // draw border
     drawBox(tabx, taby, tabw, tabh);
 
-    gotoxy(tabx, taby + 2);
-    std::cout << char(204);
-    for (int i = 1; i < tabw; i++)
+    // STT
+    gotoxy(tabx + 4, taby + 1);
+    std::cout << "STT";
+    gotoxy(x1 + 3, taby + 1);
+    std::cout << "MA MON HOC";
+    gotoxy(x2 + 8, taby + 1);
+    std::cout << "TEN MON HOC";
+    gotoxy(x3 + 3, taby + 1);
+    std::cout << "STCLT";
+    gotoxy(x4 + 3, taby + 1);
+    std::cout << "STCTH";
+
+    for (int i = 1; i < tabw - 1; i++)
     {
-        gotoxy(tabx + i, taby + 2);
-        std::cout << char(205);
+        gotoxy(tabx + i, y1);
+        std::cout << "=";
     }
-    gotoxy(tabx + tabw, taby + 2);
-    std::cout << char(185);
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, y1);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, y1);
+    std::cout << "+";
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, y1);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, y1);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, y1);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, y1);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+}
+void showStudentList(int tabx, int taby, int size)
+{
+    /*
+                  x1             x2                 x3            x4          x5             x6
+        +=========+==============+==================+=============+===========+==============+===============+
+        |   STT   |     MSSV     |        HO        |     TEN     | GIOI TINH |    MA LOP    | SO DIEN THOAI |
+      y1+=========+==============+==================+=============+===========+==============+===============+
+        |         |              |                  |             |           |              |               |
+        |         |              |                  |             |           |              |               |
+        +=========+==============+==================+=============+===========+==============+===============+
+    */
+
+    int tabw = 102;
+    int tabh = size + 4;
+    int x1 = tabx + 10;
+    int x2 = x1 + 15;
+    int x3 = x2 + 19;
+    int x4 = x3 + 14;
+    int x5 = x4 + 12;
+    int x6 = x5 + 15;
+    int y1 = taby + 2;
+
+    // draw border
+    drawBox(tabx, taby, tabw, tabh);
 
     // STT
     gotoxy(tabx + 4, taby + 1);
     std::cout << "STT";
-    gotoxy(tabx + 10, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
+    // MSSV
+    gotoxy(x1 + 6, taby + 1);
+    std::cout << "MSSV";
+    // HO SINHVIEN
+    gotoxy(x2 + 9, taby + 1);
+    std::cout << "HO";
+    // TEN SINHVIEN
+    gotoxy(x3 + 6, taby + 1);
+    std::cout << "TEN";
+    // GIOI TINH
+    gotoxy(x4 + 2, taby + 1);
+    std::cout << "GIOI TINH";
+    // MA LOP
+    gotoxy(x5 + 5, taby + 1);
+    std::cout << "MA LOP";
+    // SO DIEN THOAI
+    gotoxy(x6 + 2, taby + 1);
+    std::cout << "SO DIEN THOAI";
+
+    for (int i = 1; i < tabw - 1; i++)
     {
-        gotoxy(tabx + 10, taby + i);
-        std::cout << char(186);
+        gotoxy(tabx + i, taby + 2);
+        std::cout << "=";
     }
 
-    gotoxy(tabx + 10, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 10, taby + tabh);
-    std::cout << char(202);
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
 
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x5, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x6, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, taby + 2);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, taby + 2);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, taby + 2);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, taby + 2);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, taby + 2);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, taby + 2);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x5, taby);
+    std::cout << "+";
+    gotoxy(x5, taby + 2);
+    std::cout << "+";
+    gotoxy(x5, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x6, taby);
+    std::cout << "+";
+    gotoxy(x6, taby + 2);
+    std::cout << "+";
+    gotoxy(x6, taby + tabh - 1);
+    std::cout << "+";
+}
+void showCreditClassList(int tabx, int taby, int size)
+{
+    /*        x1       x2           x3            x4       x5       x6        x7        x8
+        +=====+========+============+=============+========+========+=========+=========+=============+
+        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX |  TINH TRANG |
+    y1  +=====+========+============+=============+========+========+=========+=========+=============+
+        |     |        |            | 2020 - 2021 |        |        |         |         |  HOAT DONG  |
+        |     |        |            |             |        |        |         |         |             |
+        +=====+========+============+=============+========+========+=========+=========+=============+
+    */
+    int tabw = 95;
+    int tabh = size + 4;
+    int x1 = tabx + 6;
+    int x2 = x1 + 9;
+    int x3 = x2 + 13;
+    int x4 = x3 + 14;
+    int x5 = x4 + 9;
+    int x6 = x5 + 9;
+    int x7 = x6 + 10;
+    int x8 = x7 + 10;
+    int y1 = taby + 2;
+
+    // draw border
+    drawBox(tabx, taby, tabw, tabh);
+
+    gotoxy(tabx + 2, taby + 1);
+    std::cout << "STT";
+    gotoxy(x1 + 2, taby + 1);
+    std::cout << "MA LOP";
+    gotoxy(x2 + 4, taby + 1);
+    std::cout << "MA MON";
+    gotoxy(x3 + 3, taby + 1);
+    std::cout << "NIEN KHOA";
+    gotoxy(x4 + 2, taby + 1);
+    std::cout << "HOC KY";
+    gotoxy(x5 + 3, taby + 1);
+    std::cout << "NHOM";
+    gotoxy(x6 + 2, taby + 1);
+    std::cout << "SOSVMIN";
+    gotoxy(x7 + 2, taby + 1);
+    std::cout << "SOSVMAX";
+    gotoxy(x8 + 3, taby + 1);
+    std::cout << "TINH TRANG";
+
+    for (int i = 1; i < tabw - 1; i++)
+    {
+        gotoxy(tabx + i, y1);
+        std::cout << "=";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x5, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x6, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x7, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x8, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, y1);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, y1);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, y1);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(tabx + 15, taby);
+    std::cout << "+";
+    gotoxy(tabx + 15, y1);
+    std::cout << "+";
+    gotoxy(tabx + 15, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, y1);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, y1);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, y1);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, y1);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x5, taby);
+    std::cout << "+";
+    gotoxy(x5, y1);
+    std::cout << "+";
+    gotoxy(x5, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x6, taby);
+    std::cout << "+";
+    gotoxy(x6, y1);
+    std::cout << "+";
+    gotoxy(x6, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x7, taby);
+    std::cout << "+";
+    gotoxy(x7, y1);
+    std::cout << "+";
+    gotoxy(x7, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x8, taby);
+    std::cout << "+";
+    gotoxy(x8, y1);
+    std::cout << "+";
+    gotoxy(x8, taby + tabh - 1);
+    std::cout << "+";
+}
+void showCreditClassStatus(int tabx, int taby, int size)
+{
+    /*
+              x1       x2         x3                              x4        x5             x6
+        +=====+========+==========+===============================+=========+==============+==============+
+        | STT | MA LOP |  MA MON  |           TEN MON             |   NHOM  | SLOT DANG KY | SLOT CON LAI |
+     y1 +=====+========+==========+===============================+=========+==============+==============+
+        |     |        |          |                               |         |              |              |
+        |     |        |          |                               |         |              |              |
+        +=====+========+==========+===============================+=========+==============+==============+
+    */
+    int tabw = 99;
+    int tabh = size + 4;
+    int x1 = tabx + 6;
+    int x2 = x1 + 9;
+    int x3 = x2 + 11;
+    int x4 = x3 + 32;
+    int x5 = x4 + 10;
+    int x6 = x5 + 15;
+
+    // draw border
+    drawBox(tabx, taby, tabw, tabh);
+
+    // STT
+    gotoxy(tabx + 2, taby + 1);
+    std::cout << "STT";
+    // MA LOP
+    gotoxy(x1 + 2, taby + 1);
+    std::cout << "MA LOP";
+    // MA MON
+    gotoxy(x2 + 3, taby + 1);
+    std::cout << "MA MON";
+    // TEN MON
+    gotoxy(x3 + 12, taby + 1);
+    std::cout << "TEN MON";
+    // NHOM
+    gotoxy(x4 + 4, taby + 1);
+    std::cout << "NHOM";
+    // SLOT DK
+    gotoxy(x5 + 2, taby + 1);
+    std::cout << "SLOT DANG KY";
+    // SLOT CON LAI
+    gotoxy(x6 + 2, taby + 1);
+    std::cout << "SLOT CON LAI";
+
+    for (int i = 1; i < tabw - 1; i++)
+    {
+        gotoxy(tabx + i, taby + 2);
+        std::cout << "=";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x5, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x6, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, taby + 2);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, taby + 2);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, taby + 2);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, taby + 2);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, taby + 2);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, taby + 2);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x5, taby);
+    std::cout << "+";
+    gotoxy(x5, taby + 2);
+    std::cout << "+";
+    gotoxy(x5, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x6, taby);
+    std::cout << "+";
+    gotoxy(x6, taby + 2);
+    std::cout << "+";
+    gotoxy(x6, taby + tabh - 1);
+    std::cout << "+";
+}
+void showPointList(int tabx, int taby, int size)
+{
+    /*
+                  x1             x2                     x3                x4
+        +=========+==============+======================+=================+============+
+        |   STT   |     MSSV     |          HO          |       TEN       |   DIEM TB  |
+    y1  +=========+==============+======================+=================+============+
+        |         |              |                      |                 |            |
+        |         |              |                      |                 |            |
+        +=========+==============+======================+=================+============+
+    */
+    int tabw = 80;
+    int tabh = size + 4;
+    int x1 = tabx + 10;
+    int x2 = x1 + 15;
+    int x3 = x2 + 23;
+    int x4 = x3 + 18;
+
+    // draw border
+    drawBox(tabx, taby, tabw, tabh);
+
+    // STT
+    gotoxy(tabx + 4, taby + 1);
+    std::cout << "STT";
+    // MSSV
+    gotoxy(x1 + 6, taby + 1);
+    std::cout << "MSSV";
+    // HO
+    gotoxy(x2 + 11, taby + 1);
+    std::cout << "HO";
+    // TEN
+    gotoxy(x3 + 8, taby + 1);
+    std::cout << "TEN";
+    // DIEM TB
+    gotoxy(x4 + 4, taby + 1);
+    std::cout << "DIEM TB";
+
+    for (int i = 1; i < tabw - 1; i++)
+    {
+        gotoxy(tabx + i, taby + 2);
+        std::cout << "=";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, taby + 2);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, taby + 2);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, taby + 2);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, taby + 2);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, taby + 2);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, taby + 2);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+}
+void drawScoreBoard(int tabx, int taby, int size)
+{
+
+    /*
+        x         x1             x2                     x3                x4
+        +=========+==============+======================+=================+==================+
+        |   STT   |     MSSV     |          HO          |       TEN       |       DIEM       |
+     y1 +=========+==============+======================+=================+==================+
+        |         |              |                      |                 |                  |
+        |         |              |                      |                 |                  |
+        +=========+==============+======================+=================+==================+
+    */
+    int tabw = 86;
+    int tabh = size + 4;
+    int x1 = tabx + 10;
+    int x2 = x1 + 15;
+    int x3 = x2 + 23;
+    int x4 = x3 + 18;
+    int y1 = taby + 2;
+
+    // draw border
+    drawBox(tabx, taby, tabw, tabh);
+
+    // STT
+    gotoxy(tabx + 4, taby + 1);
+    std::cout << "STT";
     // MSSV
     gotoxy(tabx + 16, taby + 1);
     std::cout << "MSSV";
-    gotoxy(tabx + 25, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 25, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 25, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 25, taby + tabh);
-    std::cout << char(202);
-
     // HO SINHVIEN
     gotoxy(tabx + 36, taby + 1);
     std::cout << "HO";
-    gotoxy(tabx + 48, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 48, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 48, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 48, taby + tabh);
-    std::cout << char(202);
-
     // TEN SINHVIEN
     gotoxy(tabx + 56, taby + 1);
     std::cout << "TEN";
-    gotoxy(tabx + 66, taby);
-    std::cout << char(203);
-    for (int i = 1; i < tabh + 1; i++)
-    {
-        gotoxy(tabx + 66, taby + i);
-        std::cout << char(186);
-    }
-    gotoxy(tabx + 66, taby + 2);
-    std::cout << char(206);
-    gotoxy(tabx + 66, taby + tabh);
-    std::cout << char(202);
-
     // DIEM
     gotoxy(tabx + 74, taby + 1);
     std::cout << "DIEM";
-}
-void vebangtongketdiem(int x, int y, int step, int soSV, int so_mon_hoc, std::string maMH[1000])
-{
-    // length_info la chieu dai tu dau table den het phan cootj tensinhvien
-    int length_info = 66;
-    int x_0 = x + length_info; // vi tri bat dau ve cot diem
-    int w = so_mon_hoc * step + length_info;
-    int h = soSV + 3;
-    //	int x_0 = step;
 
-    //	int w = 66;
+    for (int i = 1; i < tabw - 1; i++)
+    {
+        gotoxy(tabx + i, y1);
+        std::cout << "=";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x1, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x2, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x3, taby + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < tabh; i++)
+    {
+        gotoxy(x4, taby + i);
+        std::cout << "|";
+    }
+
+    gotoxy(tabx, y1);
+    std::cout << "+";
+    gotoxy(tabx + tabw - 1, y1);
+    std::cout << "+";
+
+    gotoxy(x1, taby);
+    std::cout << "+";
+    gotoxy(x1, y1);
+    std::cout << "+";
+    gotoxy(x1, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x2, taby);
+    std::cout << "+";
+    gotoxy(x2, y1);
+    std::cout << "+";
+    gotoxy(x2, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x3, taby);
+    std::cout << "+";
+    gotoxy(x3, y1);
+    std::cout << "+";
+    gotoxy(x3, taby + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x4, taby);
+    std::cout << "+";
+    gotoxy(x4, y1);
+    std::cout << "+";
+    gotoxy(x4, taby + tabh - 1);
+    std::cout << "+";
+}
+void vebangtongketdiem(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000])
+{
+    /*
+        <-------------------left_side--------------------->
+        x          x1           x2                        x3        <--Step--->
+      y +=========+============+==========================+=========+=========+=========+
+        |   STT   |    MSSV    |          HO TEN          |   MH    |   MH2   |   MH3   |
+        +=========+============+==========================+=========+=========+=========+
+        |         |            |                          |         |         |         |
+        |         |            |                          |         |         |         |
+        +=========+============+==========================+=========+=========+=========+
+    */
+    int x1 = x + 10;
+    int x2 = x1 + 13;
+    int x3 = x2 + 27;
+    int step = 10;
+    // left_size la chieu dai tu dau table den het phan cot HOTEN
+    int left_size = x3 - x + 1;
+    int w = so_mon_hoc * step + left_size;
+    int h = soSV + 4;
 
     drawBox(x, y, w, h); // ve vien bao quanh
-
-    gotoxy(x, y + 2);
-    std::cout << char(204);
-    for (int i = 1; i < w; i++)
-    {
-        gotoxy(x + i, y + 2);
-        std::cout << char(205);
-    }
-    gotoxy(x + w, y + 2);
-    std::cout << char(185);
 
     // STT
     gotoxy(x + 4, y + 1);
     std::cout << "STT";
-    gotoxy(x + 10, y);
-    std::cout << char(203);
-    for (int i = 1; i < h + 1; i++)
-    {
-        gotoxy(x + 10, y + i);
-        std::cout << char(186);
-    }
-
-    gotoxy(x + 10, y + 2);
-    std::cout << char(206);
-    gotoxy(x + 10, y + h);
-    std::cout << char(202);
-
     // MSSV
-    gotoxy(x + 16, y + 1);
+    gotoxy(x1 + 5, y + 1);
     std::cout << "MSSV";
-    gotoxy(x + 25, y);
-    std::cout << char(203);
-    for (int i = 1; i < h + 1; i++)
-    {
-        gotoxy(x + 25, y + i);
-        std::cout << char(186);
-    }
-    gotoxy(x + 25, y + 2);
-    std::cout << char(206);
-    gotoxy(x + 25, y + h);
-    std::cout << char(202);
-
     // HO SINHVIEN
-    gotoxy(x + 36, y + 1);
-    std::cout << "HO";
-    gotoxy(x + 48, y);
-    std::cout << char(203);
-    for (int i = 1; i < h + 1; i++)
+    gotoxy(x2 + 11, y + 1);
+    std::cout << "HO TEN";
+
+    for (int i = 1; i < w; i++)
     {
-        gotoxy(x + 48, y + i);
-        std::cout << char(186);
+        gotoxy(x + i, y + 2);
+        std::cout << "=";
     }
-    gotoxy(x + 48, y + 2);
-    std::cout << char(206);
-    gotoxy(x + 48, y + h);
-    std::cout << char(202);
 
-    // TEN SINHVIEN5
-
-    gotoxy(x + 56, y + 1);
-    std::cout << "TEN";
-    gotoxy(x + 66, y);
-    std::cout << char(203);
-    for (int i = 1; i < h + 1; i++)
+    for (int i = 1; i < h; i++)
     {
-        gotoxy(x + 66, y + i);
-        std::cout << char(186);
+        gotoxy(x1, y + i);
+        std::cout << "|";
     }
-    gotoxy(x + 66, y + 2);
-    std::cout << char(206);
-    gotoxy(x + 66, y + h);
-    std::cout << char(202);
 
-    // ve cot ddienf diem
+    for (int i = 1; i < h; i++)
+    {
+        gotoxy(x2, y + i);
+        std::cout << "|";
+    }
+
+    for (int i = 1; i < h; i++)
+    {
+        gotoxy(x3, y + i);
+        std::cout << "|";
+    }
+
+    // ve cot ghi diem
     for (int n = 1; n <= so_mon_hoc; n++)
     {
-
-        gotoxy(x_0 + n * step - 6, y + 1);
-        std::cout << maMH[n];
-        gotoxy(x_0 + n * step, y);
-        std::cout << char(203);
-        for (int i = 1; i <= h; i++)
+        gotoxy(x3 + n * step - 6, y + 1);
+        std::cout << maMH[n - 1];
+        for (int i = 1; i < h; i++)
         {
-            gotoxy(x_0 + n * step, y + i);
-            std::cout << char(186);
+            gotoxy(x3 + n * step, y + i);
+            std::cout << "|";
         }
-        gotoxy(x_0 + n * step, y + 2);
-        std::cout << char(206);
-        gotoxy(x_0 + n * step, y + h);
-        std::cout << char(202);
+        gotoxy(x3 + n * step, y);
+        std::cout << "+";
+        gotoxy(x3 + n * step, y + 2);
+        std::cout << "+";
+        gotoxy(x3 + n * step, y + h - 1);
+        std::cout << "+";
     }
 
-    gotoxy(x + w, y + 2);
-    std::cout << char(185);
-    gotoxy(x + w, y);
-    std::cout << char(187);
-    gotoxy(x + w, y + h);
-    std::cout << char(188);
+    gotoxy(x1, y + 2);
+    std::cout << "+";
+    gotoxy(x1, y + h - 1);
+    std::cout << "+";
+    gotoxy(x1, y);
+    std::cout << "+";
 
-    gotoxy(0, y + h + 5);
+    gotoxy(x2, y + 2);
+    std::cout << "+";
+    gotoxy(x2, y + h - 1);
+    std::cout << "+";
+    gotoxy(x2, y);
+    std::cout << "+";
+
+    gotoxy(x3, y);
+    std::cout << "+";
+    gotoxy(x3, y + 2);
+    std::cout << "+";
+    gotoxy(x3, y + h - 1);
+    std::cout << "+";
 }
 
 void clearScreen(int x_origin, int y_origin, int width, int height)
@@ -994,7 +1118,6 @@ void clearScreen(int x_origin, int y_origin, int width, int height)
             std::cout << " ";
     }
 }
-
 int XacNhan(int x_origin, int y_origin, std::string title, std::string luachon_1, std::string luachon_2)
 {
 
@@ -1101,4 +1224,3 @@ int XacNhan(int x_origin, int y_origin, std::string title, std::string luachon_1
         }
     }
 }
-

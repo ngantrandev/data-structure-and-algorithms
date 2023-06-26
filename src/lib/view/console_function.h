@@ -151,7 +151,7 @@ void DisableCtrButton(bool Close, bool Min, bool Max)
     }
 }
 
-void ShowScrollbar(BOOL Show)
+void HienThanhCuon(BOOL Show)
 {
     HWND hWnd = GetConsoleWindow();
     ShowScrollBar(hWnd, SB_BOTH, Show);
