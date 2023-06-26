@@ -1,6 +1,6 @@
 #pragma once
-#include "struct.h"
-#include "basic_function.h"
+#include "../struct.h"
+#include "../basic/basic_function.h"
 
 //=================================
 // HAM XOA
@@ -10,8 +10,6 @@ void deleteCource(PTRMH &treeMH, char *maMH);
 void deleteStudentFromRegistedList(PTRDK &First_DSSVDK, PTRDK &dangky);
 void deleteStudentFromStudentList(PTRSV &first, PTRSV &student);
 void deleteCourceList(PTRMH &treeMH);
-
-
 
 template <typename T>
 void deleteLinkedList(T &first)
@@ -25,8 +23,6 @@ void deleteLinkedList(T &first)
     }
     first = NULL;
 }
-
-
 
 //=================================
 // HAM XOA

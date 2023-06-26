@@ -2,10 +2,10 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <algorithms/my_search.h>
-#include "struct.h"
-#include "basic/basic_function.h"
-#include "algorithms/count_node.h"
+#include "../algorithms/my_search.h"
+#include "../struct.h"
+#include "../basic/basic_function.h"
+#include "../algorithms/count_node.h"
 
 // HAM LOAD DU LIEU TU FILE
 Course loadCourseInfo(FILE *filein);
@@ -50,9 +50,6 @@ std::vector<Course> cvtTreeTreeToVector(PTRMH treeMH);
 void mappingMaLTC_MaMH(std::map<char *, char *> &anhXaLTC_MH, char *maLTC, char *maMH);
 void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::vector<int> dsAnhXaMaLTCMaMH);
 
-
-
-
 // load data from file
 
 // nhap thong tin tung mon hoc tu file
@@ -79,7 +76,7 @@ PTRMH loadCourseList(char *File_Name)
     if (filein == NULL)
     {
         std::cout << "Mo file danh sach mon hoc that bai\n";
-        return;
+        return NULL;
     }
 
     PTRMH treeCourse = NULL;
@@ -128,7 +125,7 @@ PTRSV loadStudentList(char *File_Name)
     if (filein == NULL)
     {
         std::cout << "Mo file danh sach sinh vien that bai\n";
-        return;
+        return NULL;
     }
 
     PTRSV firstStudent = NULL;
@@ -156,7 +153,7 @@ PTRLH loadClassList(char *File_Name)
     if (filein == NULL)
     {
         std::cout << "Mo file ma lop hoc that bai\n";
-        return;
+        return NULL;
     }
 
     PTRLH firstCourseList = NULL;
@@ -231,28 +228,32 @@ Credit *loadCreditClassInfo(FILE *filein)
 LIST_LTC loadStudentCreditClassList(char *File_Name)
 {
     FILE *filein = fopen(File_Name, "r");
-    if (filein == NULL)
-    {
-        std::cout << "Mo file danh sach lop tin chi that bai\n";
-        return;
-    }
-
     LIST_LTC creditClassList;
-    char temp_line[maxLengthString];
-    int index = 0;
 
-    fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d %d", &creditClassList.currentIndex);
-
-    for (int i = 1; i <= creditClassList.currentIndex; i++)
+    if (filein != NULL)
     {
-        Credit *loptinchi = NULL; // cap phat bo nho cho node moi
-        loptinchi = loadCreditClassInfo(filein);
-        index = loptinchi->creditCode; // index store credit code
-        creditClassList.nodes[index] = loptinchi;
-    }
+        char temp_line[maxLengthString];
+        int index = 0;
 
-    return creditClassList;
+        fgets(temp_line, maxLengthString, filein);
+        sscanf(temp_line, "%d %d", &creditClassList.currentIndex);
+
+        for (int i = 1; i <= creditClassList.currentIndex; i++)
+        {
+            Credit *loptinchi = NULL; // cap phat bo nho cho node moi
+            loptinchi = loadCreditClassInfo(filein);
+            index = loptinchi->creditCode; // index store credit code
+            creditClassList.nodes[index] = loptinchi;
+        }
+
+        return creditClassList;
+    }
+    else
+    {
+
+        std::cout << "Mo file danh sach lop tin chi that bai\n";
+        return creditClassList;
+    }
 }
 
 // SAVE DATA

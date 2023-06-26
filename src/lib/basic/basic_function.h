@@ -42,9 +42,6 @@ std::string getStandardizedName(std::string text);
 std::string getStandardizedStudentID(std::string text);
 std::string getCapitalized(std::string text);
 
-
-
-
 status GetKey(int z)
 {
 	if (z == 224)
@@ -194,7 +191,6 @@ bool IsFloatNumber(std::string num)
 
 	return true;
 }
-
 
 std::string getStandardizedName(std::string text)
 {

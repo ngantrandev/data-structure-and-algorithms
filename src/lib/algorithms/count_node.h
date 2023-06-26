@@ -1,5 +1,5 @@
 #pragma once
-#include "struct.h"
+#include "../struct.h"
 
 int count_DaDangKy(PTRDK first);
 void count_MH(PTRMH Tree_monhoc, int &soLuongMonHoc);

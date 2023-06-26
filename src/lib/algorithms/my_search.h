@@ -1,6 +1,6 @@
 #pragma once
 #include <string.h>
-#include "struct.h"
+#include "../struct.h"
 
 // HAM TIM KIEM
 PTRSV timSinhVien_DSSV(PTRSV FirstSV, char *MASV);
@@ -13,8 +13,6 @@ PTRLH timLopHoc(PTRLH FirstLH, char *maLopHoc);
 Credit *timLopTinChi_theoMAMH(LIST_LTC dsLTC, char *maMH);
 Credit *timLopTinChi_theoInfo(LIST_LTC dsLTC, char *nienkhoa, int hocky, int nhom, char *maMonHoc);
 Credit *timLopTinChi_theoMAMH_NIENKHOA(LIST_LTC dsLTC, char *maMH, char *nienkhoa);
-
-
 
 //=================================
 // HAM TIM KIEM
