@@ -17,7 +17,6 @@ int main()
     HienThanhCuon(TRUE);
     firstSV = loadStudentList(tenfile);
 
-
     while (firstSV !=NULL) {
         std::cout<<firstSV->student.studentID<<std::endl;
         firstSV = firstSV->next;
