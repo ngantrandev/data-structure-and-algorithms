@@ -1,397 +1,359 @@
 #pragma once
 #include "struct.h"
 #include "basic_function.h"
+#include "../../algorithms/count_node.h"
+#include "../UI_function.h"
+#include "../../data_manager/data_manager.h"
+#include "../../algorithms/my_sort.h"
+#include "../../algorithms/my_delete.h"
+#include "../input/my_input.h"
 
-void xuatThongTinSinhVien(int tabx, int taby, Student sinhvien, int stt);
 void xuatDanhSachSinhVien_Console(PTRSV FirstSV, int tabx, int taby);
-void xuatThongTinSinhVien_MSSV_Console(PTRSV ptr_SV, int &stt, int tabx, int taby);
+void xuatDanhSachSinhVienLopHoc_Console_TheoTen(PTRSV FirstSV, int x, int y); // cau d
+// void xuatThongTinSinhVien_MSSV_Console(PTRSV ptr_SV, int &stt, int tabx, int taby);
 
-void xuatThongTinMonHoc(int tabx, int taby, int stt, Course monhoc);
-void xuatDanhSachMonHoc_LNR_Console(PTRMH Tree_monhoc, int x_origin, int y_origin, int &stt);
-void xuatDanhSachMonHoc_Console(int x_origin, int y_origin, PTRMH Tree_monhoc);
+void xuatDanhSachSinhVienDK_LTC(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV); // cau b
+void xuatDanhSachLopTinChi_Console(int x, int y, LIST_LTC dsLTC);
 
-void xuatThongTinLopTinChi_Console(int x_origin, int y_origin, Credit *loptinchi, int stt);
-void xuatDanhSachLopTinChi_Console(int x_origin, int y_origin, LIST_LTC dsLTC);
-void xuatDanhSachLopTinChi_Console_Theo_Dieu_Kien(int x_origin, int y_origin, LIST_LTC dsLTC, char nienkhoa[maxLengthString], int nhom);
+void xuatDanhSachMonHoc_Console(int x, int y, PTRMH Tree_monhoc);
+void xuatDanhSachMonHoc_LNR_Console(PTRMH Tree_monhoc, int x, int y, int &stt);
+void xuatThongTinMonHoc(int x, int y, int stt, Course monhoc);
 
-
-
+void xuatDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc);
+void inBangDiemMonHocLopTinChi(PTRSV FirstSV, PTRMH Tree_monhoc, Credit *loptinchi); // cau j
+void inBangDiemLopTinChi(PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC);          // cau j
+void inBangDiemTBKhoaHoc(int x, int y, char *maLH, PTRSV FirstSV, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC);
+void inBangDiemTongKet(int x, int y, char *maLH, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC);
 
 //=================================
 // HAM XUAT THONG TIN
 //=================================
 
+void xuatDanhSachSinhVien_Console(PTRSV FirstSV, int x, int y)
+{
+    /*
+        x         x1             x2                 x3            x4          x5             x6
+        +=========+==============+==================+=============+===========+==============+===============+
+        |   STT   |     MSSV     |        HO        |     TEN     | GIOI TINH |    MA LOP    | SO DIEN THOAI |
+      y1+=========+==============+==================+=============+===========+==============+===============+
+        |         |              |                  |             |           |              |               |
+        |         |              |                  |             |           |              |               |
+        +=========+==============+==================+=============+===========+==============+===============+
+    */
 
+    system("cls");
+    if (FirstSV == NULL)
+    {
+        // ShowMessage(x_box_thong_bao, y_box_thong_bao, "DANH SACH SINH VIEN TRONG", 1500);
+        return;
+    }
 
-void xuatDanhSachSinhVienLopHoc_Console_TheoTen(LIST_LTC dsLTC, PTRSV FirstSV, int x_origin, int y_origin)
+    PTRSV p = FirstSV;
+    int soSV = countLinkedList(FirstSV);
+    int tabw = 102;
+
+    int stt = 0;
+
+    showStudentList(x, y, 10);
+
+    while (p != NULL)
+    {
+        if (stt == 10)
+            break;
+        ++stt;
+
+        gotoxy(x + 4, y + 2 + stt);
+        std::cout << stt;
+        gotoxy(x + 13, y + 2 + stt);
+        std::cout << p->student.studentID;
+        gotoxy(x + 28, y + 2 + stt);
+        std::cout << p->student.lastName;
+        gotoxy(x + 50, y + 2 + stt);
+        std::cout << p->student.firstName;
+        gotoxy(x + 63, y + 2 + stt);
+        std::cout << p->student.sex;
+        gotoxy(x + 72, y + 2 + stt);
+        std::cout << p->student.classID;
+        gotoxy(x + 89, y + 2 + stt);
+        std::cout << p->student.phoneNum;
+
+        p = p->next;
+    }
+}
+
+void xuatDanhSachSinhVienLopHoc_Console_TheoTen(PTRSV FirstSV, int x, int y)
 { // case 4:  cau d
-
-    int x_box = x_origin;
-    int y_box = y_origin;
-
-    char maLopHoc[ClassID_Length] = {""};
-    PTRSV ptrSV = FirstSV; // giu dia chi con tro FirstSV
+    char *maLopHoc = NULL;
+    PTRSV ptrSV = NULL; // giu dia chi con tro FirstSV
     PTRSV temp_FirstSV = NULL;
+    std::string malop_string[2] = {""};
 
     while (true)
     {
         system("cls");
-        std::string malop_string[2] = {""};
+
         ptrSV = FirstSV;
         temp_FirstSV = NULL; // reset lai danh sach
 
-        if (input_UI(41, y_box, 45, "NHAP MA LOP", 1, nhap_ma_lop_hoc, malop_string, 4, "XAC NHAN XONG") == 1)
+        if (input_UI(x, y, 45, "NHAP MA LOP", 1, nhap_ma_lop_hoc, malop_string, 4, "XAC NHAN XONG") == 1)
         {
-
-            ConvertStringToChar(malop_string[0], maLopHoc);
+            // ConvertStringToChar(malop_string[0], maLopHoc);
+            maLopHoc = ConvertStringToChar(malop_string[0]);
 
             while (ptrSV != NULL)
             {
                 if (strcmp(ptrSV->student.classID, maLopHoc) == 0)
-                    themSinhVienVaoDanhSachSV(temp_FirstSV, ptrSV->student);
+                    addStudentToList(temp_FirstSV, ptrSV->student);
                 ptrSV = ptrSV->next;
             }
 
             sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(temp_FirstSV);
             xuatDanhSachSinhVien_Console(temp_FirstSV, 13, 4);
-            xoaDanhSachSinhVien(temp_FirstSV);
-            system("pause");
+            deleteLinkedList(temp_FirstSV);
+            getch();
         }
-        else
-            break;
     }
+
+    delete[] maLopHoc;
 }
 
-int xuatDanhSachSinhVienDK_LTC(int x_box, int y_box, LIST_LTC dsLTC, PTRSV FirstSV, char *nienkhoa, int hocky, int nhom, char *maMonHoc)
+void xuatDanhSachSinhVienDK_LTC(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV)
 { // case 2: cau b
-    // tham so: nien khoa, hoc ky, nhom, ma mon hoc
+
+    /*
+                                            DANH SACH SINH VIEN DANG KY
+                                Nien khoa: 2020 _ Hoc ky: 2 _ Nhom: 2 _ Ma mon hoc: MH54
+                                            Co 20 sinh vien trong danh sach
+        x         x1             x2                 x3            x4          x5             x6
+        +=========+==============+==================+=============+===========+==============+===============+
+        |   STT   |     MSSV     |        HO        |     TEN     | GIOI TINH |    MA LOP    | SO DIEN THOAI |
+    y1  +=========+==============+==================+=============+===========+==============+===============+
+        |         |              |                  |             |           |              |               |
+        |         |              |                  |             |           |              |               |
+        +=========+==============+==================+=============+===========+==============+===============+
+    */
+
     system("cls");
-    int stt = 0;
-    int tabx = x_box;
-    int taby = y_box + 4;
-    int tabw = 92; // day la chieu rong cua table show DSSV
+    char *nienkhoa, *maMonHoc;
+    int hocky;
+    int nhom;
+    std::string content[4] = {""};
 
-    Credit *loptinchi = timLopTinChi_theoInfo(dsLTC, nienkhoa, hocky, nhom, maMonHoc);
-
-    if (loptinchi != NULL)
+    if (input_UI(44, 4, 40, "NHAP THONG TIN LOP TIN CHI CAN XET", 4, cau_2, content, 8, "XAC NHAN XONG") == 1)
     {
+        system("cls");
+        int stt = 0;
+        nienkhoa = ConvertStringToChar(content[0]);
+        hocky = stringTo_Int(content[1]);
+        nhom = stringTo_Int(content[2]);
+        maMonHoc = ConvertStringToChar(content[3]);
 
-        PTRDK ptrDK = loptinchi->firstListRegister; // bien p tro toi danh sach lop tin chi;
-        PTRSV ptr_SV = NULL;
-        int soSV = Reccount_DSDK(ptrDK);
+        Credit *loptinchi = timLopTinChi_theoInfo(dsLTC, nienkhoa, hocky, nhom, maMonHoc);
 
-        gotoxy((2 * tabx + tabw - 28) / 2, y_box);
+        delete[] nienkhoa;
+        delete[] maMonHoc;
+
+        if (loptinchi == NULL)
+        {
+            // xuat thong bao
+            return;
+        }
+
+        PTRDK ptrDK = loptinchi->firstListRegister; // bien p tro toi danh sach dangky;
+        PTRSV p = NULL;
+        int soSV = countLinkedList(ptrDK);
+
+        gotoxy(x + 37, y - 5);
         std::cout << "DANH SACH SINH VIEN DANG KY";
-        gotoxy((2 * tabx + tabw - 54) / 2, y_box + 1);
+        gotoxy(x + 25, y - 4);
         std::printf("Nien khoa %s _ Hoc ky: %d _ Nhom: %d _ Ma mon hoc: %s", nienkhoa, hocky, nhom, maMonHoc);
-
-        gotoxy((2 * tabx + tabw - 33) / 2, y_box + 2);
+        gotoxy(x + 37, y - 3);
         std::printf("Co %d sinh vien trong danh sach\n", soSV);
-        showStudentList(tabx, taby, soSV + 3);
+
+        showStudentList(x, y, soSV);
 
         while (ptrDK != NULL)
         {
-
-            ptr_SV = timSinhVien_DSSV(FirstSV, ptrDK->regis.studentID);
-            if (ptr_SV != NULL)
+            p = timSinhVien_DSSV(FirstSV, ptrDK->regis.studentID);
+            if (p != NULL)
             {
+
                 stt++;
-                gotoxy(tabx + 4, taby + stt + 2);
+
+                gotoxy(x + 4, y + 2 + stt);
                 std::cout << stt;
-                gotoxy(tabx + 11, taby + stt + 2);
-                std::cout << ptr_SV->student.studentID;
-                gotoxy(tabx + 26, taby + stt + 2);
-                std::cout << ptr_SV->student.firstName;
-                gotoxy(tabx + 50, taby + stt + 2);
-                std::cout << ptr_SV->student.name;
-                gotoxy(tabx + 64, taby + stt + 2);
-                std::cout << ptr_SV->student.sex;
-                gotoxy(tabx + 73, taby + stt + 2);
-                std::cout << ptr_SV->student.classID;
-                gotoxy(tabx + 89, taby + stt + 2);
-                std::cout << ptr_SV->student.phoneNum;
+                gotoxy(x + 13, y + 2 + stt);
+                std::cout << p->student.studentID;
+                gotoxy(x + 28, y + 2 + stt);
+                std::cout << p->student.lastName;
+                gotoxy(x + 50, y + 2 + stt);
+                std::cout << p->student.firstName;
+                gotoxy(x + 63, y + 2 + stt);
+                std::cout << p->student.sex;
+                gotoxy(x + 72, y + 2 + stt);
+                std::cout << p->student.classID;
+                gotoxy(x + 89, y + 2 + stt);
+                std::cout << p->student.phoneNum;
             }
             ptrDK = ptrDK->next;
         }
 
-        gotoxy(tabx, wherey() + 2);
         system("pause");
-        return 1;
     }
-
-    else
-        return 0;
 }
 
-
-void xuatDanhSachLopTinChi_Console_Theo_Dieu_Kien(int x_origin, int y_origin, LIST_LTC dsLTC, char nienkhoa[maxLengthString], int nhom)
+void xuatDanhSachLopTinChi_Console(int x, int y, LIST_LTC dsLTC)
 {
+    /*                                        DANH SACH LOP TIN CHI
+                                            CO %d LOP TRONG DANH SACH
+        x     x1       x2           x3            x4       x5       x6        x7        x8
+        +=====+========+============+=============+========+========+=========+=========+=============+
+        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX |  TINH TRANG |
+    y1  +=====+========+============+=============+========+========+=========+=========+=============+
+        |     |        |            | 2020 - 2021 |        |        |         |         |  HOAT DONG  |
+        |     |        |            |             |        |        |         |         |             |
+        +=====+========+============+=============+========+========+=========+=========+=============+
+    */
+
     if (dsLTC.currentIndex == 0)
     {
         ShowMessage(10, 3, "KHONG CO LOP TIN CHI NAO THOA MAN", 1500);
         return;
     }
-    int stt = 0;
-    int tabw = 91;
+
     int count_LTC = 0; // dem so lop tin chi thoa man
 
     for (int i = 1; i <= dsLTC.currentIndex; i++)
     {
-        if (lopTinChiTonTai(dsLTC.nodes[i]) && dsLTC.nodes[i]->group == nhom && strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0)
+        if (dsLTC.nodes[i] != NULL)
+        {
             count_LTC++;
+
+            gotoxy(x + 2, y + 2 + count_LTC);
+            std::cout << count_LTC;
+            gotoxy(x + 8, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->creditCode;
+            gotoxy(x + 18, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->courseCode;
+            gotoxy(x + 30, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->schoolYear;
+            gotoxy(x + 44, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->semester;
+            gotoxy(x + 54, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->group;
+            gotoxy(x + 62, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->studentMin;
+            gotoxy(x + 72, y + 2 + count_LTC);
+            std::cout << dsLTC.nodes[i]->studentMax;
+            gotoxy(x + 83, y + 2 + count_LTC);
+            std::cout << (dsLTC.nodes[i]->enable == false ? "Hoat dong" : "Da huy");
+        }
     }
 
     if (count_LTC > 0)
     {
-        drawBox((2 * x_origin + tabw - 22) / 2, 2, 22, 2);
-        gotoxy((2 * x_origin + tabw - 22) / 2 + 1, 3);
+        gotoxy(x + 39, y - 4);
         std::cout << "DANH SACH LOP TIN CHI";
-        gotoxy((2 * x_origin + tabw - 22) / 2, 5);
+        gotoxy(x + 36, y - 3);
         std::printf("  CO %d LOP TRONG DANH SACH", count_LTC);
-
-        showCreditClassList(x_origin, 7, tabw, count_LTC + 3);
-
-        for (int i = 1; i <= dsLTC.currentIndex; i++)
-        {
-            if (lopTinChiTonTai(dsLTC.nodes[i]) && dsLTC.nodes[i]->group == nhom && strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0)
-            {
-                stt++;
-                gotoxy(x_origin + 3, y_origin + stt + 5);
-                std::cout << stt;
-                gotoxy(x_origin + 10, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->creditCode;
-                gotoxy(x_origin + 19, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->courseCode;
-                gotoxy(x_origin + 30, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->schoolYear;
-                gotoxy(x_origin + 42, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->semester;
-                gotoxy(x_origin + 50, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->group;
-                gotoxy(x_origin + 60, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->studentMin;
-                gotoxy(x_origin + 70, y_origin + stt + 5);
-                std::cout << dsLTC.nodes[i]->studentMax;
-                gotoxy(x_origin + 79, y_origin + stt + 5);
-                std::cout << (dsLTC.nodes[i]->enable == false ? "Hoat dong" : "Da huy");
-            }
-        }
-    }
-    else
-    {
-        system("cls");
-        ShowMessage(10, 3, "KHONG CO LOP TIN CHI NAO THOA MAN", 1500);
-        return;
+        showCreditClassList(x, y, count_LTC);
     }
 }
 
-
-void xuatDanhSachLopTinChi_Console(int x_origin, int y_origin, LIST_LTC dsLTC)
+void xuatDanhSachMonHoc_Console(int x, int y, PTRMH Tree_monhoc)
 {
-    system("cls");
+    /*
+                                  DANH SACH MON HOC
+                            CO %d MON HOC TRONG DANH SACH
 
-    if (dsLTC.currentIndex == 0)
-    {
-        ShowMessage(50, 3, "KHONG CO LOP TIN CHI NAO", 1500);
-        return;
-    }
-
-    int stt = 0;
-    int tabw = 91;
-
-    drawBox((2 * x_origin + tabw - 22) / 2, y_origin, 22, 2);
-    gotoxy((2 * x_origin + tabw - 22) / 2 + 1, y_origin + 1);
-    std::cout << "DANH SACH LOP TIN CHI";
-
-    if (so_lop_hien_tai_LTC > 0)
-    {
-        gotoxy((2 * x_origin + tabw - 28) / 2, y_origin + 4);
-        std::printf("  CO %d LOP TRONG DANH SACH", so_lop_hien_tai_LTC);
-
-        showCreditClassList(x_origin, y_origin + 6, tabw, so_lop_hien_tai_LTC + 3);
-
-        for (int i = 1; i <= dsLTC.currentIndex; i++)
-        {
-            if (lopTinChiTonTai(dsLTC.nodes[i]))
-            {
-                stt++;
-                xuatThongTinLopTinChi_Console(x_origin, y_origin + 3, dsLTC.nodes[i], stt);
-            }
-        }
-    }
-    else
-    {
-        gotoxy((2 * x_origin + tabw - 28) / 2, y_origin + 3);
-        std::printf("DANH SACH TRONG");
-    }
-
-    // gotoxy(x_origin,  y_origin + stt + 12);
-    gotoxy(x_origin, wherey() + 2);
-}
-
-
-void xuatThongTinLopTinChi_Console(int x_origin, int y_origin, Credit *loptinchi, int stt)
-{
-
-    gotoxy(x_origin + 3, y_origin + stt + 5);
-    std::cout << stt;
-    gotoxy(x_origin + 10, y_origin + stt + 5);
-    std::cout << loptinchi->creditCode;
-    gotoxy(x_origin + 19, y_origin + stt + 5);
-    std::cout << loptinchi->courseCode;
-    gotoxy(x_origin + 30, y_origin + stt + 5);
-    std::cout << loptinchi->schoolYear;
-    gotoxy(x_origin + 42, y_origin + stt + 5);
-    std::cout << loptinchi->semester;
-    gotoxy(x_origin + 50, y_origin + stt + 5);
-    std::cout << loptinchi->group;
-    gotoxy(x_origin + 60, y_origin + stt + 5);
-    std::cout << loptinchi->studentMin;
-    gotoxy(x_origin + 70, y_origin + stt + 5);
-    std::cout << loptinchi->studentMax;
-    gotoxy(x_origin + 79, y_origin + stt + 5);
-    std::cout << (loptinchi->enable == false ? "Hoat dong" : "Da huy");
-}
-
-
-void xuatDanhSachMonHoc_Console(int x_origin, int y_origin, PTRMH Tree_monhoc)
-{
+        x         x1             x2                        x3        x4
+        +=========+==============+=========================+=========+========+
+        |   STT   |  MA MON HOC  |       TEN MON HOC       |  STCLT  |  STCTH |
+    y1  +=========+==============+=========================+=========+========+
+        |   4     |    MH1       |       Toan Lop 5        |    1    |    2   |
+        |   5     |    MH10      |       Toan Cao Cap      |    4    |    4   |
+        +=========+==============+=========================+=========+========+
+    */
 
     if (Tree_monhoc == NULL)
     {
-        ShowMessage(x_box_thong_bao, y_box_thong_bao, "DANH SACH MON HOC TRONG!", 1500);
+        // ShowMessage(x_box_thong_bao, y_box_thong_bao, "DANH SACH MON HOC TRONG!", 1500);
+        // thong bao
         return;
     }
 
-    int soLuongMonHoc = so_mon_hoc_DSMH; // so luong mon hoc
+    int soLuongMonHoc = 0;                // so luong mon hoc
+    count_MH(Tree_monhoc, soLuongMonHoc); // dem so luong mon hoc
     int tabw = 80;
-    int tabh = soLuongMonHoc + 3;
-    int stt = 0;
+    int count = 0;
 
-    gotoxy((2 * x_origin + tabw - 18) / 2, y_origin + 1);
-    std::printf("DANH SACH MON HOC");
-    gotoxy((2 * x_origin + tabw - 14) / 2, y_origin + 2);
-    std::printf("CO %d MON HOC", soLuongMonHoc);
+    gotoxy(x + 27, y - 4);
+    std::cout << "DANH SACH MON HOC";
+    gotoxy(x + 21, y - 3);
+    std::printf("CO %d MON HOC TRONG DANH SACH", soLuongMonHoc);
 
-    showCourceList(x_origin, y_origin + 4, tabw, tabh);
+    xuatDanhSachMonHoc_LNR_Console(Tree_monhoc, x, y, count);
 
-    xuatDanhSachMonHoc_LNR_Console(Tree_monhoc, x_origin, y_origin + 2, stt);
-
-    // gotoxy(x_origin, y_origin + tabh + 6);
-    gotoxy(x_origin, wherey() + 2);
+    showCourceListBox(x, y, count);
 }
 
-
-void xuatDanhSachMonHoc_LNR_Console(PTRMH Tree_monhoc, int x_origin, int y_origin, int &stt)
+void xuatThongTinMonHoc(int x, int y, int stt, Course monhoc)
 {
-    // ║   STT   ║  MA MON HOC  ║          TEN MON HOC          ║   STCLT   ║   STCTH  ║
-    if (Tree_monhoc != NULL)
-    {
-        xuatDanhSachMonHoc_LNR_Console(Tree_monhoc->pLeft, x_origin, y_origin, stt);
-
-        stt++;
-        xuatThongTinMonHoc(x_origin, y_origin, stt, Tree_monhoc->course);
-
-        xuatDanhSachMonHoc_LNR_Console(Tree_monhoc->pRight, x_origin, y_origin, stt);
-    }
-}
-
-
-void xuatThongTinMonHoc(int tabx, int taby, int stt, Course monhoc)
-{
-    gotoxy(tabx + 4, taby + stt + 4);
+    gotoxy(x + 4, y + 2 + stt);
     std::cout << stt;
-    gotoxy(tabx + 16, taby + stt + 4);
+    gotoxy(x + 15, y + 2 + stt);
     std::cout << monhoc.courceCode;
-    gotoxy(tabx + 33, taby + stt + 4);
+    gotoxy(x + 33, y + 2 + stt);
     std::cout << monhoc.courceName;
-    gotoxy(tabx + 63, taby + stt + 4);
+    gotoxy(x + 56, y + 2 + stt);
     std::cout << monhoc.STCLT;
-    gotoxy(tabx + 75, taby + stt + 4);
+    gotoxy(x + 66, y + 2 + stt);
     std::cout << monhoc.STCTH;
 }
 
-
-void xuatDanhSachSinhVien_Console(PTRSV FirstSV, int tabx, int taby)
+void xuatDanhSachMonHoc_LNR_Console(PTRMH Tree_monhoc, int x, int y, int &stt)
 {
-    system("cls");
-    if (FirstSV == NULL)
+    if (Tree_monhoc != NULL)
     {
-        ShowMessage(x_box_thong_bao, y_box_thong_bao, "DANH SACH SINH VIEN TRONG", 1500);
-        return;
+        xuatDanhSachMonHoc_LNR_Console(Tree_monhoc->pLeft, x, y, stt);
+
+        if (stt == 10)
+            return;
+        stt++;
+        xuatThongTinMonHoc(x, y, stt, Tree_monhoc->course);
+
+        xuatDanhSachMonHoc_LNR_Console(Tree_monhoc->pRight, x, y, stt);
     }
-
-    PTRSV p = FirstSV;
-    int soSV = Reccount_SV(FirstSV);
-    int tabw = 102;
-    int tabh = soSV + 3;
-    int stt = 0;
-
-    gotoxy((2 * tabx + tabw - 20) / 2, taby);
-    std::cout << "DANH SACH SINH VIEN";
-    gotoxy((2 * tabx + tabw - 32) / 2, taby + 1);
-    std::printf("CO %d SINH VIEN TRONG DANH SACH", soSV);
-
-    showStudentList(tabx, taby + 3, tabh);
-
-    while (p != NULL)
-    {
-        ++stt;
-        xuatThongTinSinhVien(tabx, taby + 1, p->student, stt);
-        p = p->next;
-    }
-    //  gotoxy(tabx, taby + stt + 7);
-    gotoxy(tabx, wherey() + 2);
 }
 
+// // chuc nang: xuat thong tin sinh vien dua vao ma sinh vien
+// void xuatThongTinSinhVien_MSSV_Console(PTRSV ptr_SV, int &stt, int tabx, int taby)
+// {
+//     int tabw = 102;
+//     int tabh = 4;
 
-// chuc nang: xuat thong tin sinh vien dua vao ma sinh vien
-void xuatThongTinSinhVien_MSSV_Console(PTRSV ptr_SV, int &stt, int tabx, int taby)
-{
-    int tabw = 102;
-    int tabh = 4;
+//     gotoxy((2 * tabx + tabw - 20) / 2, taby);
+//     std::cout << "THONG TIN SINH VIEN";
 
-    gotoxy((2 * tabx + tabw - 20) / 2, taby);
-    std::cout << "THONG TIN SINH VIEN";
+//     showStudentList(tabx, taby + 2, tabh);
 
-    showStudentList(tabx, taby + 2, tabh);
+//     gotoxy(tabx + 4, taby + stt + 4);
+//     std::cout << stt;
+//     gotoxy(tabx + 11, taby + stt + 4);
+//     std::cout << ptr_SV->student.studentID;
+//     gotoxy(tabx + 27, taby + stt + 4);
+//     std::cout << ptr_SV->student.firstName;
+//     gotoxy(tabx + 50, taby + stt + 4);
+//     std::cout << ptr_SV->student.name;
+//     gotoxy(tabx + 64, taby + stt + 4);
+//     std::cout << ptr_SV->student.sex;
+//     gotoxy(tabx + 73, taby + stt + 4);
+//     std::cout << ptr_SV->student.classID;
+//     gotoxy(tabx + 89, taby + stt + 4);
+//     std::cout << ptr_SV->student.phoneNum;
 
-    gotoxy(tabx + 4, taby + stt + 4);
-    std::cout << stt;
-    gotoxy(tabx + 11, taby + stt + 4);
-    std::cout << ptr_SV->student.studentID;
-    gotoxy(tabx + 27, taby + stt + 4);
-    std::cout << ptr_SV->student.firstName;
-    gotoxy(tabx + 50, taby + stt + 4);
-    std::cout << ptr_SV->student.name;
-    gotoxy(tabx + 64, taby + stt + 4);
-    std::cout << ptr_SV->student.sex;
-    gotoxy(tabx + 73, taby + stt + 4);
-    std::cout << ptr_SV->student.classID;
-    gotoxy(tabx + 89, taby + stt + 4);
-    std::cout << ptr_SV->student.phoneNum;
-
-    gotoxy(0, taby + stt + 2 + 4);
-}
-
-
-void xuatThongTinSinhVien(int tabx, int taby, Student sinhvien, int stt)
-{
-    gotoxy(tabx + 4, taby + stt + 4);
-    std::cout << stt;
-    gotoxy(tabx + 11, taby + stt + 4);
-    std::cout << sinhvien.studentID;
-    gotoxy(tabx + 26, taby + stt + 4);
-    std::cout << sinhvien.firstName;
-    gotoxy(tabx + 50, taby + stt + 4);
-    std::cout << sinhvien.name;
-    gotoxy(tabx + 64, taby + stt + 4);
-    std::cout << sinhvien.sex;
-    gotoxy(tabx + 73, taby + stt + 4);
-    std::cout << sinhvien.classID;
-    gotoxy(tabx + 89, taby + stt + 4);
-    std::cout << sinhvien.phoneNum;
-}
+//     gotoxy(0, taby + stt + 2 + 4);
+// }
 
 void xuatDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc)
 {
@@ -401,54 +363,61 @@ void xuatDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc)
     xoaDanhSachMonHoc(temp_tree);
 }
 
-void inBangDiemLopTinChi(PTRSV FirstSV, PTRMH Tree_monhoc, Credit *loptinchi)
-{ // case 10: cau j
+void inBangDiemMonHocLopTinChi(PTRSV FirstSV, PTRMH Tree_monhoc, Credit *loptinchi) // cau j
+{                                                                                   // case 10: cau j
+    /*
+                                    BANG DIEM MON HOC < Toan Lop 5 >
+                           Nien khoa: 2020       Hoc ky: 3          Nhom: 10
+
+        x         x1             x2                     x3                x4
+        +=========+==============+======================+=================+==================+
+        |   STT   |     MSSV     |          HO          |       TEN       |       DIEM       |
+     y1 +=========+==============+======================+=================+==================+
+        |   1     |  N20DCPT001  |  Tran Thi Uyen       |      Hau        |      10.00       |
+        |   10    |  N20DCPT090  |  Truong Thanh Thao   |      Uyen       |      0.00        |
+        +=========+==============+======================+=================+==================+
+    */
+
+    int x = 10;
+    int y = 10;
 
     PTRMH monhoc = timMonHocTheoMa(Tree_monhoc, loptinchi->courseCode);
     PTRDK ptrDK = loptinchi->firstListRegister;
     PTRSV ptrSV = NULL;
-    int soSV = Reccount_DSDK(ptrDK);
     int stt = 0;
-    int length_of_title = 22 + strlen(monhoc->course.courceName);
-    int tabw = 85;
-    int x_box = (128 - tabw) / 2;
-    int x_origin = 0;
-    int y_origin = 4;
 
     system("cls");
-    gotoxy((128 - length_of_title) / 2, y_origin);
+    gotoxy(x + 29, y - 4);
     std::cout << "BANG DIEM MON HOC < " << monhoc->course.courceName << " >";
-    gotoxy((128 - 48) / 2, y_origin + 1);
+    gotoxy(x + 20, y - 3);
     std::printf("Nien khoa: %-10s Hoc ky: %-10d Nhom: %-10d", loptinchi->schoolYear, loptinchi->semester, loptinchi->group);
-
-    drawScoreBoard(x_box, y_origin + 4, tabw, soSV + 3);
 
     while (ptrDK != NULL)
     {
         ptrSV = timSinhVien_DSSV(FirstSV, ptrDK->regis.studentID);
 
+        if (stt == 10)
+            break;
         stt++;
-        gotoxy(x_box + 5, y_origin + stt + 6);
+        gotoxy(x + 4, y + 2 + stt);
         std::cout << stt;
-        gotoxy(x_box + 13, y_origin + stt + 6);
+        gotoxy(x + 13, y + 2 + stt);
         std::cout << ptrDK->regis.studentID;
-        gotoxy(x_box + 28, y_origin + stt + 6);
+        gotoxy(x + 28, y + 2 + stt);
+        std::cout << ptrSV->student.lastName;
+        gotoxy(x + 55, y + 2 + stt);
         std::cout << ptrSV->student.firstName;
-        gotoxy(x_box + 55, y_origin + stt + 6);
-        std::cout << ptrSV->student.name;
-        gotoxy(x_box + 74, y_origin + stt + 6);
+        gotoxy(x + 73, y + 2 + stt);
         std::printf("%0.2f", ptrDK->regis.point);
 
         ptrDK = ptrDK->next;
     }
-    gotoxy(x_box, wherey() + 2);
-    system("pause");
+    drawScoreBoard(x, y, stt);
 }
 
-void inBangDiem(PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC)
-{ // case 10: cau j
-    char nienkhoa[maxLengthString] = "2020";
-    char maMH[maxLengthString] = "MH2";
+void inBangDiemLopTinChi(PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC) // cau j
+{                                                                          // case 10: cau j
+    char *nienkhoa = NULL, *maMH = NULL;
     int hocky = 3, nhom = 2;
     Credit *loptinchi = NULL;
 
@@ -459,16 +428,19 @@ void inBangDiem(PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC)
 
         if (input_UI(44, 4, 40, "NHAP THONG TIN LOP TIN CHI CAN XET", 4, cau_2, content, 8, "XAC NHAN XONG") == 1)
         {
-            ConvertStringToChar(content[0], nienkhoa);
+            nienkhoa = ConvertStringToChar(content[0]);
             hocky = stringTo_Int(content[1]);
             nhom = stringTo_Int(content[2]);
-            ConvertStringToChar(content[3], maMH);
+            maMH = ConvertStringToChar(content[3]);
+
+            delete[] nienkhoa;
+            delete[] maMH;
 
             loptinchi = timLopTinChi_theoInfo(dsLTC, nienkhoa, hocky, nhom, maMH);
 
             if (loptinchi != NULL)
             {
-                inBangDiemLopTinChi(FirstSV, Tree_monhoc, loptinchi);
+                inBangDiemMonHocLopTinChi(loptinchi, FirstSV, Tree_monhoc);
                 continue;
             }
 
@@ -486,206 +458,116 @@ void inBangDiem(PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC)
     return;
 }
 
-
-void inBangDiemTongKet(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, char maLopHoc[ClassID_Length])
+void inBangDiemTBKhoaHoc(int x, int y, char *maLH, PTRSV FirstSV, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC)
 {
-    // MAX_SV la:  so sinh vien lon nhat co the co trong 1 lop ( vi du: lop D20CQPT01-n);
-    // khac voi ma lop tin chi
-    int MAX_SV = Reccount_SV(FirstSV);
-    int soSV = 0;
-    int soMH = 0;  // so mon hoc
-    int step = 10; // do rong cua cot diem
+    /*
+                                BANG THONG KE DIEM TRUNG BINH KHOA HOC
+                                        Lop:     <ma lop hoc>
+        x         x1             x2                     x3                x4
+        +=========+==============+======================+=================+============+
+        |   STT   |     MSSV     |          HO          |       TEN       |   DIEM TB  |
+    y1  +=========+==============+======================+=================+============+
+        |         |              |                      |                 |            |
+        |         |              |                      |                 |            |
+        +=========+==============+======================+=================+============+
+    */
+    PTRDK ptrDK = NULL;
+    PTRMH ptrMH = NULL;
+    char *mssv = NULL;
+    PTRSV nodeSV = NULL;
+    int stt = 0;
+    float totalScore = 0;
+    int totalCredit = 0;
+    std::vector<int> splitDsLTC;
 
-    char temp_maMH[MAXMONHOC] = {""}; // danh sach
-    PTRSV dssv[MAX_SV + 1];           // danh sach
-
-    PTRDK ptrDK = NULL;           // dung de tim kiem
-    Credit *ptr_loptinchi = NULL; // dung de tim kiem
-
-    std::string maMH[MAXMONHOC];
-    int index = 0;
-
-    // PHAN XU LY DU LIEU
-
-    layDanhSachSinhVienCungLop(FirstSV, dssv, maLopHoc, soSV); // nap danh sach sinh vien
-    if (soSV == 0)
+    for (auto &it : anhXaMSSV_dsLTC)
     {
-        system("cls");
-        ShowMessage(x_box_thong_bao, y_box_thong_bao, "LOP HOC KHONG CO SINH VIEN", 1500);
-        return;
-    }
+        mssv = it.first;
+        totalScore = 0;
+        totalCredit = 0;
 
-    // reset index = 0;
-    index = 0;
-    layDanhSachMaMonHoc(Tree_monhoc, maMH, index); // nap danh sach ma mon hoc
-    soMH = index;
+        nodeSV = timSinhVien_DSSV(FirstSV, mssv);
 
-    // PHAN outPUT
+        if (strcmp(nodeSV->student.classID, maLH) != 0)
+            return;
 
-    gotoxy(x_origin, y_origin - 2);
-    std::cout << "Chu thich: NONE -> mon hoc chua co lop tin chi";
-    gotoxy(x_origin, y_origin - 1);
-    std::cout << "           .... -> chua co diem do chua dang ky lop tin chi";
-    vebangtongketdiem(x_origin, y_origin, step, soSV, soMH, maMH);
+        splitDsLTC = customSplit(it.second, ',');
+        stt++;
 
-    for (int i = 1; i <= soSV; i++)
-    {
-        // IN THONG TIN SINH VIEN
-        gotoxy(x_origin + 5, y_origin + i + 2);
-        std::cout << i;
-        gotoxy(x_origin + 13, y_origin + i + 2);
-        std::cout << dssv[i]->sv.MASV;
-        gotoxy(x_origin + 28, y_origin + i + 2);
-        std::cout << dssv[i]->sv.HO;
-        gotoxy(x_origin + 55, y_origin + i + 2);
-        std::cout << dssv[i]->sv.TEN;
-
-        // IN DIEM
-
-        for (int j = 1; j <= soMH; j++)
+        for (int i = 0; i < splitDsLTC.size(); i++)
         {
-            ConvertStringToChar(maMH[j], temp_maMH);
-            ptr_loptinchi = timLopTinChi_theoMAMH(dsLTC, temp_maMH);
-
-            if (ptr_loptinchi != NULL)
+            ptrDK = timSinhVien_DSSVDK(dsLTC.nodes[splitDsLTC[i]]->firstListRegister, mssv);
+            if (ptrDK != NULL)
             {
-                ptrDK = timSinhVien_DSSVDK(ptr_loptinchi->firstListRegister, dssv[i]->sv.MASV);
+                ptrMH = timMonHocTheoMa(treeMH, dsLTC.nodes[splitDsLTC[i]]->courseCode);
+                totalScore += ptrDK->regis.point * (ptrMH->course.STCLT + ptrMH->course.STCTH);
+                totalCredit += ptrMH->course.STCLT + ptrMH->course.STCTH;
 
-                if (ptrDK != NULL)
-                {
-                    gotoxy(x_origin + 66 + j * step - 6, y_origin + i + 2);
-                    std::printf("%0.2f", ptrDK->regis.point);
-                }
-                else
-                {
-                    gotoxy(x_origin + 66 + j * step - 6, y_origin + i + 2);
-                    std::printf("....");
-                }
-            }
-
-            else
-            {
-                gotoxy(x_origin + 66 + j * step - 6, y_origin + i + 2);
-                std::printf("NONE");
+                gotoxy(x + 4, y + 2 + stt);
+                std::cout << stt;
+                gotoxy(x + 12, y + 2 + stt);
+                std::cout << mssv;
+                gotoxy(x + 28, y + 2 + stt);
+                std::cout << nodeSV->student.lastName;
+                gotoxy(x + 53, y + 2 + stt);
+                std::cout << nodeSV->student.firstName;
+                gotoxy(x + 68, y + 2 + stt);
+                std::cout << round(totalScore / totalCredit * 100) / 100; // round(totalScore/totalCredit, 2 decimal places)
             }
         }
     }
-    //  gotoxy(0, y_origin + soSV + 5);
-    gotoxy(0, wherey() + 2);
-    system("pause");
 }
 
-
-void inBangDiemTBKhoaHoc(int x_origin, int y_origin, PTRSV FirstSV, PTRMH Tree_monhoc, LIST_LTC dsLTC)
+void inBangDiemTongKet(int x, int y, char *maLH, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC)
 {
-    PTRDK ptrDK = NULL;
-    PTRSV ptrSV = NULL;
-    PTRMH ptrMH = NULL;
-    StudentListNode DSSV[so_sinh_vien_DSSV + 1];
+    /*
+        <-------------------left_side--------------------->
+        x          x1           x2                        x3        <--Step--->
+      y +=========+============+==========================+=========+=========+=========+
+        |   STT   |    MSSV    |          HO TEN          |   MH    |   MH2   |   MH3   |
+        +=========+============+==========================+=========+=========+=========+
+        |         |            |                          |         |         |         |
+        |         |            |                          |         |         |         |
+        +=========+============+==========================+=========+=========+=========+
+                                                          index = 0  idx = 1   idx = 2
+    */
+    int x1 = x + 10;
+    int x2 = x1 + 13;
+    int x3 = x2 + 27;
+    int step = 10;
 
     int stt = 0;
-    int crt_index = -1; // chi so mang hien tai
-    int index = 0;
-    char maLopHoc[ClassID_Length] = {""};
-    char nienkhoa[SchoolYear_Length] = "2020";
-    int soSV = 0;
 
-    int tabw = 85;
-    int x_box = (128 - tabw) / 2;
+    int indexMaMH = 0; // vi tri phan tu maMH trong dsMaMH
+    PTRDK nodeDK = NULL;
+    Credit *loptinchi = NULL;
+    PTRSV p = FirstSV;
+    std::vector<char *> dsMaMH = getListCourceCode(treeMH);
+    std::vector<int> splitDsLTC;
 
-    while (true)
+    while (p != NULL)
     {
+        if (strcmp(p->student.classID, maLH) != 0)
+            return;
 
-        crt_index = -1;
-        soSV = 0;
+        stt++;
+        gotoxy(x + 4, y + 2 + stt);
+        std::cout << stt;
+        gotoxy(x + 12, y + 2 + stt);
+        std::cout << p->student.studentID;
+        gotoxy(x + 24, y + 2 + stt);
+        std::cout << p->student.lastName << " " << p->student.firstName;
 
-        system("cls");
-        gotoxy(45, y_origin);
-        std::cout << "BANG THONG KE DIEM TRUNG BINH KHOA HOC";
-
-        std::string content[2] = {""};
-
-        if (input_UI(44, y_origin + 2, 45, "NHAP THONG TIN LOP HOC CAN XET", 2, nhap_MALH_NIENKHOA, content, 20, "XAC NHAN XONG") == 1)
+        auto it = anhXaMSSV_dsLTC.find(p->student.studentID);
+        splitDsLTC = customSplit(it->second, ',');
+        for (int i = 0; i <= splitDsLTC.size(); i++)
         {
-            ConvertStringToChar(content[0], maLopHoc);
-            ConvertStringToChar(content[1], nienkhoa);
+            loptinchi = dsLTC.nodes[splitDsLTC[i]];
+            nodeDK = timSinhVien_DSSVDK(loptinchi->firstListRegister, p->student.studentID);
+            indexMaMH = std::find(dsMaMH.begin(), dsMaMH.end(), loptinchi->courseCode) - dsMaMH.begin();
 
-            for (int i = 1; i <= dsLTC.currentIndex; i++)
-            {
-                if (lopTinChiTonTai(dsLTC.nodes[i]) == true && dsLTC.nodes[i]->enable == false && strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0)
-                {
-                    ptrDK = dsLTC.nodes[i]->firstListRegister;
-                    ptrMH = timMonHocTheoMa(Tree_monhoc, dsLTC.nodes[i]->courseCode);
-
-                    while (ptrDK != NULL)
-                    {
-                        ptrSV = timSinhVien_DSSV(FirstSV, ptrDK->regis.studentID);
-
-                        if (strcmp(ptrSV->student.classID, maLopHoc) == 0)
-                        {
-
-                            index = timSinhVien_nodeDSSV(DSSV, crt_index, ptrSV);
-
-                            if (index == -1)
-                            { // khong tim thay
-                                ++crt_index;
-                                soSV++;
-                                DSSV[crt_index].ptrSV = ptrSV;
-                                DSSV[crt_index].tong_diem = ptrDK->regis.point * (ptrMH->course.STCLT + ptrMH->course.STCTH);
-                                DSSV[crt_index].creditSum = ptrMH->course.STCLT + ptrMH->course.STCTH;
-                            }
-
-                            else
-                            {
-                                DSSV[index].tong_diem += ptrDK->regis.point * (ptrMH->course.STCLT + ptrMH->course.STCTH);
-                                DSSV[index].creditSum += ptrMH->course.STCLT + ptrMH->course.STCTH;
-                            }
-                        }
-
-                        ptrDK = ptrDK->next;
-                    }
-                }
-            }
-
-            // sap xep lai danh sach
-            sapXep_nodeDSSV_SelectionSort(DSSV, crt_index);
-
-            if (soSV == 0)
-            {
-                system("cls");
-                ShowMessage(x_box_thong_bao, y_box_thong_bao, "KHONG CO SINH VIEN THOA MAN", 1500);
-                continue;
-            }
-
-            system("cls");
-            gotoxy(45, y_origin);
-            std::cout << "BANG THONG KE DIEM TRUNG BINH KHOA HOC";
-            gotoxy(54, y_origin + 1);
-            std::cout << "Ma lop: " << maLopHoc;
-
-            veBangInDiemTB(x_box, y_origin + 3, tabw, soSV + 3);
-
-            stt = 0; // reset stt
-            for (int i = 0; i <= crt_index; i++)
-            {
-                stt++;
-
-                gotoxy(x_box + 5, y_origin + stt + 5);
-                std::cout << stt;
-                gotoxy(x_box + 13, y_origin + stt + 5);
-                std::cout << DSSV[i].ptrSV->sv.MASV;
-                gotoxy(x_box + 28, y_origin + stt + 5);
-                std::cout << DSSV[i].ptrSV->sv.HO;
-                gotoxy(x_box + 55, y_origin + stt + 5);
-                std::cout << DSSV[i].ptrSV->sv.TEN;
-                gotoxy(x_box + 74, y_origin + stt + 5);
-                std::printf("%0.2f", DSSV[i].tong_diem / DSSV[i].creditSum);
-            }
-            gotoxy(x_box, wherey() + 2);
-            system("pause");
+            gotoxy(x3 + step * (indexMaMH + 1) - 8, y + 2 + stt);
+            std::cout << round(nodeDK->regis.point * 100) / 100;
         }
-
-        else
-            break;
     }
 }

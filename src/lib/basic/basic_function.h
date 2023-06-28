@@ -6,6 +6,7 @@
 #include <direct.h>
 #include <algorithm>
 #include <math.h>
+#include <vector>
 #include <string.h>
 #include "../struct.h" // cac caaus truc du lieu
 #include "../view/console_function.h"
@@ -30,6 +31,8 @@ status GetKey(int z);
 int CompareSourseCode(char *a, char *b);
 char *ConvertStringToChar(std::string a);
 std::string convertCharToString(char *a);
+std::vector<int> customSplit(std::string a, char delim);
+char *convertIntToChar(int a);
 char *loaiBoDauXuongDong(char *a);
 std::string DeleteCharacter(std::string text, int index);
 char ToLower(char a);
@@ -116,6 +119,29 @@ std::string convertCharToString(char *a)
 		b.push_back(a[i]);
 
 	return b;
+}
+
+std::vector<int> customSplit(std::string a, char delim) {
+	std::vector<int> res;
+	std::string temp = "";
+	for (int i = 0; i < a.size(); i++) {
+		if (a[i] == delim) {
+			res.push_back(stringTo_Int(temp));
+			temp = "";
+		}
+		else {
+			temp.push_back(a[i]);
+		}
+	}
+	res.push_back(stringTo_Int(temp));
+	return res;
+}
+
+char *convertIntToChar(int a)
+{
+	std::string b = std::to_string(a);
+	char *c = ConvertStringToChar(b);
+	return c;
 }
 char *loaiBoDauXuongDong(char *a)
 {

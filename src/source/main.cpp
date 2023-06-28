@@ -1,6 +1,6 @@
 #include <iostream>
 #include "menu.h"
-
+//xuatDanhSachSinhVienDK_LTC
 bool LOAD_FILE_ERROR = false; // looix load file
 const int SLEEP_TIME = 400;
 

@@ -26,8 +26,8 @@ typedef CourseNode *PTRMH; // mon hoc
 struct Student
 {
     char studentID[Student_ID_Length]; // ma sinh vien
-    char firstName[First_Name_Length]; // ho sinh vien
-    char name[Ten_Length];             // ten sinh vien
+    char lastName[First_Name_Length]; // ho sinh vien
+    char firstName[Ten_Length];             // ten sinh vien
     char sex[SEX_Length];              // gioi tinh
     char phoneNum[PhoneNum_Length];    // so dien thoai
     char classID[ClassID_Length];      // ma lop hoc

@@ -24,10 +24,10 @@ void sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(PTRSV &FirstSV)
 
         for (q = p->next; q != NULL; q = q->next)
         {
-            if (strcmp(q->student.name, pmin->student.name) < 0)
+            if (strcmp(q->student.firstName, pmin->student.firstName) < 0)
                 pmin = q;
 
-            else if (strcmp(q->student.name, pmin->student.name) == 0 && strcmp(q->student.firstName, pmin->student.firstName) < 0)
+            else if (strcmp(q->student.firstName, pmin->student.firstName) == 0 && strcmp(q->student.lastName, pmin->student.lastName) < 0)
                 pmin = q;
         }
         // hoan doi

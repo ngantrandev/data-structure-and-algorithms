@@ -296,7 +296,7 @@ int Nhap_Diem_UI(int x_origin, int y_origin, Credit *loptinchi, PTRSV FirstSV, s
     } // end while
 }
 
-int input_UI(int x_originMenu, int y_originMenu, int width, std::string title, int amount_of_selection, char menu_selection[10][100], std::string content[100], int ma_nhom_du_lieu, std::string report_notification)
+int input_UI(int x_originMenu, int y_originMenu, int width, std::string title, int amount_of_selection, char menu_selection[10][100], std::string *content, int ma_nhom_du_lieu, std::string report_notification)
 {
     int error_code = 0;
     int pos = 0;
