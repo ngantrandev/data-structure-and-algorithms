@@ -104,8 +104,6 @@ LIST_LTC loadStudentCreditClassList(char *File_Name)
     }
 }
 
-
-
 int main()
 {
 
