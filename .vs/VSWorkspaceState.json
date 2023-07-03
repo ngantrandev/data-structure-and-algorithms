@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\lib",
+    "\\src\\lib\\view",
+    "\\src\\lib\\view\\input",
+    "\\src\\lib\\view\\show"
+  ],
+  "SelectedNode": "\\src\\lib\\view\\drawBoard.h",
+  "PreviewInSolutionExplorer": false
+}

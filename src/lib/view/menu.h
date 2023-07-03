@@ -1,21 +1,38 @@
 #pragma once
 #include <iostream>
 #include <conio.h>
-#include "./UI_function.h"
+#include "./drawBoard.h"
 #include "../basic/basic_function.h"
 
 // path: lib\basic\menu.h
 
-int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &pos)
+int menu(int x, int y, std::string *menuName, int size, int &pos)
 {
+	/*
+		+===========================================+
+		| 1    Cap nhat lop tin chi                 |
+		| 2    In danh sach sinh vien lop tin chi   |
+		| 3    Cap nhat sinh vien lop hoc           |
+		| 4    In danh sach sinh vien lop hoc       |
+		| 5    Cap nhat danh sach mon hoc           |
+		+===========================================+
+	*/
+
+	int w = menuName[0].length() + 8;
+
+	drawBox(x, y, w, size + 2);
+	SetColor("WHITE");
+	gotoxy(x, y + 3 + size);
+	std::string description = "[SELECT:ENTER]     [EXIT:ESC]     [UP: UP ARROW]     [DOWN: DOWN ARROW]";
+	std::printf(description.c_str());
+
 	while (true)
 	{
 		SetColor(23); // white
-		drawBox(x, y, w, size + 1);
 
 		for (int i = 0; i < size; i++)
 		{
-			gotoxy(x + 1, y + i + 1);
+			gotoxy(x + 2, y + i + 1);
 
 			if (i == pos)
 			{
@@ -34,43 +51,37 @@ int menu(int x, int y, int w, std::string *menuName, int size, int &out, int &po
 					std::cout << i + 1 << "    " << menuName[i] << std::endl;
 
 				else
-					std::cout << i + 1 << "    " << menuName[i] << std::endl;
+					std::cout << i + 1 << "   " << menuName[i] << std::endl;
 			}
 		}
 
-		SetColor(23);
-		// gotoxy((2 * x + w - 62) / 2 + 4, y + size + 5);
-		// std::printf("[SELECT:ENTER]     [EXIT:ESC]     [UP: UP ARROW]     [DOWN: DOWN ARROW]");
-
 		int key_hit = getch();
-		status stt = GetKey(key_hit);
-		switch (stt)
-		{
-		case UP:
-		LEFT:
+		std::string keyType = getKeyType(key_hit);
+
+		if (keyType == "UP" || keyType == "LEFT")
 		{
 			(pos == 0) ? pos = size - 1 : pos--;
-			gotoxy(1, 1);
-			std::cout << pos;
-			break;
-		};
-		case DOWN:
-		RIGHT:
+		}
+		else if (keyType == "DOWN" || keyType == "RIGHT")
 		{
 			(pos == size - 1) ? pos = 0 : pos++;
-			gotoxy(1, 1);
-			std::cout << pos;
-			break;
 		}
-		case ENTER:
-			return pos + 1;
-		case EXIT:
+		else if (keyType == "ENTER")
 		{
-			out = 1;
-			return pos = 0;
+			clearScreen(x, y, w > description.length() ? w : description.length(), y + 3 + size);
+			SetColor("WHITE");
+			return 0;
 		}
+		else if (keyType == "EXIT")
+		{
+			if (XacNhan(x, y + 5 + size, "BAN CO CHAC MUON THOAT?") == "YES")
+			{
+				clearScreen(x, y, w > description.length() ? w : description.length(), y + 3 + size);
+				SetColor("WHITE");
+				return 1;
+			}
 		}
-	} // end while
+	}
 
-	return 0;
+	return 1;
 }

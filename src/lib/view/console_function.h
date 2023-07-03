@@ -61,6 +61,60 @@ void SetColor(WORD color)
 
     SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
+
+void SetColor(std::string colorName)
+{
+    /*
+        0	BLACK
+        1	BLUE
+        2	GREEN
+        3	AQUA
+        4	RED
+        5	PURPLE
+        6	YELLOW
+        7	WHITE
+        8	GRAY
+        9	LIGHT BLUE
+        10 ( A )	LIGHT GREEN
+        11 ( B )	LIGHT AQUA
+        12 ( C )	LIGHT RED
+        13 ( D )	LIGHT PURPLE
+        14 ( E )	LIGHT YELLOW
+        15 ( F )	BRIGHT WHITE
+    */
+
+    WORD color = 0;
+
+    if(colorName == "BLACK") color = 0;
+    else if(colorName == "BLUE") color = 1;
+    else if(colorName == "GREEN") color = 2;
+    else if(colorName == "AQUA") color = 3;
+    else if(colorName == "RED") color = 4;
+    else if(colorName == "PURPLE") color = 5;
+    else if(colorName == "YELLOW") color = 6;
+    else if(colorName == "WHITE") color = 7;
+    else if(colorName == "GRAY") color = 8;
+    else if(colorName == "LIGHT BLUE") color = 9;
+    else if(colorName == "LIGHT GREEN") color = 10;
+    else if(colorName == "LIGHT AQUA") color = 11;
+    else if(colorName == "LIGHT RED") color = 12;
+    else if(colorName == "LIGHT PURPLE") color = 13;
+    else if(colorName == "LIGHT YELLOW") color = 14;
+    else if(colorName == "BRIGHT WHITE") color = 15;
+
+    HANDLE hConsoleOutput;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+    GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
+
+    WORD wAttributes = screen_buffer_info.wAttributes;
+    color &= 0x000f;
+    wAttributes &= 0xfff0;
+    wAttributes |= color;
+
+    SetConsoleTextAttribute(hConsoleOutput, wAttributes);
+}
 void SetBGColor(WORD color)
 {
     HANDLE hConsoleOutput;

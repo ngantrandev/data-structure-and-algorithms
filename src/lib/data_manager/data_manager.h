@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <iostream>
 #include <algorithm>
-#include "../algorithms/my_search.h"
+#include <fstream>
+#include "../algorithms/algorithms.h"
 #include "../struct.h"
 #include "../basic/basic_function.h"
-#include "../algorithms/count_node.h"
 
 // HAM LOAD DU LIEU TU FILE
 Course loadCourseInfo(FILE *filein);
@@ -178,88 +179,88 @@ PTRLH loadClassList(char *File_Name)
     return firstCourseList;
 }
 
-// PTRDK loadRegisStudentList(FILE *filein)
-// {
-//     PTRDK firstRegisStudent = NULL;
-//     char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
-//     int soSVDK = 0;
-//     Registration dangky;
+PTRDK loadRegisStudentList(FILE *filein)
+{
+    PTRDK firstRegisStudent = NULL;
+    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
+    int soSVDK = 0;
+    Registration dangky;
 
-//     fgets(temp_line, maxLengthString, filein);
-//     sscanf(temp_line, "%d", &soSVDK);
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &soSVDK);
 
-//     for (int i = 1; i <= soSVDK; i++)
-//     {
-//         fgets(dangky.studentID, maxLengthString, filein);
+    for (int i = 1; i <= soSVDK; i++)
+    {
+        fgets(dangky.studentID, maxLengthString, filein);
 
-//         fgets(temp_line, maxLengthString, filein); // nhap dong chua DIEM
-//         sscanf(temp_line, "%f", &dangky.point);
+        fgets(temp_line, maxLengthString, filein); // nhap dong chua DIEM
+        sscanf(temp_line, "%f", &dangky.point);
 
-//         fgets(temp_line, maxLengthString, filein); // nhap dong chua bien TRUE/FALSE ( ma hoa owr dang 0 / 1);
-//         sscanf(temp_line, "%d", &dangky.isRegistered);
+        fgets(temp_line, maxLengthString, filein); // nhap dong chua bien TRUE/FALSE ( ma hoa owr dang 0 / 1);
+        sscanf(temp_line, "%d", &dangky.isRegistered);
 
-//         loaiBoDauXuongDong(dangky.studentID);
+        loaiBoDauXuongDong(dangky.studentID);
 
-//         addStudentToRegisList(firstRegisStudent, dangky);
-//     }
+        addStudentToRegisList(firstRegisStudent, dangky);
+    }
 
-//     return firstRegisStudent;
-// }
+    return firstRegisStudent;
+}
 
-// Credit *loadCreditClassInfo(FILE *filein)
-// {
-//     Credit *creditClass = new Credit;
-//     char temp_line[maxLengthString];
+Credit *loadCreditClassInfo(FILE *filein)
+{
+    Credit *creditClass = new Credit;
+    char temp_line[maxLengthString];
 
-//     fgets(temp_line, maxLengthString, filein);
-//     sscanf(temp_line, "%d", &creditClass->creditCode);
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &creditClass->creditCode);
 
-//     fgets(creditClass->courseCode, maxLengthString, filein);
-//     fgets(creditClass->schoolYear, maxLengthString, filein);
-//     loaiBoDauXuongDong(creditClass->courseCode);
-//     loaiBoDauXuongDong(creditClass->schoolYear);
+    fgets(creditClass->courseCode, maxLengthString, filein);
+    fgets(creditClass->schoolYear, maxLengthString, filein);
+    loaiBoDauXuongDong(creditClass->courseCode);
+    loaiBoDauXuongDong(creditClass->schoolYear);
 
-//     fgets(temp_line, maxLengthString, filein);
-//     sscanf(temp_line, "%d %d %d %d", &creditClass->semester, &creditClass->group, &creditClass->studentMin, &creditClass->studentMax);
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d %d %d %d", &creditClass->semester, &creditClass->group, &creditClass->studentMin, &creditClass->studentMax);
 
-//     fgets(temp_line, maxLengthString, filein);
-//     sscanf(temp_line, "%d", &creditClass->enable);
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &creditClass->enable);
 
-//     creditClass->firstListRegister = loadRegisStudentList(filein);
-//     return creditClass;
-// }
-// // Chuc nang: nhap danh sach lop tin chi tu file vao chuong trinh
-// LIST_LTC loadStudentCreditClassList(char *File_Name)
-// {
-//     FILE *filein = fopen(File_Name, "r");
-//     LIST_LTC creditClassList;
+    creditClass->firstListRegister = loadRegisStudentList(filein);
+    return creditClass;
+}
+// Chuc nang: nhap danh sach lop tin chi tu file vao chuong trinh
+LIST_LTC loadStudentCreditClassList(char *File_Name)
+{
+    FILE *filein = fopen(File_Name, "r");
+    LIST_LTC creditClassList;
 
-//     if (filein != NULL)
-//     {
-//         char temp_line[maxLengthString];
-//         int index = 0;
-//         int size = 0;
+    if (filein != NULL)
+    {
+        char temp_line[maxLengthString];
+        int index = 0;
+        int size = 0;
 
-//         fgets(temp_line, maxLengthString, filein);
-//         sscanf(temp_line, "%d %d", &size, &creditClassList.currentIndex);
+        fgets(temp_line, maxLengthString, filein);
+        sscanf(temp_line, "%d %d", &size, &creditClassList.currentIndex);
 
-//         for (int i = 1; i <= size; i++)
-//         {
-//             Credit *loptinchi = NULL; // cap phat bo nho cho node moi
-//             loptinchi = loadCreditClassInfo(filein);
-//             index = loptinchi->creditCode; // index store credit code
-//             creditClassList.nodes[index] = loptinchi;
-//         }
+        for (int i = 1; i <= size; i++)
+        {
+            Credit *loptinchi = NULL; // cap phat bo nho cho node moi
+            loptinchi = loadCreditClassInfo(filein);
+            index = loptinchi->creditCode; // index store credit code
+            creditClassList.nodes[index] = loptinchi;
+        }
 
-//         return creditClassList;
-//     }
-//     else
-//     {
+        return creditClassList;
+    }
+    else
+    {
 
-//         std::cout << "Mo file danh sach lop tin chi that bai\n";
-//         return creditClassList;
-//     }
-// }
+        std::cout << "Mo file danh sach lop tin chi that bai\n";
+        return creditClassList;
+    }
+}
 
 // SAVE DATA
 void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString])
@@ -303,7 +304,6 @@ void xuatDanhSachMonHoc_LNR_File_Txt(PTRMH treeMH, FILE *fileout)
 {
     if (treeMH != NULL)
     {
-
         xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pLeft, fileout);
 
         fputs("\n", fileout);
@@ -316,6 +316,7 @@ void xuatDanhSachMonHoc_LNR_File_Txt(PTRMH treeMH, FILE *fileout)
         xuatDanhSachMonHoc_LNR_File_Txt(treeMH->pRight, fileout);
     }
 }
+
 void xuatDanhSachMonHoc_File_Txt(PTRMH treeMH, char File_Name[50])
 {
     FILE *fileout = NULL;
@@ -353,6 +354,7 @@ void xuatDanhSachSVDK_File_Txt(PTRDK First_DSSVDK, FILE *fileout)
         p = p->next;
     }
 }
+
 void xuatThongTinLopTinChi_File_Txt(Credit *loptinchi, FILE *fileout)
 {
     fprintf(fileout, "%d", loptinchi->creditCode);
@@ -368,6 +370,7 @@ void xuatThongTinLopTinChi_File_Txt(Credit *loptinchi, FILE *fileout)
 
     xuatDanhSachSVDK_File_Txt(loptinchi->firstListRegister, fileout);
 }
+
 void xuatDanhSachLopTinChi_File_Txt(LIST_LTC dsLTC, char File_Name[maxLengthString])
 {
     FILE *fileout = fopen(File_Name, "w");
@@ -432,6 +435,7 @@ void xuatDanhSachSinhVien_File_Csv(PTRSV FirstSv, char File_Name[maxLengthString
 
     fclose(fileout);
 }
+
 void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH treeMH, FILE *fileout)
 {
     if (treeMH != NULL)
@@ -448,6 +452,7 @@ void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH treeMH, FILE *fileout)
         xuatDanhSachMonHoc_LNR_File_Csv(treeMH->pRight, fileout);
     }
 }
+
 void xuatDanhSachMonHoc_File_Csv(PTRMH treeMH, char File_Name[50])
 {
     FILE *fileout = NULL;
@@ -478,7 +483,7 @@ void saveMapMaLTC_MaMH(std::map<int, char *> anhXaLTC_MH, char *filename)
         return;
     }
 
-    fputs(convertIntToChar(anhXaLTC_MH.size()), fileout);
+    fprintf(fileout, "%d", anhXaLTC_MH.size());
 
     for (auto it = anhXaLTC_MH.begin(); it != anhXaLTC_MH.end(); it++)
     {
@@ -495,11 +500,11 @@ void saveMapMSSV_dsLTC(std::map<char *, std::string> anhXaMSSV_dsLTC, char *file
         std::cout << "Mo file MappingMSSV_dsLTC that bai\n";
         return;
     }
-    fputs(convertIntToChar(anhXaMSSV_dsLTC.size()), fileout);
+    fprintf(fileout, "\n%d", anhXaMSSV_dsLTC.size());
 
     for (auto it = anhXaMSSV_dsLTC.begin(); it != anhXaMSSV_dsLTC.end(); it++)
     {
-        fprintf(fileout, "\n%s %s", it->first, ConvertStringToChar(it->second));
+        fprintf(fileout, "\n%s %s", it->first, it->second);
     }
 }
 
@@ -833,7 +838,7 @@ void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map
         // std::cout<<"CHeck trung lap"<<it->first << " " << it->second << std::endl;
         // ds lop tin chi cua sinh vien dang xet
         std::string dsLTC = it->second;
-        if (dsLTC.find(convertIntToChar(loptinchi->creditCode)))
+        if (dsLTC.find(std::to_string(loptinchi->creditCode)))
             return;
 
         // kiem tra xem dsLTC cua sinh vien co chua ma lop tin chi cua mon hoc dang xet khong

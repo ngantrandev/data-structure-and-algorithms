@@ -1,13 +1,7 @@
 #include <iostream>
 #include <map>
-// #include "./src/lib/view/menu.h"
-#include "src/lib/struct.h"
-#include "src/lib/view/menu.h"
-#include "./src/lib/view/UI_function.h"
-#include "src/lib/data_manager/data_manager.h"
-#include "src/lib/algorithms/my_sort.h"
-#include "src/lib/algorithms/my_delete.h"
-#include <typeinfo>
+
+#include "src/lib/view/my_show.h"
 
 std::map<int, char *> anhXaLTC_MH;
 std::map<char *, std::string> anhXaMSSV_dsLTC;
@@ -15,133 +9,101 @@ PTRSV firstSV;
 PTRMH treeMH;
 LIST_LTC dsLTC;
 
-PTRDK loadRegisStudentList(FILE *filein, Credit *loptinchi)
+void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK, int maxSize)
 {
-    PTRDK firstRegisStudent = NULL;
-    char temp_line[maxLengthString]; // chuaws chuoi nhap tu file ddeer xu ly
-    int soSVDK = 0;
-    Registration dangky;
+    /*
+        x         x1             x2                     x3                x4
+        +=========+==============+======================+=================+==================+
+        |   STT   |     MSSV     |          HO          |       TEN       |       DIEM       |
+     y1 +=========+==============+======================+=================+==================+
+        |   1     |  N20DCPT001  |  Tran Thi Uyen       |      Hau        |      ____        |
+        |   10    |  N20DCPT090  |  Truong Thanh Thao   |      Uyen       |      ____        |
+        +=========+==============+======================+=================+==================+
+    */
 
-    fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d", &soSVDK);
+    PTRDK ptrDK = firstDK;
+    PTRSV ptrSV = NULL;
+    int stt = 0;
+    int x4 = x + 66;
+    int y1 = y + 2;
 
-    for (int i = 1; i <= soSVDK; i++)
+    system("cls");
+
+    while (ptrDK != NULL)
     {
-        fgets(dangky.studentID, maxLengthString, filein);
+        ptrSV = timSinhVien_DSSV(firstSV, ptrDK->regis.studentID);
 
-        fgets(temp_line, maxLengthString, filein); // nhap dong chua DIEM
-        sscanf(temp_line, "%f", &dangky.point);
+        stt++;
 
-        fgets(temp_line, maxLengthString, filein); // nhap dong chua bien TRUE/FALSE ( ma hoa owr dang 0 / 1);
-        sscanf(temp_line, "%d", &dangky.isRegistered);
+        if (stt > maxSize)
+            break;
 
-        loaiBoDauXuongDong(dangky.studentID);
-        std::cout << "Size: " << anhXaMSSV_dsLTC.size() << std::endl;
-        mappingMSSV_dsLTC(dangky.studentID, loptinchi, dsLTC, anhXaMSSV_dsLTC, anhXaLTC_MH);
+        gotoxy(x + 4, y + 2 + stt);
+        std::cout << stt;
+        gotoxy(x + 13, y + 2 + stt);
+        std::cout << ptrDK->regis.studentID;
+        gotoxy(x + 28, y + 2 + stt);
+        std::cout << ptrSV->student.lastName;
+        gotoxy(x + 55, y + 2 + stt);
+        std::cout << ptrSV->student.firstName;
+        gotoxy(x + 73, y + 2 + stt);
+        std::printf("%0.2f", ptrDK->regis.point);
 
-        addStudentToRegisList(firstRegisStudent, dangky);
+        ptrDK = ptrDK->next;
     }
-    system("pause");
+    drawScoreBoard(x, y, stt);
 
-    return firstRegisStudent;
-}
+    std::string selectionList[stt] = {""};
+    std::string answer[stt] = {""};
 
-Credit *loadCreditClassInfo(FILE *filein)
-{
-    Credit *creditClass = new Credit;
-    char temp_line[maxLengthString];
+    input_UI(x4 + 5, y1, stt, selectionList, answer, "INTEGER", 8, false);
 
-    fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d", &creditClass->creditCode);
-
-    fgets(creditClass->courseCode, maxLengthString, filein);
-    fgets(creditClass->schoolYear, maxLengthString, filein);
-    loaiBoDauXuongDong(creditClass->courseCode);
-    loaiBoDauXuongDong(creditClass->schoolYear);
-
-    // mappingMaLTC_MaMH(anhXaLTC_MH, creditClass->creditCode, creditClass->courseCode);
-
-    fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d %d %d %d", &creditClass->semester, &creditClass->group, &creditClass->studentMin, &creditClass->studentMax);
-
-    fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d", &creditClass->enable);
-
-    std::cout << creditClass->creditCode << std::endl;
-    creditClass->firstListRegister = loadRegisStudentList(filein, creditClass);
-    return creditClass;
-}
-// Chuc nang: nhap danh sach lop tin chi tu file vao chuong trinh
-LIST_LTC loadStudentCreditClassList(char *File_Name)
-{
-    FILE *filein = fopen(File_Name, "r");
-    LIST_LTC creditClassList;
-
-    if (filein != NULL)
-    {
-        char temp_line[maxLengthString];
-        int index = 0;
-        int size = 0;
-
-        fgets(temp_line, maxLengthString, filein);
-        sscanf(temp_line, "%d %d", &size, &creditClassList.currentIndex);
-
-        for (int i = 1; i <= size; i++)
-        {
-            Credit *loptinchi = NULL; // cap phat bo nho cho node moi
-            loptinchi = loadCreditClassInfo(filein);
-            index = loptinchi->creditCode; // index store credit code
-            creditClassList.nodes[index] = loptinchi;
-        }
-
-        return creditClassList;
-    }
-    else
-    {
-
-        std::cout << "Mo file danh sach lop tin chi that bai\n";
-        return creditClassList;
-    }
+    getch();
+    clearScreen(x, y, SCORE_BOARD_WIDTH, y + 3 + stt);
 }
 
 int main()
 {
 
-    char tenfile[] = "./data/txt_file/danh_sach_sinh_vien.txt";
-    char tenfile2[] = "./data/txt_file/danh_sach_mon_hoc.txt";
-    char tenfile3[] = "./data/txt_file/danh_sach_lop_tin_chi.txt";
-    char tenfile4[] = "./data/txt_file/map_maLTC_maMH.txt";
-    char tenfile5[] = "./data/txt_file/map_MSSV_dsLTC.txt";
-    // SetWindowSize(1000, 1000);
-    // SetScreenBufferSize(1000, 1000);
-    // // ShowScrollBar();///
-    // HienThanhCuon(TRUE);
-    // firstSV = loadStudentList(tenfile);
-    // treeMH = loadCourseList(tenfile2);
-    // dsLTC = loadStudentCreditClassList(tenfile3);
+    /*
+        +==================================+
+        |1    Cap nhat lop tin chi
+        |2  >In danh sach sinh vien lop tin chi
+        |3    Cap nhat sinh vien lop hoc
+        |4    In danh sach sinh vien lop hoc
+        |5    Cap nhat danh sach mon hoc
+        |6    In danh sach mon hoc
+        |7    Dang ky lop tin chi
+        |8    Huy lop tin chi khong du dieu kien
+        |9    Nhap diem lop tin chi
+        |10   In bang diem lop tin chi
+        |11   In bang diem trung binh lop hoc
+        |12   In bang diem tong ket cac mon hoc
+        |13   Xuat thong tin - Console
+        |14   Luu du lieu - File
+        +==================================+
 
-    std::vector<int> vec{10, 20, 30, 40};
 
-    // Print Original Vector
-    std::cout << "Original vector :";
+    */
+    int out = 0;
+    int pos = 1;
 
-    for (int i = 0; i < vec.size(); i++)
-        std::cout << " " << vec[i];
+    char ltcFile[] = "./data/txt_file/danh_sach_lop_tin_chi.txt";
+    char svFile[] = "./data/txt_file/danh_sach_sinh_vien.txt";
+    dsLTC = loadStudentCreditClassList(ltcFile);
+    firstSV = loadStudentList(svFile);
 
-    // Element to be searched
-    int ser = 30;
+    nhapDiem(10, 10, firstSV, dsLTC.nodes[1]->firstListRegister, 10);
 
-    // std::find function call
-    auto it = std::find(vec.begin(),
-                        vec.end(), ser);
-    if (it != vec.end())
-    {
-        std::cout << "Element " << ser << " found at position : ";
-        std::cout << it - vec.begin() << " (counting from zero) \n";
-        std::cout << typeid(it).name();
-    }
-    else
-        std::cout << "Element not found.\n\n";
+    // dsLTC = loadStudentCreditClassList(ltcFile);
 
+    // xuatDanhSachLopTinChi_Console(10, 2, dsLTC);
+
+    // menu(10, 2, menu_chinh, 14, pos);
+
+    // xuatDanhSachSinhVien_Console(firstSV, 10, 10);
+
+    // std::cout << a << std::endl;
+    // std::cout<<strlen(a)<<std::endl;
     getch();
 }

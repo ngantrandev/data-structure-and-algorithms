@@ -12,19 +12,19 @@
 void ShowProgramName(int x, int y, int w, int h, int sleep_time);
 void Show_Loading_Time(int x = 59, int y = 8);
 void ShowMessage(int x, int y, std::string message, int duration);
-void Show_Error(int error_code);
 
 void drawBox(int x, int y, int w, int h);
-void showCourceListBox(int x, int y, int size);
-void showStudentList(int x, int y, int size);
-void showCreditClassList(int x, int y, int size);
-void showCreditClassStatus(int x, int y, int size);
+void drawCourseInfoBoard(int x, int y, int size);
+void drawStudentInfoBoard(int x, int y, int size);
+void drawCreditClassInfoBoard(int x, int y, int size);
+void drawCreditClassStatusBoard(int x, int y, int size);
 void drawAvgScoreBoard(int x, int y, int size);
 void drawScoreBoard(int x, int y, int size);
-void vebangtongketdiem(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000]);
+void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000]);
 
 void clearScreen(int x_origin, int y_origin, int width, int height);
-int XacNhan(int x_origin, int y_origin, std::string title, std::string luachon_1, std::string luachon_2);
+// max title length = 30
+std::string XacNhan(int x, int y, std::string title);
 
 // sleep time: mini second
 void ShowProgramName(int x, int y, int w, int h, int sleep_time)
@@ -62,12 +62,12 @@ void ShowProgramName(int x, int y, int w, int h, int sleep_time)
 
             gotoxy(0, 0);
             std::cout << "hello world";
-            status st = GetKey(getch());
-            if (st == ENTER)
+            std::string st = getKeyType(getch());
+            if (st == "ENTER")
             {
                 gotoxy(0, 0);
                 std::cout << "hello world";
-                SetColor(15); // set white color
+                SetColor("WHITE"); // set white color
                 ShowCur(1);   // hien thi con tro
                 return;
             }
@@ -169,62 +169,24 @@ void Show_Loading_Time(int x, int y)
 void ShowMessage(int x, int y, std::string message, int duration)
 {
     gotoxy(x, y);
-    SetColor(4);
+    SetColor("RED");
     std::cout << message;
-    SetColor(39);
+    SetColor("WHITE");
     Sleep(duration);
-}
-// XAC NHAN TU PHIA NGUOI DUNG
-void Show_Error(int error_code)
-{
-    if (error_code == 1)
-        std::cout << "Sinh vien khong ton tai!";
-    else if (error_code == 2)
-        std::cout << "Lop tin chi khong ton tai!";
-    else if (error_code == 3)
-        std::cout << "Mon hoc khong ton tai!";
-    else if (error_code == 4)
-        std::cout << "Lop hoc khong ton tai!";
-    else if (error_code == 5)
-        std::cout << "Sinh vien da ton tai!";
-    else if (error_code == 6)
-        std::cout << "Lop tin chi da ton tai!";
-    else if (error_code == 7)
-        std::cout << "Mon hoc da ton tai!";
-    else if (error_code == 8)
-        std::cout << "Chuoi rong!";
-    else if (error_code == 9)
-        std::cout << "Sai: Vuot qua gioi han ky tu!";
-    else if (error_code == 10)
-        std::cout << "Sai: Nien khoa khong hop le!";
-    else if (error_code == 11)
-        std::cout << "Sai: Nhom qua lon hoac qua nho!";
-    else if (error_code == 12)
-        std::cout << "Sai: STCLT khong hop le!";
-    else if (error_code == 13)
-        std::cout << "Sai: STCTH khong hop le!";
-    else if (error_code == 14)
-        std::cout << "Sai: Hoc ky qua lon hoac qua nho!";
-    else if (error_code == 15)
-        std::cout << "Sai: MIN qua lon hoac qua nho!";
-    else if (error_code == 16)
-        std::cout << "Sai: MAX qua lon hoac qua nho!";
-    else if (error_code == 17)
-        std::cout << "Sai: Ma lop tin chi khong hop le!";
-    else if (error_code == 18)
-        std::cout << "Sai: Ma lop hoc khong hop le!";
-    else if (error_code == 19)
-        std::cout << "Sai: MAX phai >= MIN!";
-    else if (error_code == 20)
-        std::cout << "Sai: Diem phai >= 0!";
-    else if (error_code == 21)
-        std::cout << "Sai: Ten mon hoc trung lap!";
-    else if (error_code == 101)
-        std::cout << "Sai cu phap!";
+
+    clearScreen(x,y,message.length(),1);
 }
 
 void drawBox(int x, int y, int w, int h)
 {
+    /*
+        +================================================+
+        |                                                |
+        |                                                |
+        |                                                |
+        |                                                |
+        +================================================+
+    */
     for (int i = x; i < x + w; i++)
     {
         for (int j = y; j < y + h; j++)
@@ -274,7 +236,7 @@ void drawBox(int x, int y, int w, int h)
         }
     }
 }
-void showCourceListBox(int x, int y, int size)
+void drawCourseInfoBoard(int x, int y, int size)
 {
     /*
         x         x1             x2                        x3        x4
@@ -285,7 +247,7 @@ void showCourceListBox(int x, int y, int size)
         |         |              |                         |         |         |
         +=========+==============+=========================+=========+=========+
     */
-    int tabw = 71;
+    int tabw = COURSE_INFO_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 10;
     int x2 = x1 + 15;
@@ -367,7 +329,7 @@ void showCourceListBox(int x, int y, int size)
     gotoxy(x4, y + tabh - 1);
     std::cout << "+";
 }
-void showStudentList(int x, int y, int size)
+void drawStudentInfoBoard(int x, int y, int size)
 {
     /*
         x         x1             x2                 x3            x4          x5             x6
@@ -379,7 +341,7 @@ void showStudentList(int x, int y, int size)
         +=========+==============+==================+=============+===========+==============+===============+
     */
 
-    int tabw = 102;
+    int tabw = STUDENT_CLASS_INFO_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 10;
     int x2 = x1 + 15;
@@ -503,7 +465,7 @@ void showStudentList(int x, int y, int size)
     gotoxy(x6, y + tabh - 1);
     std::cout << "+";
 }
-void showCreditClassList(int x, int y, int size)
+void drawCreditClassInfoBoard(int x, int y, int size)
 {
     /*  x     x1       x2           x3            x4       x5       x6        x7        x8
         +=====+========+============+=============+========+========+=========+=========+=============+
@@ -513,7 +475,7 @@ void showCreditClassList(int x, int y, int size)
         |     |        |            |             |        |        |         |         |             |
         +=====+========+============+=============+========+========+=========+=========+=============+
     */
-    int tabw = 95;
+    int tabw = CREDIT_CLASS_INFO_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 6;
     int x2 = x1 + 9;
@@ -676,7 +638,7 @@ void showCreditClassList(int x, int y, int size)
     gotoxy(x8, y + tabh - 1);
     std::cout << "+";
 }
-void showCreditClassStatus(int x, int y, int size)
+void drawCreditClassStatusBoard(int x, int y, int size)
 {
     /*
         x     x1       x2         x3                              x4        x5             x6
@@ -687,7 +649,7 @@ void showCreditClassStatus(int x, int y, int size)
         |     |        |          |                               |         |              |              |
         +=====+========+==========+===============================+=========+==============+==============+
     */
-    int tabw = 99;
+    int tabw = CREDIT_CLASS_STATUS_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 6;
     int x2 = x1 + 9;
@@ -821,7 +783,7 @@ void drawAvgScoreBoard(int x, int y, int size)
         |         |              |                      |                 |            |
         +=========+==============+======================+=================+============+
     */
-    int tabw = 80;
+    int tabw = AVG_SCORE_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 10;
     int x2 = x1 + 15;
@@ -922,7 +884,7 @@ void drawScoreBoard(int x, int y, int size)
         |         |              |                      |                 |                  |
         +=========+==============+======================+=================+==================+
     */
-    int tabw = 86;
+    int tabw = SCORE_BOARD_WIDTH;
     int tabh = size + 4;
     int x1 = x + 10;
     int x2 = x1 + 15;
@@ -1012,7 +974,7 @@ void drawScoreBoard(int x, int y, int size)
     gotoxy(x4, y + tabh - 1);
     std::cout << "+";
 }
-void vebangtongketdiem(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000])
+void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000])
 {
     /*
         <-------------------left_side--------------------->
@@ -1118,109 +1080,113 @@ void clearScreen(int x_origin, int y_origin, int width, int height)
             std::cout << " ";
     }
 }
-int XacNhan(int x_origin, int y_origin, std::string title, std::string luachon_1, std::string luachon_2)
+
+// max title length = 30
+std::string XacNhan(int x, int y, std::string title)
 {
+    /*      <-----------Width------------>
+                        x_title
+                        |
+            x           TITLE   x2
+            Lua chon 1          Lua chon 2
+    */
+    ShowCur(false); // an con tro van ban
+    std::string luachon1 = "YES";
+    std::string luachon2 = "NO";
+    std::string keyType = "NONE";
 
-    ShowCur(0); // an con tro van ban
-    // title co chuc nang in ra thong bao toi nguoi dung
-    int pos = 1;
-    int luachon;
+    int w = 30;
+    int pos = 2;
+    int keyPressed = 0;
+    int x2 = (w - luachon2.length()) + x;
 
-    int length_of_box = 10 + luachon_1.length() + luachon_2.length();
+    SetColor("RED");
+    if (title.length() >= w)
+    {
+        gotoxy(x, y);
+        for (int i = 0; i < 30; i++)
+        {
+            std::cout << title[i];
+        }
+    }
+    else
+    {
+        gotoxy((w - title.length()) / 2 + x, y);
+        std::cout << title;
+    }
+    SetColor("WHITE");
 
-    // tao title thong bao
-    int x_title = (2 * x_origin + length_of_box - title.length()) / 2; // toa do cua Title
+    gotoxy(x, y + 2);
+    std::cout << luachon1;
+    gotoxy(x2, y + 2);
+    std::cout << luachon2;
 
-    SetColor(39);
-
-    gotoxy((2 * x_origin + length_of_box - title.length()) / 2, y_origin);
-    SetColor(4);
-    std::cout << title;
-    SetColor(39);
-
-    gotoxy(x_origin, y_origin + 1);
-    std::cout << "              ";
-    gotoxy(x_origin, y_origin + 2);
-    std::cout << luachon_1 << "          " << luachon_2;
-
-    gotoxy(x_origin, y_origin + 2); // khoi tao gia tri ban dau, hightlight YES
-    SetColor(1);
-    std::cout << luachon_1;
+    gotoxy(x2, y + 2); // khoi tao gia tri ban dau, hightlight YES
+    SetColor("BLUE");
+    std::cout << luachon2;
 
     // int keyhit;
     while (true)
     {
-        luachon = getch();
+        keyPressed = getch();
+        keyType = getKeyType(keyPressed);
 
-        if (luachon == 75)
+        if (keyType == "LEFT")
+        {
+            if (pos == 2)
+            {
+                pos = 1;
+                gotoxy(x2, y + 2);
+                SetColor("WHITE");
+                std::cout << luachon2;
+
+                gotoxy(x, y + 2);
+                SetColor("BLUE");
+                std::cout << luachon1;
+            }
+            else if (pos == 1)
+            {
+                pos = 2;
+                gotoxy(x, y + 2);
+                SetColor("WHITE");
+                std::cout << luachon1;
+
+                gotoxy(x2, y + 2);
+                SetColor("BLUE");
+                std::cout << luachon2;
+            }
+        }
+        else if (keyType == "RIGHT")
         {
             if (pos == 1)
             {
-                gotoxy(x_origin, y_origin + 2);
-                SetColor(39);
-                std::cout << luachon_1;
+                pos = 2;
+                gotoxy(x, y + 2);
+                SetColor("WHITE");
+                std::cout << luachon1;
 
-                pos = 0;
-                gotoxy(x_origin + 10 + luachon_1.length(), y_origin + 2);
-                SetColor(1);
-                std::cout << luachon_2;
+                gotoxy(x2, y + 2);
+                SetColor("BLUE");
+                std::cout << luachon2;
             }
-            else if (pos == 0)
+            else if (pos == 2)
             {
-
-                gotoxy(x_origin + 10 + luachon_1.length(), y_origin + 2);
-                SetColor(39);
-                std::cout << luachon_2;
-
                 pos = 1;
-                gotoxy(x_origin, y_origin + 2);
-                SetColor(1);
-                std::cout << luachon_1;
+                gotoxy(x2, y + 2);
+                SetColor("WHITE");
+                std::cout << luachon2;
+
+                gotoxy(x, y + 2);
+                SetColor("BLUE");
+                std::cout << luachon1;
             }
         }
-        else if (luachon == 77)
+
+        else if (keyType == "ENTER")
         {
-            if (pos == 1)
-            {
-
-                gotoxy(x_origin, y_origin + 2);
-                SetColor(39);
-                std::cout << luachon_1;
-
-                pos = 0;
-                gotoxy(x_origin + 10 + luachon_1.length(), y_origin + 2);
-                SetColor(1);
-                std::cout << luachon_2;
-            }
-
-            else if (pos == 0)
-            {
-
-                gotoxy(x_origin + 10 + luachon_1.length(), y_origin + 2);
-                SetColor(39);
-                std::cout << luachon_2;
-
-                pos = 1;
-                gotoxy(x_origin, y_origin + 2);
-                SetColor(1);
-                std::cout << luachon_1;
-            }
-        }
-
-        else if (pos == 1 && luachon == 13)
-        { // CHON YES
-            SetColor(39);
-            clearScreen(40, y_origin, 50, 5);
-            ShowCur(1); // hien con tro van ban
-            return 1;
-        }
-
-        else if (pos == 0 && luachon == 13)
-        { // CHON NO
-            SetColor(39);
-            clearScreen(40, y_origin, 50, 5);
-            ShowCur(1); // hien con tro van ban
-            return 0;
+            clearScreen(x, y, w, 2);
+            ShowCur(true);
+            return (pos == 1) ? luachon1 : luachon2;
         }
     }
 }

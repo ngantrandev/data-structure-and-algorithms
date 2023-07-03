@@ -7,10 +7,10 @@
 /// </summary>
 struct Course
 {
-    char courceCode[CouseCode_Length];
-    char courceName[CouseName_Length];
-    int STCLT; // so tin chi ly thuyet
-    int STCTH; // so tin chi thuc hanh
+    char courceCode[CourseCode_Length] = "";
+    char courceName[CourseName_Length] = "";
+    int STCLT = 0; // so tin chi ly thuyet
+    int STCTH = 0; // so tin chi thuc hanh
 };
 struct CourseNode
 {
@@ -25,12 +25,12 @@ typedef CourseNode *PTRMH; // mon hoc
 /// </summary>
 struct Student
 {
-    char studentID[Student_ID_Length]; // ma sinh vien
-    char lastName[First_Name_Length]; // ho sinh vien
-    char firstName[Ten_Length];             // ten sinh vien
-    char sex[SEX_Length];              // gioi tinh
-    char phoneNum[PhoneNum_Length];    // so dien thoai
-    char classID[ClassID_Length];      // ma lop hoc
+    char studentID[Student_ID_Length] = ""; // ma sinh vien
+    char lastName[First_Name_Length] = "";  // ho sinh vien
+    char firstName[Ten_Length] = "";        // ten sinh vien
+    char sex[SEX_Length] = "";              // gioi tinh
+    char phoneNum[PhoneNum_Length] = "";    // so dien thoai
+    char classID[ClassID_Length] = "";      // ma lop hoc
 };
 struct StudentNode
 {
@@ -44,7 +44,7 @@ typedef StudentNode *PTRSV;
 /// </summary>
 struct Registration
 {
-    char studentID[Student_ID_Length] = "Unknow";
+    char studentID[Student_ID_Length] = "";
     float point = 0;
     bool isRegistered = false;
 };
@@ -61,11 +61,11 @@ typedef RegisNode *PTRDK;
 /// </summary>
 struct Credit
 {
-    int creditCode = 0;                            // ma lop tin chi
-    char courseCode[CouseCode_Length] = "Unknow";  // ma mon hoc
-    char schoolYear[SchoolYear_Length] = "Unknow"; // khoa hoc
-    int semester = 0, group = 0;                   //
-    int studentMin = 0, studentMax = 0;            // so sinh vien lon nhat - nho nhat
+    int creditCode = 0;                      // ma lop tin chi
+    char courseCode[CourseCode_Length] = "";  // ma mon hoc
+    char schoolYear[SchoolYear_Length] = ""; // khoa hoc
+    int semester = 0, group = 0;             //
+    int studentMin = 0, studentMax = 0;      // so sinh vien lon nhat - nho nhat
     bool enable = false;
     PTRDK firstListRegister = NULL; // con tro danh sach sinh vien dang ky lop tin chi
 };
@@ -91,13 +91,5 @@ typedef ClassNode *PTRLH;
 struct Student_Point
 {
     PTRDK ptrDK = NULL;
-    std::string point = "10";
+    std::string point = "0";
 };
-
-struct StudentListNode
-{
-    PTRSV ptrSV = NULL;
-    float pointSum = 0; // duoc tinh bang tong cua DIEM*(STCLT + STCTH) cac mon trong nien khoa
-    int creditSum = 0;
-};
-typedef StudentListNode *PTRDSSV;

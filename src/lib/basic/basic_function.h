@@ -25,14 +25,12 @@ enum status
 	XOA_VAN_BAN
 };
 
-int stringTo_Int(std::string num_a);
 int charToInt(char *a);
-status GetKey(int z);
-int CompareSourseCode(char *a, char *b);
-char *ConvertStringToChar(std::string a);
-std::string convertCharToString(char *a);
+std::string getKeyType(int z);
+void stringToChar(std::string a, char *b, int size_b);
+std::string charToString(char *a);
 std::vector<int> customSplit(std::string a, char delim);
-char *convertIntToChar(int a);
+void intToChar(int a, char *b, int size_b);
 char *loaiBoDauXuongDong(char *a);
 std::string DeleteCharacter(std::string text, int index);
 char ToLower(char a);
@@ -45,32 +43,32 @@ std::string getStandardizedName(std::string text);
 std::string getStandardizedStudentID(std::string text);
 std::string getCapitalized(std::string text);
 
-status GetKey(int z)
+std::string getKeyType(int z)
 {
 	if (z == 224)
 	{
 		char c = getch();
 		if (c == 72)
-			return UP;
+			return "UP";
 		if (c == 80)
-			return DOWN;
+			return "DOWN";
 		if (c == 77)
-			return RIGHT;
+			return "RIGHT";
 		if (c == 75)
-			return LEFT;
+			return "LEFT";
 	}
 	else
 	{
 		if (z >= 32 && z <= 126 && z != 13 && z != 27)
-			return NHAP_VAN_BAN;
+			return "NHAP_VAN_BAN";
 		else if (z == 27)
-			return EXIT;
+			return "EXIT";
 		else if (z == 13)
-			return ENTER;
+			return "ENTER";
 		else if (z == 8)
-			return XOA_VAN_BAN;
+			return "XOA_VAN_BAN";
 		else if (z == 27)
-			return BACK;
+			return "BACK";
 	}
 }
 int charToInt(char *a)
@@ -84,64 +82,45 @@ int charToInt(char *a)
 
 	return res;
 }
-int stringTo_Int(std::string num_a)
-{
-	int res = 0;
-	for (int i = 0; i < num_a.size(); i++)
-		res = res * 10 + int(num_a[i] - '0');
 
-	return res;
-}
-// a > b return 1, a < b return -1, a = b return 0;
-int CompareSourseCode(char *a, char *b)
+void stringToChar(std::string a, char *b, int size_b)
 {
-	if (charToInt(a) > charToInt(b))
-		return 1;
-	else if (charToInt(a) < charToInt(b))
-		return -1;
-	else
-		return 0;
-}
-char *ConvertStringToChar(std::string a)
-{
-	int n = a.size();
-	char *b = new char[n + 1];
-	for (int i = 0; i < a.size(); i++)
-		b[i] = a[i];
-	b[n] = '\0';
-
-	return b;
-}
-std::string convertCharToString(char *a)
-{
-	std::string b = "";
-	for (int i = 0; i < strlen(a); i++)
-		b.push_back(a[i]);
-
-	return b;
+	int copyLength = a.copy(b, size_b);
+	for (int i = copyLength; i < size_b; i++)
+    {
+        b[i] = '\0';
+    }
 }
 
-std::vector<int> customSplit(std::string a, char delim) {
+std::string charToString(char *a)
+{
+	return std::string(a);
+}
+
+std::vector<int> customSplit(std::string a, char delim)
+{
 	std::vector<int> res;
 	std::string temp = "";
-	for (int i = 0; i < a.size(); i++) {
-		if (a[i] == delim) {
-			res.push_back(stringTo_Int(temp));
+	for (int i = 0; i < a.size(); i++)
+	{
+		if (a[i] == delim)
+		{
+			res.push_back(std::stoi(temp));
 			temp = "";
 		}
-		else {
+		else
+		{
 			temp.push_back(a[i]);
 		}
 	}
-	res.push_back(stringTo_Int(temp));
+	res.push_back(std::stoi(temp));
 	return res;
 }
 
-char *convertIntToChar(int a)
+void intToChar(int a, char *b, int size_b)
 {
-	std::string b = std::to_string(a);
-	char *c = ConvertStringToChar(b);
-	return c;
+	std::string c = std::to_string(a);
+	stringToChar(c, b, size_b);
 }
 char *loaiBoDauXuongDong(char *a)
 {
