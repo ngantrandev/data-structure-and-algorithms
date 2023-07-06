@@ -5,18 +5,18 @@
 // check error
 std::string checkError(std::string input, std::string dataType);
 
+int getNextCreditClassID(LIST_LTC dsLTC, int currindex, int size);
+int countCreditClass(LIST_LTC dsLTC);
 // count node
 int count_DaDangKy(PTRDK first);
 void count_MH(PTRMH Tree_monhoc, int &soLuongMonHoc);
 int count_CreditClass(LIST_LTC dsLTC);
-
 // delete node
 void timNodeThayThe(PTRMH &X, PTRMH &Y);
 void deleteCource(PTRMH &treeMH, char *maMH);
 void deleteStudentFromRegistedList(PTRDK &First_DSSVDK, PTRDK &dangky);
 void deleteStudentFromStudentList(PTRSV &first, PTRSV &student);
 void deleteCourceList(PTRMH &treeMH);
-
 // HAM TIM KIEM
 PTRSV timSinhVien_DSSV(PTRSV FirstSV, char *MASV);
 PTRSV timSinhVien_TheoMaLopHoc(PTRSV FirstSV, char *MASV, char *maLopHoc);
@@ -24,12 +24,106 @@ PTRDK timSinhVien_DSSVDK(PTRDK First_DSSVDK, char *MASV);
 PTRMH timMonHocTheoMa(PTRMH tree, char *MAMH);
 // PTRMH timMonHocTheoTen(PTRMH tree, char TENMH[CouseCode_Length]);
 PTRLH timLopHoc(PTRLH FirstLH, char *maLopHoc);
-Credit *timLopTinChi_theoMAMH(LIST_LTC dsLTC, char *maMH);
+Credit *timLopTinChi_theoNienKhoaHocKy(LIST_LTC dsLTC, char *nienkhoa, int hocky);
 Credit *timLopTinChi_theoInfo(LIST_LTC dsLTC, char *nienkhoa, int hocky, int nhom, char *maMonHoc);
-Credit *timLopTinChi_theoMAMH_NIENKHOA(LIST_LTC dsLTC, char *maMH, char *nienkhoa);
-
+std::vector<int> getCreditList_theoMAMH_NIENKHOA(LIST_LTC dsLTC, int hocky, char *nienkhoa);
 // HAM SAP XEP
 void sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(PTRSV &FirstSV);
+
+// MERGE SORT
+void mergePTRMH(std::vector<PTRMH> dsMH, int left, int mid, int right);
+void mergeSortPTRMH(std::vector<PTRMH> dsMH, int l, int r);
+
+int getNextCreditClassID(LIST_LTC dsLTC, int currindex, int step);
+int getNextCourseID(std::vector<PTRMH> dsMonhoc, int currIndex, int step);
+
+/*
+=================DEFINITION=================
+*/
+
+int getNextCreditClassID(LIST_LTC dsLTC, int currindex, int step)
+{
+    int count = 0;
+    for (int i = currindex + 1; i <= dsLTC.currentIndex; i++)
+    {
+        if (dsLTC.nodes[i] != NULL)
+            count++;
+        if (count == step)
+            return i;
+        if (i == dsLTC.currentIndex && count < step)
+            return currindex;
+    }
+    return -1;
+}
+
+int getNextIndexArray(int currIndex, int arraySize, int step)
+{
+    int count = 0;
+    for (int i = currIndex + 1; i < arraySize; i++)
+    {
+        count++;
+        if (count == step)
+        {
+            return i;
+        }
+    }
+    return currIndex;
+}
+
+int getNextCourseID(std::vector<PTRMH> dsMonhoc, int currIndex, int step)
+{
+    int count = 0;
+    for (int i = currIndex + 1; i < dsMonhoc.size(); i++)
+    {
+        if (dsMonhoc[i] != NULL)
+        {
+            count++;
+        }
+
+        if (count == step)
+        {
+            return i;
+        }
+        if (i == dsMonhoc.size() && count < step)
+        {
+            return currIndex;
+        }
+    }
+
+    return -1;
+}
+
+template <typename T>
+T getNextPointer(T First, int size)
+{
+    T p = First;
+    int count = 0;
+    while (true)
+    {
+        if (p->next != NULL)
+        {
+            count++;
+            p = p->next;
+        }
+
+        if (count == size)
+            return p;
+
+        if (p->next == NULL && count < size)
+            return First;
+    }
+}
+
+template <typename T>
+void getListTreeNode(T tree, std::vector<T> &list)
+{
+    if (tree != NULL)
+    {
+        list.push_back(tree);
+        getListTreeNode(tree->pLeft, list);
+        getListTreeNode(tree->pRight, list);
+    }
+}
 
 // check error
 std::string checkError(std::string input, std::string dataType)
@@ -72,13 +166,24 @@ int countLinkedList(T First)
     return count;
 }
 
+int countCreditClass(LIST_LTC dsLTC)
+{
+    int count = 0;
+    for (int i = 1; i <= dsLTC.currentIndex; i++)
+    {
+        if (dsLTC.nodes[i] != NULL)
+            count++;
+    }
+    return count;
+}
+
 int count_DaDangKy(PTRDK first)
 { // chuc nang: dem so luong SINH VIEN DANG KY
     int count = 0;
     PTRDK p = first;
     while (p != NULL)
     {
-        if (p->regis.isRegistered == false)
+        if (p->regis.disable == false)
             count++;
         p = p->next;
     }
@@ -98,7 +203,7 @@ void count_MH(PTRMH Tree_monhoc, int &soLuongMonHoc)
 int count_CreditClass(LIST_LTC dsLTC)
 {
     int count = 0;
-    for (int i = 0; i < dsLTC.currentIndex; i++)
+    for (int i = 1; i <= dsLTC.currentIndex; i++)
     {
         if (dsLTC.nodes[i] != NULL)
             count++;
@@ -303,29 +408,31 @@ PTRLH timLopHoc(PTRLH FirstLH, char *maLopHoc)
     return NULL;
 }
 
-Credit *timLopTinChi_theoMAMH(LIST_LTC dsLTC, char *maMH)
+Credit *timLopTinChi_theoNienKhoaHocKy(LIST_LTC dsLTC, char *nienkhoa, int hocky)
 {
     for (int i = 1; i <= dsLTC.currentIndex; i++)
-        if (dsLTC.nodes[i] == NULL && strcmp(dsLTC.nodes[i]->courseCode, maMH) == 0)
-            return dsLTC.nodes[i];
-
-    return NULL;
-}
-
-Credit *timLopTinChi_theoMAMH_NIENKHOA(LIST_LTC dsLTC, char *maMH, char *nienkhoa)
-{
-    for (int i = 1; i <= dsLTC.currentIndex; i++)
-        if (dsLTC.nodes[i] == NULL)
-            if (strcmp(dsLTC.nodes[i]->courseCode, maMH) == 0 && strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0)
+        if (dsLTC.nodes[i] != NULL)
+            if (strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0 && dsLTC.nodes[i]->semester == hocky)
                 return dsLTC.nodes[i];
 
     return NULL;
 }
 
+std::vector<int> getCreditList_theoMAMH_NIENKHOA(LIST_LTC dsLTC, int hocky, char *nienkhoa)
+{
+    std::vector<int> listCreditID;
+    for (int i = 1; i <= dsLTC.currentIndex; i++)
+        if (dsLTC.nodes[i] != NULL)
+            if (dsLTC.nodes[i]->semester == hocky && strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0)
+                listCreditID.push_back(i);
+
+    return listCreditID;
+}
+
 Credit *timLopTinChi_theoInfo(LIST_LTC dsLTC, char *nienkhoa, int hocky, int nhom, char *maMonHoc)
 {
     for (int i = 1; i <= dsLTC.currentIndex; i++)
-        if (dsLTC.nodes[i] == NULL)
+        if (dsLTC.nodes[i] != NULL)
             if (strcmp(dsLTC.nodes[i]->schoolYear, nienkhoa) == 0 && dsLTC.nodes[i]->semester == hocky && dsLTC.nodes[i]->group == nhom && strcmp(dsLTC.nodes[i]->courseCode, maMonHoc) == 0)
                 return dsLTC.nodes[i];
     return NULL;
@@ -357,5 +464,71 @@ void sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(PTRSV &FirstSV)
         }
         // hoan doi
         std::swap(pmin->student, p->student);
+    }
+}
+
+void mergePTRMH(std::vector<PTRMH> dsMH, int left, int mid, int right)
+{
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // temp array
+    std::vector<PTRMH> L;
+    std::vector<PTRMH> R;
+
+    // copy data to temp arrays
+    for (int i = 0; i < n1; i++)
+    {
+        L[i] = dsMH[left + i];
+    }
+    for (int j = 0; j < n2; j++)
+    {
+        R[j] = dsMH[mid + 1 + j];
+    }
+
+    // merge temp arrays to real array
+    int i = 0;    // initial index of first subarray
+    int j = 0;    // initial index of second subarray
+    int k = left; // initial index of merged subarray
+
+    while (i < n1 && j < n2)
+    {
+        if (strcmp(L[i]->course.courceName, R[j]->course.courceName) < 0)
+        {
+            dsMH[k] = L[i];
+            i++;
+        }
+        else
+        {
+            dsMH[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        dsMH[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2)
+    {
+        dsMH[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSortPTRMH(std::vector<PTRMH> dsMH, int l, int r)
+{
+    if (l < r)
+    {
+        int m = l + (r - l) / 2;
+
+        mergeSortPTRMH(dsMH, l, m);
+        mergeSortPTRMH(dsMH, m + 1, r);
+
+        mergePTRMH(dsMH, l, m, r);
     }
 }

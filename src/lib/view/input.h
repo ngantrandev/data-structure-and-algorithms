@@ -3,9 +3,9 @@
 #include "drawBoard.h"
 #include "../algorithms/algorithms.h"
 
-void input_UI(int x, int y, int selectionSize, std::string *selectionList, std::string *answer, std::string dataType, int maxAnswerLength = 25, bool border = true);
+bool input_UI(int x, int y, int selectionSize, std::string *selectionList, std::string *answer, std::string dataType, int maxAnswerLength = 25, bool border = true);
 
-void input_UI(int x, int y, int selectionSize, std::string *selectionList, std::string *answer, std::string dataType, int maxAnswerLength, bool border)
+bool input_UI(int x, int y, int selectionSize, std::string *selectionList, std::string *answer, std::string dataType, int maxAnswerLength, bool border)
 {
 
     //  x1 = x + maxlength(lua chon co do dai lon nhat) + 2
@@ -109,7 +109,7 @@ void input_UI(int x, int y, int selectionSize, std::string *selectionList, std::
                         if (errorType != "NONE") // found error
                         {
                             // in thong bao loi
-                            ShowMessage(x, y - 2, "Ma loi: " + errorType, 1000);
+                            ShowMessage(x, y - 2, "Ma loi: " + errorType, FAST_TIME);
                             break;
                         }
                     }
@@ -117,22 +117,26 @@ void input_UI(int x, int y, int selectionSize, std::string *selectionList, std::
                     if (errorType == "NONE")
                     {
                         clearScreen(x, y, width > description.length() ? width : description.length(), selectionSize + 3);
-                        return;
+                        return false;
                     }
                 }
             }
             else
             {
                 // in thong bao loi
-                ShowMessage(x, y - 2, "Ma loi: " + errorType, 1000);
+                ShowMessage(x, y - 2, "Ma loi: " + errorType, FAST_TIME);
                 continue;
             }
         }
 
         else if (keyType == "EXIT")
         {
-            // in bieu mau xac nhan
-            return;
+            if (XacNhan(x, y + selectionSize + 5, "Ban co muon thoat? (Y/N)") == "YES")
+            {
+
+                clearScreen(x, y, width > description.length() ? width : description.length(), selectionSize + 3);
+                return true; // confirm exit
+            }
         }
 
     } // end while

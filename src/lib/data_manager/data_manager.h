@@ -16,7 +16,7 @@ PTRSV loadStudentList(char *filename);
 PTRLH loadClassList(char *filename);
 PTRDK loadRegisStudentList(FILE *filein);
 Credit *loadCreditClassInfo(FILE *filein);
-LIST_LTC loadStudentCreditClassList(char *filename);
+LIST_LTC loadCreditClassList(char *filename);
 
 // HAM luu THONG TIN vao file
 void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString]);
@@ -47,9 +47,6 @@ void addStudentToRegisList(PTRDK &First_DSSVDK, Registration dangky);
 
 void addCourseByName(PTRMH &Tree_monhoc, Course monhoc);
 void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree);
-
-void cvtTree(PTRMH treeMH, std::vector<char *> &dsMaMH);
-std::vector<char *> getListCourceCode(PTRMH treeMH);
 
 // xu ly nghiep vu chuong trinh
 void mappingMaLTC_MaMH(std::map<int, char *> &anhXaLTC_MH, int maLTC, char *maMH);
@@ -197,7 +194,7 @@ PTRDK loadRegisStudentList(FILE *filein)
         sscanf(temp_line, "%f", &dangky.point);
 
         fgets(temp_line, maxLengthString, filein); // nhap dong chua bien TRUE/FALSE ( ma hoa owr dang 0 / 1);
-        sscanf(temp_line, "%d", &dangky.isRegistered);
+        sscanf(temp_line, "%d", &dangky.disable);
 
         loaiBoDauXuongDong(dangky.studentID);
 
@@ -230,7 +227,7 @@ Credit *loadCreditClassInfo(FILE *filein)
     return creditClass;
 }
 // Chuc nang: nhap danh sach lop tin chi tu file vao chuong trinh
-LIST_LTC loadStudentCreditClassList(char *File_Name)
+LIST_LTC loadCreditClassList(char *File_Name)
 {
     FILE *filein = fopen(File_Name, "r");
     LIST_LTC creditClassList;
@@ -350,7 +347,7 @@ void xuatDanhSachSVDK_File_Txt(PTRDK First_DSSVDK, FILE *fileout)
         fputs("\n", fileout);
         fprintf(fileout, "%0.6f", p->regis.point);
         fputs("\n", fileout);
-        fprintf(fileout, "%d", p->regis.isRegistered);
+        fprintf(fileout, "%d", p->regis.disable);
         p = p->next;
     }
 }
@@ -793,26 +790,6 @@ void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree)
         saoChepMonHocTheoTen(treeMH->pLeft, newTree);
         saoChepMonHocTheoTen(treeMH->pRight, newTree);
     }
-}
-
-void cvtTree(PTRMH treeMH, std::vector<char *> &dsMaMH)
-{
-    if (treeMH != NULL)
-    {
-        dsMaMH.push_back(treeMH->course.courceCode);
-        cvtTree(treeMH->pLeft, dsMaMH);
-        cvtTree(treeMH->pRight, dsMaMH);
-    }
-}
-std::vector<char *> getListCourceCode(PTRMH treeMH)
-{
-    int size = 0;
-    count_MH(treeMH, size);
-    std::vector<char *> arrMH(size);
-
-    cvtTree(treeMH, arrMH);
-
-    return arrMH;
 }
 
 // xu ly nghiep vu chuong trinh

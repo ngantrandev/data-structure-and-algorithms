@@ -20,7 +20,7 @@ void drawCreditClassInfoBoard(int x, int y, int size);
 void drawCreditClassStatusBoard(int x, int y, int size);
 void drawAvgScoreBoard(int x, int y, int size);
 void drawScoreBoard(int x, int y, int size);
-void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000]);
+void drawFinalScoreBoard(int x, int y, int so_mon_hoc, std::vector<PTRMH> dsMH);
 
 void clearScreen(int x_origin, int y_origin, int width, int height);
 // max title length = 30
@@ -68,7 +68,7 @@ void ShowProgramName(int x, int y, int w, int h, int sleep_time)
                 gotoxy(0, 0);
                 std::cout << "hello world";
                 SetColor("WHITE"); // set white color
-                ShowCur(1);   // hien thi con tro
+                ShowCur(1);        // hien thi con tro
                 return;
             }
         }
@@ -174,7 +174,7 @@ void ShowMessage(int x, int y, std::string message, int duration)
     SetColor("WHITE");
     Sleep(duration);
 
-    clearScreen(x,y,message.length(),1);
+    clearScreen(x, y, message.length(), 1);
 }
 
 void drawBox(int x, int y, int w, int h)
@@ -465,6 +465,7 @@ void drawStudentInfoBoard(int x, int y, int size)
     gotoxy(x6, y + tabh - 1);
     std::cout << "+";
 }
+
 void drawCreditClassInfoBoard(int x, int y, int size)
 {
     /*  x     x1       x2           x3            x4       x5       x6        x7        x8
@@ -974,7 +975,7 @@ void drawScoreBoard(int x, int y, int size)
     gotoxy(x4, y + tabh - 1);
     std::cout << "+";
 }
-void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[1000])
+void drawFinalScoreBoard(int x, int y, int so_mon_hoc, std::vector<PTRMH> dsMH)
 {
     /*
         <-------------------left_side--------------------->
@@ -993,7 +994,7 @@ void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[100
     // left_size la chieu dai tu dau table den het phan cot HOTEN
     int left_size = x3 - x + 1;
     int w = so_mon_hoc * step + left_size;
-    int h = soSV + 4;
+    int h = MAX_BOARD_ELEMENTS + 4;
 
     drawBox(x, y, w, h); // ve vien bao quanh
 
@@ -1035,7 +1036,7 @@ void drawFinalScore(int x, int y, int soSV, int so_mon_hoc, std::string maMH[100
     for (int n = 1; n <= so_mon_hoc; n++)
     {
         gotoxy(x3 + n * step - 6, y + 1);
-        std::cout << maMH[n - 1];
+        std::cout << dsMH[n - 1]->course.courceCode;
         for (int i = 1; i < h; i++)
         {
             gotoxy(x3 + n * step, y + i);
@@ -1186,6 +1187,7 @@ std::string XacNhan(int x, int y, std::string title)
         {
             clearScreen(x, y, w, 2);
             ShowCur(true);
+            SetColor("WHITE");
             return (pos == 1) ? luachon1 : luachon2;
         }
     }

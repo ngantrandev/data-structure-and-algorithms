@@ -8,6 +8,7 @@ char fileDsLTC[] = "./data/txt_file/danh_sach_lop_tin_chi.txt";
 char fileMapMaLTC_maMH[] = "./data/txt_file/map_maLTC_maMH.txt";
 char fileMapMSSV_dsLTC[] = "./data/txt_file/map_MSSV_dsLTC.txt";
 
+const int MAX_BOARD_ELEMENTS = 10; // so luong phan tu toi da tren 1 bang
 const int MAXSIZE = 10000;
 const int MAXMONHOC = 2000;
 const int MAXLTC = 10000; // so lop tin chi toi da
@@ -27,8 +28,12 @@ const int SCORE_BOARD_WIDTH = 86;
 const int AVG_SCORE_BOARD_WIDTH = 80;
 const int CREDIT_CLASS_INFO_BOARD_WIDTH = 95;
 const int STUDENT_CLASS_INFO_BOARD_WIDTH = 102;
-const int COURSE_INFO_BOARD_WIDTH = 72;
+const int COURSE_INFO_BOARD_WIDTH = 71;
 const int CREDIT_CLASS_STATUS_BOARD_WIDTH = 99;
+
+const int FAST_TIME = 700;
+const int NORMAL_TIME = 1000;
+const int SLOW_TIME = 1500;
 
 std::string thong_tin_lop_tin_chi[6] = {
 	"Ma mon hoc       : ",
@@ -80,7 +85,7 @@ std::string cap_nhat_lop_tin_chi[3] = {
 	"Sua thong tin lop tin chi ",
 	"Xoa lop tin chi           "};
 
-std::string question_g[2] = {
+std::string cau_g[2] = {
 	"Nhap nien khoa: ",
 	"Nhap hoc ky   : "};
 
@@ -89,10 +94,10 @@ std::string dang_ky_lop_TC[3] = {
 	"Huy dang ky"};
 
 std::string cau_2[5] = {
-	"Nhap nien khoa  : ",
-	"Nhap hoc ky     : ",
-	"Nhap nhom       : ",
-	"Nhap ma mon hoc : "};
+	"Nhap nien khoa (chuoi ky tu) : ",
+	"Nhap hoc ky (so nguyen)      : ",
+	"Nhap nhom (so nguyen)        : ",
+	"Nhap ma mon hoc (chuoi ky tu): "};
 
 std::string cap_nhat_mon_hoc[4] = {
 	"Them mon hoc ",

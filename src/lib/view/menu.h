@@ -6,19 +6,17 @@
 
 // path: lib\basic\menu.h
 
-int menu(int x, int y, std::string *menuName, int size, int &pos)
+int menu(int x, int y, std::string *menuSelection, int size, int &pos)
 {
 	/*
 		+===========================================+
-		| 1    Cap nhat lop tin chi                 |
-		| 2    In danh sach sinh vien lop tin chi   |
-		| 3    Cap nhat sinh vien lop hoc           |
-		| 4    In danh sach sinh vien lop hoc       |
-		| 5    Cap nhat danh sach mon hoc           |
+		| 1    Selection 1                          |
+		| 2    Selection 2                          |
+		| 3    Selection 3                          |
 		+===========================================+
 	*/
 
-	int w = menuName[0].length() + 8;
+	int w = menuSelection[0].length() + 8;
 
 	drawBox(x, y, w, size + 2);
 	SetColor("WHITE");
@@ -28,6 +26,7 @@ int menu(int x, int y, std::string *menuName, int size, int &pos)
 
 	while (true)
 	{
+		ShowCur(0);
 		SetColor(23); // white
 
 		for (int i = 0; i < size; i++)
@@ -39,19 +38,19 @@ int menu(int x, int y, std::string *menuName, int size, int &pos)
 				SetColor(241); // blue
 				if (i + 1 < 10)
 					std::cout << i + 1 << "  "
-							  << ">" << menuName[i] << std::endl;
+							  << ">" << menuSelection[i] << std::endl;
 				else
 					std::cout << i + 1 << " "
-							  << ">" << menuName[i] << std::endl;
+							  << ">" << menuSelection[i] << std::endl;
 			}
 			else
 			{
 				SetColor(23); // white
 				if (i + 1 < 10)
-					std::cout << i + 1 << "    " << menuName[i] << std::endl;
+					std::cout << i + 1 << "    " << menuSelection[i] << std::endl;
 
 				else
-					std::cout << i + 1 << "   " << menuName[i] << std::endl;
+					std::cout << i + 1 << "   " << menuSelection[i] << std::endl;
 			}
 		}
 
@@ -70,6 +69,7 @@ int menu(int x, int y, std::string *menuName, int size, int &pos)
 		{
 			clearScreen(x, y, w > description.length() ? w : description.length(), y + 3 + size);
 			SetColor("WHITE");
+			ShowCur(1);
 			return 0;
 		}
 		else if (keyType == "EXIT")

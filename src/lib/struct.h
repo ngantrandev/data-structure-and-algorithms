@@ -46,7 +46,7 @@ struct Registration
 {
     char studentID[Student_ID_Length] = "";
     float point = 0;
-    bool isRegistered = false;
+    bool disable = false;
 };
 
 struct RegisNode
