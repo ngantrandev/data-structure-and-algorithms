@@ -23,6 +23,7 @@ void drawScoreBoard(int x, int y, int size);
 void drawFinalScoreBoard(int x, int y, int so_mon_hoc, std::vector<PTRMH> dsMH);
 
 void clearScreen(int x_origin, int y_origin, int width, int height);
+void clearBorder(int x, int y, int w, int h);
 // max title length = 30
 std::string XacNhan(int x, int y, std::string title);
 
@@ -191,6 +192,8 @@ void drawBox(int x, int y, int w, int h)
     {
         for (int j = y; j < y + h; j++)
         {
+            if (isInSaveArea(i, j) == false)
+                continue;
             if (i == x && j == y)
             {
                 gotoxy(i, j);
@@ -999,35 +1002,40 @@ void drawFinalScoreBoard(int x, int y, int so_mon_hoc, std::vector<PTRMH> dsMH)
     drawBox(x, y, w, h); // ve vien bao quanh
 
     // STT
-    gotoxy(x + 4, y + 1);
-    std::cout << "STT";
+    printStringXY(x + 4, y + 1, "STT");
     // MSSV
-    gotoxy(x1 + 5, y + 1);
-    std::cout << "MSSV";
+    printStringXY(x1 + 5, y + 1, "MSSV");
     // HO SINHVIEN
-    gotoxy(x2 + 11, y + 1);
-    std::cout << "HO TEN";
+    printStringXY(x2 + 11, y + 1, "HO TEN");
 
     for (int i = 1; i < w; i++)
     {
+        if (isInSaveArea(x + i, y + 2) == false)
+            continue;
         gotoxy(x + i, y + 2);
         std::cout << "=";
     }
 
     for (int i = 1; i < h; i++)
     {
+        if (isInSaveArea(x1, y + i) == false)
+            continue;
         gotoxy(x1, y + i);
         std::cout << "|";
     }
 
     for (int i = 1; i < h; i++)
     {
+        if (isInSaveArea(x2, y + i) == false)
+            continue;
         gotoxy(x2, y + i);
         std::cout << "|";
     }
 
     for (int i = 1; i < h; i++)
     {
+        if (isInSaveArea(x3, y + i) == false)
+            continue;
         gotoxy(x3, y + i);
         std::cout << "|";
     }
@@ -1035,41 +1043,79 @@ void drawFinalScoreBoard(int x, int y, int so_mon_hoc, std::vector<PTRMH> dsMH)
     // ve cot ghi diem
     for (int n = 1; n <= so_mon_hoc; n++)
     {
-        gotoxy(x3 + n * step - 6, y + 1);
-        std::cout << dsMH[n - 1]->course.courceCode;
+        printStringXY(x3 + n * step - 6, y + 1, dsMH[n - 1]->course.courceCode);
         for (int i = 1; i < h; i++)
         {
+            if (isInSaveArea(x3 + n * step, y + i) == false)
+                continue;
             gotoxy(x3 + n * step, y + i);
             std::cout << "|";
         }
-        gotoxy(x3 + n * step, y);
-        std::cout << "+";
-        gotoxy(x3 + n * step, y + 2);
-        std::cout << "+";
-        gotoxy(x3 + n * step, y + h - 1);
+        if (isInSaveArea(x3 + n * step, y) == true)
+        {
+            gotoxy(x3 + n * step, y);
+            std::cout << "+";
+        }
+        if (isInSaveArea(x3 + n * step, y + 2) == true)
+        {
+            gotoxy(x3 + n * step, y + 2);
+            std::cout << "+";
+        }
+        if (isInSaveArea(x3 + n * step, y + h - 1) == true)
+        {
+            gotoxy(x3 + n * step, y + h - 1);
+            std::cout << "+";
+        }
+    }
+
+    if (isInSaveArea(x1, y + 2) == true)
+    {
+        gotoxy(x1, y + 2);
         std::cout << "+";
     }
 
-    gotoxy(x1, y + 2);
-    std::cout << "+";
-    gotoxy(x1, y + h - 1);
-    std::cout << "+";
-    gotoxy(x1, y);
-    std::cout << "+";
+    if (isInSaveArea(x1, y + h - 1) == true)
+    {
+        gotoxy(x1, y + h - 1);
+        std::cout << "+";
+    }
+    if (isInSaveArea(x1, y) == true)
+    {
+        gotoxy(x1, y);
+        std::cout << "+";
+    }
 
-    gotoxy(x2, y + 2);
-    std::cout << "+";
-    gotoxy(x2, y + h - 1);
-    std::cout << "+";
-    gotoxy(x2, y);
-    std::cout << "+";
+    if (isInSaveArea(x2, y + 2) == true)
+    {
+        gotoxy(x2, y + 2);
+        std::cout << "+";
+    }
+    if (isInSaveArea(x2, y + h - 1) == true)
+    {
+        gotoxy(x2, y + h - 1);
+        std::cout << "+";
+    }
+    if (isInSaveArea(x2, y) == true)
+    {
+        gotoxy(x2, y);
+        std::cout << "+";
+    }
 
-    gotoxy(x3, y);
-    std::cout << "+";
-    gotoxy(x3, y + 2);
-    std::cout << "+";
-    gotoxy(x3, y + h - 1);
-    std::cout << "+";
+    if (isInSaveArea(x3, y) == true)
+    {
+        gotoxy(x3, y);
+        std::cout << "+";
+    }
+    if (isInSaveArea(x3, y + 2) == true)
+    {
+        gotoxy(x3, y + 2);
+        std::cout << "+";
+    }
+    if (isInSaveArea(x3, y + h - 1) == true)
+    {
+        gotoxy(x3, y + h - 1);
+        std::cout << "+";
+    }
 }
 
 void clearScreen(int x_origin, int y_origin, int width, int height)
@@ -1082,6 +1128,17 @@ void clearScreen(int x_origin, int y_origin, int width, int height)
     }
 }
 
+void clearBorder(int x, int y, int w, int h)
+{
+    for (int i = 0; i < h; i++)
+    {
+        gotoxy(x, y + i);
+        for (int j = 1; j <= w; j++)
+        {
+            std::cout << " ";
+        }
+    }
+}
 // max title length = 30
 std::string XacNhan(int x, int y, std::string title)
 {

@@ -31,9 +31,16 @@ const int STUDENT_CLASS_INFO_BOARD_WIDTH = 102;
 const int COURSE_INFO_BOARD_WIDTH = 71;
 const int CREDIT_CLASS_STATUS_BOARD_WIDTH = 99;
 
+//11||||||||||||++++MH10|||||+|||||||+++MH12||||||||||||++++MH19|||||||||||||+++MH16|||||||||||||+++MH15|||||||||||||+++MH
 const int FAST_TIME = 700;
 const int NORMAL_TIME = 1000;
 const int SLOW_TIME = 1500;
+
+const int MIN_CONSOLE_X = 0;
+const int MIN_CONSOLE_Y = 0;
+const int MAX_CONSOLE_X = 118;
+const int MAX_CONSOLE_Y = 30;
+const int SCROOL_STEP = 10;
 
 std::string thong_tin_lop_tin_chi[6] = {
 	"Ma mon hoc       : ",

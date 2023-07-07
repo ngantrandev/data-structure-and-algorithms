@@ -9,6 +9,7 @@
 /*
     HAM XUAT THONG TIN
 */
+
 void fillStudentInfoBoard(PTRSV FirstSV, int x, int y);
 
 void fillRegistedStudentBoard(int x, int y, PTRDK firstDK, PTRSV FirstSV);
@@ -18,7 +19,7 @@ void fillCourseInfoBoard(int x, int y, std::vector<PTRMH> dsMonHoc);
 void inDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc);
 void fillCreditClassPointBoard(int x, int y, PTRSV FirstSV, PTRDK firstDK);
 void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC);
-void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC);
+void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC);
 void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC dsLTC, PTRMH treeMH, char *mssv);
 
 /*
@@ -1025,7 +1026,7 @@ void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC
     clearScreen(x, y - 1, tabw, MAX_BOARD_ELEMENTS + 5);
 }
 
-void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC)
+void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC)
 {
     /*
         <-------------------left_side--------------------->
@@ -1039,9 +1040,10 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
                                                           index = 0  idx = 1   idx = 2
                                         < Trang   1  /  2 >
     */
-    int x1 = x + 10;
-    int x2 = x1 + 13;
-    int x3 = x2 + 27;
+
+    int x = x_origin;
+    int y = y_origin;
+    int x3 = x + 50;
     int step = 10;
 
     std::vector<PTRMH> dsMonHoc;
@@ -1050,7 +1052,6 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
 
     // left_size la chieu dai tu dau table den het phan cot HOTEN
     int so_mon_hoc = dsMonHoc.size();
-    int soSV = countLinkedList(FirstSV);
     int left_size = 51;
     int w = so_mon_hoc * step + left_size;
 
@@ -1059,32 +1060,33 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
     PTRDK nodeDK = NULL;
     PTRSV pfirst = FirstSV;
     PTRSV p = NULL;
+
     int currentPage = 1;
-    int pageSize = ceil((float)soSV / MAX_BOARD_ELEMENTS);
+    int pageSize = ceil((float)countLinkedList(FirstSV) / MAX_BOARD_ELEMENTS);
     int keyPressed = 0;
     std::string keyType = "NONE";
     std::stack<PTRSV> stackSV;
+    std::string temp_str = "";
 
     int stt = 0;
     int count = 0;
     bool reDraw = true;
 
-    gotoxy(x, y - 1);
-    std::cout << "[NEXT: RIGHT ARROW]   [PREVIOUS: LEFT ARROW]   [EXIT: ESC]";
-
     while (true)
     {
         if (reDraw == true)
         {
-            clearScreen(x, y, w, MAX_BOARD_ELEMENTS + 3);
-            drawFinalScoreBoard(x, y, so_mon_hoc, dsMonHoc);
-            gotoxy(x + 42, y + MAX_BOARD_ELEMENTS + 4);
+            system("cls");
+
+            gotoxy(10, y - 1);
+            std::cout << "[NEXT: RIGHT ARROW]   [PREVIOUS: LEFT ARROW]    [SCROOL: A,D]    [EXIT: ESC]";
+            gotoxy(42, y + MAX_BOARD_ELEMENTS + 4);
             std::printf("< Trang %2d / %d >", currentPage, pageSize);
+            drawFinalScoreBoard(x, y, so_mon_hoc, dsMonHoc);
 
             p = pfirst;
             count = 0;
             stt = (currentPage == 1) ? 0 : (currentPage - 1) * 10;
-
             while (p != NULL)
             {
                 count++;
@@ -1094,12 +1096,9 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
 
                 stt++;
 
-                gotoxy(x + 4, y + 2 + count);
-                std::cout << ((stt < 10) ? "0" + std::to_string(stt) : std::to_string(stt));
-                gotoxy(x + 12, y + 2 + count);
-                std::cout << p->student.studentID;
-                gotoxy(x + 24, y + 2 + count);
-                std::cout << p->student.lastName << " " << p->student.firstName;
+                printStringXY(x + 4, y + 2 + count, ((stt < 10) ? "0" + std::to_string(stt) : std::to_string(stt)));
+                printStringXY(x + 12, y + 2 + count, p->student.studentID, Student_ID_Length);
+                printStringXY(x + 28, y + 2 + count, charToString(p->student.lastName) + " " + charToString(p->student.firstName));
 
                 auto it = anhXaMSSV_dsLTC.find(p->student.studentID);
 
@@ -1108,6 +1107,7 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
                     p = p->next;
                     continue;
                 }
+
                 splitDsLTC = customSplit(it->second, ',');
                 for (int i = 0; i <= splitDsLTC.size(); i++)
                 {
@@ -1118,8 +1118,7 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
                                              { return strcmp(node->course.courceCode, loptinchi->courseCode) == 0; }) -
                                 dsMonHoc.begin();
 
-                    gotoxy(x3 + step * (indexMaMH + 1) - 8, y + 2 + count);
-                    std::cout << round(nodeDK->regis.point * 100) / 100;
+                    printStringXY(x3 + step * (indexMaMH + 1) - 8, y + 2 + count, round(nodeDK->regis.point * 100) / 100);
                 }
 
                 p = p->next;
@@ -1149,13 +1148,27 @@ void fillFinalPointBoard(int x, int y, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree
                 reDraw = true;
             }
         }
+
+        else if (keyType == "NHAP_VAN_BAN")
+        {
+            if (keyPressed == 'a' || keyPressed == 'A')
+            {
+                reDraw = true;
+                x += SCROOL_STEP;
+            }
+            else if (keyPressed == 'd' || keyPressed == 'D')
+            {
+                reDraw = true;
+                x -= SCROOL_STEP;
+            }
+        }
         else if (keyType == "EXIT")
         {
             break;
         }
     }
 
-    clearScreen(x, y - 1, w, MAX_BOARD_ELEMENTS + 6);
+    system("cls");
 }
 
 void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC dsLTC, PTRMH treeMH, char *mssv)

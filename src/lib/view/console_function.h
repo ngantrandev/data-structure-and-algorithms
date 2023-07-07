@@ -3,10 +3,17 @@
 #pragma once
 #include <stdio.h>
 #include <conio.h>
+#include "../config.h"
 #include <ctime>     /* thư viện hỗ trợ về thời gian thực */
 #include "windows.h" // thư viện này bá đạo lắm nhé - chứa nhiều đồ chơi nek - cứ tìm hiểu dần dần s
 //======= lấy tọa độ x của con trỏ hiện tại =============
 // #include<direct.h>
+
+// print string at (x,y)
+void printStringXY(int x, int y, std::string str);
+void printStringXY(int x, int y, char *str, int size);
+void printStringXY(int x, int y, int i);
+void printStringXY(int x, int y, float f);
 
 void gotoxy(short x, short y)
 {
@@ -85,22 +92,38 @@ void SetColor(std::string colorName)
 
     WORD color = 0;
 
-    if(colorName == "BLACK") color = 0;
-    else if(colorName == "BLUE") color = 1;
-    else if(colorName == "GREEN") color = 2;
-    else if(colorName == "AQUA") color = 3;
-    else if(colorName == "RED") color = 4;
-    else if(colorName == "PURPLE") color = 5;
-    else if(colorName == "YELLOW") color = 6;
-    else if(colorName == "WHITE") color = 7;
-    else if(colorName == "GRAY") color = 8;
-    else if(colorName == "LIGHT BLUE") color = 9;
-    else if(colorName == "LIGHT GREEN") color = 10;
-    else if(colorName == "LIGHT AQUA") color = 11;
-    else if(colorName == "LIGHT RED") color = 12;
-    else if(colorName == "LIGHT PURPLE") color = 13;
-    else if(colorName == "LIGHT YELLOW") color = 14;
-    else if(colorName == "BRIGHT WHITE") color = 15;
+    if (colorName == "BLACK")
+        color = 0;
+    else if (colorName == "BLUE")
+        color = 1;
+    else if (colorName == "GREEN")
+        color = 2;
+    else if (colorName == "AQUA")
+        color = 3;
+    else if (colorName == "RED")
+        color = 4;
+    else if (colorName == "PURPLE")
+        color = 5;
+    else if (colorName == "YELLOW")
+        color = 6;
+    else if (colorName == "WHITE")
+        color = 7;
+    else if (colorName == "GRAY")
+        color = 8;
+    else if (colorName == "LIGHT BLUE")
+        color = 9;
+    else if (colorName == "LIGHT GREEN")
+        color = 10;
+    else if (colorName == "LIGHT AQUA")
+        color = 11;
+    else if (colorName == "LIGHT RED")
+        color = 12;
+    else if (colorName == "LIGHT PURPLE")
+        color = 13;
+    else if (colorName == "LIGHT YELLOW")
+        color = 14;
+    else if (colorName == "BRIGHT WHITE")
+        color = 15;
 
     HANDLE hConsoleOutput;
     hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -211,6 +234,47 @@ void HienThanhCuon(BOOL Show)
     ShowScrollBar(hWnd, SB_BOTH, Show);
 }
 
+// kiem tra toa do x,y co nam trong khu vuc
+// hien thi khong bi loi bo dem khong
+bool isInSaveArea(int x, int y)
+{
+    return x >= MIN_CONSOLE_X && x <= MAX_CONSOLE_X && y >= MIN_CONSOLE_Y && y <= MAX_CONSOLE_Y;
+}
+
+void printStringXY(int x, int y, std::string str)
+{
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (isInSaveArea(x + i, y) == true)
+        {
+            gotoxy(x + i, y);
+            std::cout << str[i];
+        }
+    }
+}
+
+void printStringXY(int x, int y, char *str, int size)
+{
+    gotoxy(x, y);
+    for (int i = 0; i < size; i++)
+    {
+        if (isInSaveArea(x + i, y) == true)
+        {
+            gotoxy(x + i, y);
+            std::cout << str[i];
+        }
+    }
+}
+
+void printStringXY(int x, int y, float f){
+    std::string str = std::to_string(f);
+    printStringXY(x, y, str);
+}
+
+void printStringXY(int x, int y, int i){
+    std::string str = std::to_string(i);
+    printStringXY(x, y, str);
+}
 // //BOOL WINAPI SetConsoleOutputCP(_In_UINT wCodePageID);
 
 // BOOL WINAPI SetConsoleOutputCP(

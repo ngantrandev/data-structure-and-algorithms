@@ -30,11 +30,34 @@ int main()
     firstSV = loadStudentList(svFile);
     firstLH = loadClassList(lhFile);
 
+    char a[100] = "N20DCPT001";
+    char b[100] = "N20DCPT002";
+    char c[100] = "N20DCPT003";
+    char d[100] = "N20DCPT004";
+
+    anhXaMSSV_dsLTC[a] = "LTC1,LTC2,LTC3";
+    anhXaMSSV_dsLTC[b] = "LTC1,LTC2,LTC3";
+    anhXaMSSV_dsLTC[c] = "LTC1,LTC2,LTC3";
+    anhXaMSSV_dsLTC[d] = "LTC1,LTC2,LTC3";
+
+    mappingMSSV_dsLTC(a, dsLTC.nodes[1], dsLTC, anhXaMSSV_dsLTC, anhXaLTC_MH);
+    mappingMSSV_dsLTC(b, dsLTC.nodes[1], dsLTC, anhXaMSSV_dsLTC, anhXaLTC_MH);
+    mappingMSSV_dsLTC(c, dsLTC.nodes[1], dsLTC, anhXaMSSV_dsLTC, anhXaLTC_MH);
+    mappingMSSV_dsLTC(d, dsLTC.nodes[1], dsLTC, anhXaMSSV_dsLTC, anhXaLTC_MH);
+
+    for (auto it = anhXaMSSV_dsLTC.begin(); it != anhXaMSSV_dsLTC.end(); it++)
+    {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
+
+    getch();
+
     while (true)
     {
         SetColor("WHITE");
         ShowCur(0);
-        out = menu(30, 4, menu_chinh, 14, pos);
+        // out = menu(30, 4, menu_chinh, 14, pos);
+        pos = 11;
         ShowCur(1);
 
         if (out == 1)
@@ -90,6 +113,9 @@ int main()
         else if (pos == 11) // cau l
         {
             // in bang diem tong ket
+            ShowCur(0);
+            fillFinalPointBoard(10, 10, dsLTC, firstSV, treeMH, anhXaMSSV_dsLTC);
+            ShowCur(1);
         }
         else if (pos == 12) // xuat thong tin
         {
