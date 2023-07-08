@@ -17,7 +17,7 @@ PTRLH loadClassList(char *filename);
 PTRDK loadRegisStudentList(FILE *filein);
 Credit *loadCreditClassInfo(FILE *filein);
 LIST_LTC loadCreditClassList(char *filename);
-std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename);
+std::map<std::string, std::string> loadMapMSSV_dsLTC(char *filename);
 std::map<int, char *> loadMapMaLTC_MaMH(char *filename);
 
 // HAM luu THONG TIN vao file
@@ -35,7 +35,7 @@ void xuatDanhSachMonHoc_LNR_File_Csv(PTRMH Tree_monhoc, FILE *fileout);
 void xuatDanhSachMonHoc_File_Csv(PTRMH Tree_monhoc, char File_Name[50]);
 
 void saveMapMaLTC_MaMH(std::map<int, char *> anhXaLTC_MH, char *filename);
-void saveMapMSSV_dsLTC(std::map<char *, std::string> anhXaMSSV_dsLTC, char *filename);
+void saveMapMSSV_dsLTC(std::map<std::string, std::string> anhXaMSSV_dsLTC, char *filename);
 
 // ham thao tac data bo nho trong chuong trinh
 void leftRotate(PTRMH &tree);
@@ -52,7 +52,7 @@ void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree);
 
 // xu ly nghiep vu chuong trinh
 void mappingMaLTC_MaMH(std::map<int, char *> &anhXaLTC_MH, int maLTC, char *maMH);
-void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH);
+void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<std::string, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH);
 
 // load data from file
 
@@ -261,10 +261,10 @@ LIST_LTC loadCreditClassList(char *File_Name)
     }
 }
 
-std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename)
+std::map<std::string, std::string> loadMapMSSV_dsLTC(char *filename)
 {
     FILE *filein = fopen(filename, "r");
-    std::map<char *, std::string> mapMSSV_dsLTC;
+    std::map<std::string, std::string> mapMSSV_dsLTC;
 
     if (filein == NULL)
     {
@@ -273,8 +273,8 @@ std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename)
     }
 
     char temp_line[maxLengthString];
-    char firstPart[maxLengthString];
-    char secondPart[maxLengthString];
+    char mssv[maxLengthString];
+    char dsLTC[maxLengthString];
     int size = 0;
 
     fgets(temp_line, maxLengthString, filein);
@@ -282,13 +282,13 @@ std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename)
 
     for (int i = 0; i < size; i++)
     {
-        fgets(temp_line, maxLengthString, filein);
-        loaiBoDauXuongDong(temp_line);
+        fgets(mssv, maxLengthString, filein);
+        fgets(dsLTC, maxLengthString, filein);
+        loaiBoDauXuongDong(mssv);
+        loaiBoDauXuongDong(dsLTC);
 
-        sscanf(temp_line, "%s %s", firstPart, secondPart);
-
-        std::cout << firstPart << " " << strlen(firstPart) << " " << secondPart << " " << strlen(secondPart) << "\n";
-        mapMSSV_dsLTC[firstPart] = charToString(secondPart);
+        std::cout << mssv << " " << strlen(mssv) << " " << dsLTC << " " << strlen(dsLTC) << "\n";
+        mapMSSV_dsLTC[charToString(mssv)] = charToString(dsLTC);
     }
 
     fclose(filein);
@@ -308,7 +308,6 @@ std::map<int, char *> loadMapMaLTC_MaMH(char *filename)
 
     char temp_line[maxLengthString];
     int maLTC = 0;
-    char maMH[maxLengthString];
     int size = 0;
 
     fgets(temp_line, maxLengthString, filein);
@@ -317,13 +316,14 @@ std::map<int, char *> loadMapMaLTC_MaMH(char *filename)
     for (int i = 0; i < size; i++)
     {
         fgets(temp_line, maxLengthString, filein);
-        loaiBoDauXuongDong(temp_line);
+        sscanf(temp_line, "%d", &maLTC);
+        fgets(temp_line, maxLengthString, filein);
+        char *value = new char[CourseCode_Length];
+        strcpy(value, temp_line);
+        loaiBoDauXuongDong(value);
+        mapMaLTC_MaMH[maLTC] = value;
 
-        sscanf(temp_line, "%d %s", &maLTC, maMH);
-
-        std::cout<<maLTC<<" "<<maMH<<"\n";
-
-        mapMaLTC_MaMH[maLTC] = maMH;
+        std::cout<<maLTC<<" "<<mapMaLTC_MaMH[maLTC]<<"\n";
     }
 
     fclose(filein);
@@ -560,7 +560,7 @@ void saveMapMaLTC_MaMH(std::map<int, char *> anhXaLTC_MH, char *filename)
     fclose(fileout);
 }
 
-void saveMapMSSV_dsLTC(std::map<char *, std::string> anhXaMSSV_dsLTC, char *filename)
+void saveMapMSSV_dsLTC(std::map<std::string, std::string> anhXaMSSV_dsLTC, char *filename)
 {
     FILE *fileout = NULL;
     fileout = fopen(filename, "w");
@@ -868,7 +868,7 @@ void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree)
 // xu ly nghiep vu chuong trinh
 
 // dsAnhXaMaLTCMaMH la danh sach lop tin chi ung voi maMH dang xet
-void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH)
+void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<std::string, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH)
 {
     auto it = anhXaMSSV_dsLTC.find(mssv);
 
