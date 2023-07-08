@@ -17,6 +17,8 @@ PTRLH loadClassList(char *filename);
 PTRDK loadRegisStudentList(FILE *filein);
 Credit *loadCreditClassInfo(FILE *filein);
 LIST_LTC loadCreditClassList(char *filename);
+std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename);
+std::map<int, char *> loadMapMaLTC_MaMH(char *filename);
 
 // HAM luu THONG TIN vao file
 void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString]);
@@ -259,6 +261,75 @@ LIST_LTC loadCreditClassList(char *File_Name)
     }
 }
 
+std::map<char *, std::string> loadMapMSSV_dsLTC(char *filename)
+{
+    FILE *filein = fopen(filename, "r");
+    std::map<char *, std::string> mapMSSV_dsLTC;
+
+    if (filein == NULL)
+    {
+        std::cout << "Mo danh sach map MSSV dsLTC that bai\n";
+        return mapMSSV_dsLTC;
+    }
+
+    char temp_line[maxLengthString];
+    char firstPart[maxLengthString];
+    char secondPart[maxLengthString];
+    int size = 0;
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &size);
+
+    for (int i = 0; i < size; i++)
+    {
+        fgets(temp_line, maxLengthString, filein);
+        loaiBoDauXuongDong(temp_line);
+
+        sscanf(temp_line, "%s %s", firstPart, secondPart);
+
+        std::cout << firstPart << " " << strlen(firstPart) << " " << secondPart << " " << strlen(secondPart) << "\n";
+        mapMSSV_dsLTC[firstPart] = charToString(secondPart);
+    }
+
+    fclose(filein);
+    return mapMSSV_dsLTC;
+}
+
+std::map<int, char *> loadMapMaLTC_MaMH(char *filename)
+{
+    FILE *filein = fopen(filename, "r");
+    std::map<int, char *> mapMaLTC_MaMH;
+
+    if (filein == NULL)
+    {
+        std::cout << "Mo danh sach map MaLTC MaMH that bai\n";
+        return mapMaLTC_MaMH;
+    }
+
+    char temp_line[maxLengthString];
+    int maLTC = 0;
+    char maMH[maxLengthString];
+    int size = 0;
+
+    fgets(temp_line, maxLengthString, filein);
+    sscanf(temp_line, "%d", &size);
+
+    for (int i = 0; i < size; i++)
+    {
+        fgets(temp_line, maxLengthString, filein);
+        loaiBoDauXuongDong(temp_line);
+
+        sscanf(temp_line, "%d %s", &maLTC, maMH);
+
+        std::cout<<maLTC<<" "<<maMH<<"\n";
+
+        mapMaLTC_MaMH[maLTC] = maMH;
+    }
+
+    fclose(filein);
+    return mapMaLTC_MaMH;
+}
+
 // SAVE DATA
 void xuatDanhSachSinhVien_File_Txt(PTRSV FirstSv, char File_Name[maxLengthString])
 {
@@ -486,6 +557,7 @@ void saveMapMaLTC_MaMH(std::map<int, char *> anhXaLTC_MH, char *filename)
     {
         fprintf(fileout, "\n%d %s", it->first, it->second);
     }
+    fclose(fileout);
 }
 
 void saveMapMSSV_dsLTC(std::map<char *, std::string> anhXaMSSV_dsLTC, char *filename)
@@ -497,12 +569,13 @@ void saveMapMSSV_dsLTC(std::map<char *, std::string> anhXaMSSV_dsLTC, char *file
         std::cout << "Mo file MappingMSSV_dsLTC that bai\n";
         return;
     }
-    fprintf(fileout, "\n%d", anhXaMSSV_dsLTC.size());
+    fprintf(fileout, "%d", anhXaMSSV_dsLTC.size());
 
     for (auto it = anhXaMSSV_dsLTC.begin(); it != anhXaMSSV_dsLTC.end(); it++)
     {
-        fprintf(fileout, "\n%s %s", it->first, it->second);
+        fprintf(fileout, "\n%s %s", it->first, it->second.c_str());
     }
+    fclose(fileout);
 }
 
 // thao tac data bo nho trong
@@ -798,22 +871,13 @@ void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree)
 void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<char *, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH)
 {
     auto it = anhXaMSSV_dsLTC.find(mssv);
-    std::cout << "mssv: " << mssv;
-    // std::cout << it->first << " " << it->second << std::endl;
 
     if (it == anhXaMSSV_dsLTC.end())
     {
-        std::cout << ": tao moi";
-        // std::cout<<"Tao moi"<<it->first << " " << it->second << std::endl;
         anhXaMSSV_dsLTC[mssv] = std::to_string(loptinchi->creditCode) + ",";
-        std::cout << mssv << " " << anhXaMSSV_dsLTC[mssv] << std::endl;
     }
     else
     {
-        std::cout << ": CHeck trung lap";
-        std::cout << it->first << " " << it->second << std::endl;
-        // std::cout<<"CHeck trung lap"<<it->first << " " << it->second << std::endl;
-        // ds lop tin chi cua sinh vien dang xet
         std::string dsLTC = it->second;
         if (dsLTC.find(std::to_string(loptinchi->creditCode)))
             return;
@@ -822,6 +886,7 @@ void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map
         // duyet dsAnhXaMaLTCMaMH
         for (auto &x : dsAnhXaMaLTCMaMH)
         {
+            // khac lop tim chi nhung cung ma mon hoc
             if (x.first != loptinchi->creditCode && strcmp(x.second, loptinchi->courseCode) == 0)
             {
                 size_t index = dsLTC.find(std::to_string(x.first));
@@ -832,10 +897,10 @@ void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map
                     PTRDK nodeDK1 = timSinhVien_DSSVDK(listLTC.nodes[x.first]->firstListRegister, mssv);
                     PTRDK nodeDK2 = timSinhVien_DSSVDK(loptinchi->firstListRegister, mssv);
 
-                    if (nodeDK2->regis.point >= nodeDK1->regis.point)
+                    if (nodeDK2->regis.point > nodeDK1->regis.point)
                     {
                         it->second.replace(index, std::to_string(loptinchi->creditCode).length(), std::to_string(loptinchi->creditCode));
-                        return;
+                        anhXaMSSV_dsLTC[mssv] = it->second;
                     }
                 }
             }

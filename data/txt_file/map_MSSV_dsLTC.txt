@@ -1,2 +1,5 @@
-1
-Èƒ 1,1,1,1,1,1,1,1,1,1,
+4
+N20DCPT004 hello
+N20DCPT003 world
+N20DCPT002 myname
+N20DCPT001 isNgan
