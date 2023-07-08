@@ -1,7 +1,6 @@
 #include <iostream>
 #include <map>
 
-// #include "src/lib/view/my_show.h"
 #include "src/lib/data_manager/data_manager.h"
 #include "src/lib/view/input.h"
 #include "src/lib/view/drawBoard.h"
@@ -21,14 +20,10 @@ int main()
     int out = 0;
     int pos = 0;
 
-    char ltcFile[] = "./data/txt_file/danh_sach_lop_tin_chi.txt";
-    char svFile[] = "./data/txt_file/danh_sach_sinh_vien.txt";
-    char mhFile[] = "./data/txt_file/danh_sach_mon_hoc.txt";
-    char lhFile[] = "./data/txt_file/danh_sach_ma_lop_hoc.txt";
-    treeMH = loadCourseList(mhFile);
-    dsLTC = loadCreditClassList(ltcFile);
-    firstSV = loadStudentList(svFile);
-    firstLH = loadClassList(lhFile);
+    treeMH = loadCourseList(fileDsMonhoc);
+    dsLTC = loadCreditClassList(fileDsLTC);
+    firstSV = loadStudentList(fileDsSinhvien);
+    firstLH = loadClassList(fileDsMaLop);
     anhXaMSSV_dsLTC = loadMapMSSV_dsLTC(fileMapMSSV_dsLTC);
     anhXaLTC_MH = loadMapMaLTC_MaMH(fileMapMaLTC_maMH);
 
@@ -113,7 +108,7 @@ int main()
 
                 if (pos == 0)
                 { // xuat danh sach lop tin chi
-                    fillCreditClassBoard(15, 10, dsLTC);
+                    fillCreditClassBoard(5, 10, dsLTC);
                 }
                 else if (pos == 1)
                 { // xuat danh sach sinh vien
@@ -143,6 +138,15 @@ int main()
                 saveMapMaLTC_MaMH(anhXaLTC_MH, fileMapMaLTC_maMH);
             }
         }
+    }
+
+    if (XacNhan(30, 10, "LUU TIEN TRINH TRUOC KHI THOAT") == "YES")
+    {
+        xuatDanhSachSinhVien_File_Txt(firstSV, fileDsSinhvien);
+        xuatDanhSachMonHoc_File_Txt(treeMH, fileDsMonhoc);
+        xuatDanhSachLopTinChi_File_Txt(dsLTC, fileDsLTC);
+        saveMapMSSV_dsLTC(anhXaMSSV_dsLTC, fileMapMSSV_dsLTC);
+        saveMapMaLTC_MaMH(anhXaLTC_MH, fileMapMaLTC_maMH);
     }
 
     return 0;

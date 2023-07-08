@@ -66,7 +66,7 @@ struct Credit
     char schoolYear[SchoolYear_Length] = ""; // khoa hoc
     int semester = 0, group = 0;             //
     int studentMin = 0, studentMax = 0;      // so sinh vien lon nhat - nho nhat
-    bool enable = false;
+    bool disable = false;
     PTRDK firstListRegister = NULL; // con tro danh sach sinh vien dang ky lop tin chi
 };
 /// <summary>

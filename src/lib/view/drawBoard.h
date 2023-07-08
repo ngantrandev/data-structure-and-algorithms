@@ -471,13 +471,13 @@ void drawStudentInfoBoard(int x, int y, int size)
 
 void drawCreditClassInfoBoard(int x, int y, int size)
 {
-    /*  x     x1       x2           x3            x4       x5       x6        x7        x8
-        +=====+========+============+=============+========+========+=========+=========+=============+
-        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX |  TINH TRANG |
-    y1  +=====+========+============+=============+========+========+=========+=========+=============+
-        |     |        |            | 2020 - 2021 |        |        |         |         |  HOAT DONG  |
-        |     |        |            |             |        |        |         |         |             |
-        +=====+========+============+=============+========+========+=========+=========+=============+
+    /*  x     x1       x2           x3            x4       x5       x6        x7        x8                x9
+        +=====+========+============+=============+========+========+=========+=========+=================+=============+
+        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX | SLOT DA DANG KY |  TINH TRANG |
+    y1  +=====+========+============+=============+========+========+=========+=========+=================+=============+
+        |     |        |            | 2020 - 2021 |        |        |         |         |                 |  HOAT DONG  |
+        |     |        |            |             |        |        |         |         |                 |             |
+        +=====+========+============+=============+========+========+=========+=========+=================+=============+
     */
     int tabw = CREDIT_CLASS_INFO_BOARD_WIDTH;
     int tabh = size + 4;
@@ -489,6 +489,7 @@ void drawCreditClassInfoBoard(int x, int y, int size)
     int x6 = x5 + 9;
     int x7 = x6 + 10;
     int x8 = x7 + 10;
+    int x9 = x8 + 18;
     int y1 = y + 2;
 
     // draw border
@@ -510,8 +511,11 @@ void drawCreditClassInfoBoard(int x, int y, int size)
     std::cout << "SOSVMIN";
     gotoxy(x7 + 2, y + 1);
     std::cout << "SOSVMAX";
-    gotoxy(x8 + 3, y + 1);
+    gotoxy(x8 + 2, y + 1);
+    std::cout << "SLOT DA DANG KY";
+    gotoxy(x9 + 3, y + 1);
     std::cout << "TINH TRANG";
+
 
     for (int i = 1; i < tabw - 1; i++)
     {
@@ -564,6 +568,11 @@ void drawCreditClassInfoBoard(int x, int y, int size)
     for (int i = 1; i < tabh; i++)
     {
         gotoxy(x8, y + i);
+        std::cout << "|";
+    }
+    for(int i = 1; i < tabh; i++)
+    {
+        gotoxy(x9, y + i);
         std::cout << "|";
     }
 
@@ -640,6 +649,13 @@ void drawCreditClassInfoBoard(int x, int y, int size)
     gotoxy(x8, y1);
     std::cout << "+";
     gotoxy(x8, y + tabh - 1);
+    std::cout << "+";
+
+    gotoxy(x9, y);
+    std::cout << "+";
+    gotoxy(x9, y1);
+    std::cout << "+";
+    gotoxy(x9, y + tabh - 1);
     std::cout << "+";
 }
 void drawCreditClassStatusBoard(int x, int y, int size)

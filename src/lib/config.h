@@ -5,6 +5,7 @@
 char fileDsSinhvien[] = "./data/txt_file/danh_sach_sinh_vien.txt";
 char fileDsMonhoc[] = "./data/txt_file/danh_sach_mon_hoc.txt";
 char fileDsLTC[] = "./data/txt_file/danh_sach_lop_tin_chi.txt";
+char fileDsMaLop[] = "./data/txt_file/danh_sach_ma_lop_hoc.txt";
 char fileMapMaLTC_maMH[] = "./data/txt_file/map_maLTC_maMH.txt";
 char fileMapMSSV_dsLTC[] = "./data/txt_file/map_MSSV_dsLTC.txt";
 
@@ -26,7 +27,7 @@ const int maxLengthString = 128;
 
 const int SCORE_BOARD_WIDTH = 86;
 const int AVG_SCORE_BOARD_WIDTH = 80;
-const int CREDIT_CLASS_INFO_BOARD_WIDTH = 95;
+const int CREDIT_CLASS_INFO_BOARD_WIDTH = 113;
 const int STUDENT_CLASS_INFO_BOARD_WIDTH = 102;
 const int COURSE_INFO_BOARD_WIDTH = 71;
 const int CREDIT_CLASS_STATUS_BOARD_WIDTH = 99;
@@ -67,21 +68,21 @@ std::string nhap_ma_mon_hoc[2] = {
 	"Nhap ma mon hoc(chuoi ky tu): "};
 
 std::string menu_chinh[15] = {
-	"Cap nhat lop tin chi                ",
-	"In danh sach sinh vien lop tin chi  ",
-	"Cap nhat sinh vien lop hoc          ",
-	"In danh sach sinh vien lop hoc      ",
-	"Cap nhat danh sach mon hoc          ",
-	"In danh sach mon hoc theo ten       ",
-	"Dang ky lop tin chi                 ",
-	"Huy lop tin chi khong du dieu kien  ",
-	"Nhap diem lop tin chi               ",
-	"In bang diem lop tin chi            ",
-	"In bang diem trung binh lop hoc     ",
-	"In bang diem tong ket cac mon hoc   ",
-	"Xuat thong tin - Console            ",
-	"Cap nhat diem sinh vien             ",
-	"Luu du lieu - File                  "};
+	"Cap nhat lop tin chi                           ",
+	"In danh sach sinh vien lop tin chi             ",
+	"Cap nhat sinh vien lop hoc                     ",
+	"In danh sach sinh vien lop hoc                 ",
+	"Cap nhat danh sach mon hoc                     ",
+	"In danh sach mon hoc theo ten                  ",
+	"Dang ky lop tin chi                            ",
+	"Huy lop tin chi khong du dieu kien             ",
+	"Nhap diem lop tin chi                          ",
+	"In bang diem lop tin chi                       ",
+	"In bang diem trung binh lop hoc                ",
+	"In bang diem tong ket cac mon hoc              ",
+	"Xuat thong tin - Console                       ",
+	"Cap nhat diem lon nhat tung mon cua sinh vien  ",
+	"Luu du lieu - File                             "};
 
 std::string show_file[4] = {
 	"Xuat danh sach lop tin chi ",

@@ -16,7 +16,7 @@ int menu(int x, int y, std::string *menuSelection, int size, int &pos)
 		+===========================================+
 	*/
 
-	int w = menuSelection[0].length() + 8;
+	int w = menuSelection[0].length() + 10;
 
 	drawBox(x, y, w, size + 2);
 	SetColor("WHITE");

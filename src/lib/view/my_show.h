@@ -37,7 +37,7 @@ void inDanhSachSinhVienTheoTen(int x, int y, PTRSV FirstSV, PTRLH firstLH);     
 void capNhatDanhSachMonHoc_User(PTRMH &treeMH, int x, int y);                                                                                                 // cau e
 void inDanhSachMonHocTheoTen(int x, int y, PTRMH treeMH);                                                                                                     // cau f
 void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV);                                                                              // cau g
-void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC dsLTC);                                                                                               // cau h
+void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC &dsLTC);                                                                                              // cau h
 void nhapDiemLopTinChi(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                                          // cau i
 void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC);                                                                                                      // cau j
 void inBangDiemTrungBinhLopHoc(int x, int y, PTRSV firstSV, PTRLH firstLH, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC); // cau k
@@ -306,16 +306,16 @@ void fillRegistedStudentBoard(int x, int y, PTRDK firstDK, PTRSV FirstSV) // cas
 
 void fillCreditClassBoard(int x, int y, LIST_LTC dsLTC)
 {
-    /*                                        DANH SACH LOP TIN CHI
-                                            CO %d LOP TRONG DANH SACH
-        x     x1       x2           x3            x4       x5       x6        x7        x8
-        +=====+========+============+=============+========+========+=========+=========+=============+
-        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX |  TINH TRANG |
-    y1  +=====+========+============+=============+========+========+=========+=========+=============+
-        |     |        |            | 2020 - 2021 |        |        |         |         |  HOAT DONG  |
-        |     |        |            |             |        |        |         |         |             |
-        +=====+========+============+=============+========+========+=========+=========+=============+
-                                            < Trang   1  /  2 >
+    /*                                              DANH SACH LOP TIN CHI
+                                                  CO %d LOP TRONG DANH SACH
+         x     x1       x2           x3            x4       x5       x6        x7        x8                x9
+        +=====+========+============+=============+========+========+=========+=========+=================+=============+
+        | STT | MA LOP |   MA MON   |  NIEN KHOA  | HOC KY |  NHOM  | SOSVMIN | SOSVMAX | SLOT DA DANG KY |  TINH TRANG |
+    y1  +=====+========+============+=============+========+========+=========+=========+=================+=============+
+        |     |        |            | 2020 - 2021 |        |        |         |         |                 |  HOAT DONG  |
+        |     |        |            |             |        |        |         |         |                 |             |
+        +=====+========+============+=============+========+========+=========+=========+=================+=============+
+                                                        < Trang   1  /  2 >
     */
     int size = countCreditClass(dsLTC);
 
@@ -351,7 +351,7 @@ void fillCreditClassBoard(int x, int y, LIST_LTC dsLTC)
         {
             clearScreen(x, y, tabw, MAX_BOARD_ELEMENTS + 3);
             drawCreditClassInfoBoard(x, y, MAX_BOARD_ELEMENTS);
-            gotoxy(x + 37, y + MAX_BOARD_ELEMENTS + 4);
+            gotoxy(x + 48, y + MAX_BOARD_ELEMENTS + 4);
             std::printf("< Trang %2d / %d >", currentPage, pageSize);
 
             count = 0;
@@ -371,22 +371,24 @@ void fillCreditClassBoard(int x, int y, LIST_LTC dsLTC)
                     stt++;
                     gotoxy(x + 2, y + 2 + count);
                     std::cout << ((stt < 10) ? "0" + std::to_string(stt) : std::to_string(stt));
-                    gotoxy(x + 8, y + 2 + count);
+                    gotoxy(x + 10, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->creditCode;
-                    gotoxy(x + 18, y + 2 + count);
+                    gotoxy(x + 20, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->courseCode;
-                    gotoxy(x + 30, y + 2 + count);
+                    gotoxy(x + 33, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->schoolYear;
-                    gotoxy(x + 44, y + 2 + count);
+                    gotoxy(x + 46, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->semester;
-                    gotoxy(x + 54, y + 2 + count);
+                    gotoxy(x + 55, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->group;
-                    gotoxy(x + 62, y + 2 + count);
+                    gotoxy(x + 65, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->studentMin;
-                    gotoxy(x + 72, y + 2 + count);
+                    gotoxy(x + 75, y + 2 + count);
                     std::cout << dsLTC.nodes[curr_index]->studentMax;
-                    gotoxy(x + 83, y + 2 + count);
-                    std::cout << (dsLTC.nodes[curr_index]->enable == false ? "Hoat dong" : "Da huy");
+                    gotoxy(x + 88, y + 2 + count);
+                    std::cout << countLinkedList(dsLTC.nodes[curr_index]->firstListRegister);
+                    gotoxy(x + 101, y + 2 + count);
+                    std::cout << (dsLTC.nodes[curr_index]->disable == false ? "Hoat dong" : "Da huy");
                 }
 
                 curr_index++;
@@ -610,15 +612,18 @@ void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV) 
     ShowCur(1);
 }
 
-void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC dsLTC) // cau h
+void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC &dsLTC) // cau h
 {
     if (XacNhan(x, y, "XAC NHAN HUY CAC LOP TIN CHI KHONG DU SINH VIEN") == "YES")
     {
         for (int i = 1; i <= dsLTC.currentIndex; i++)
         {
-            if (countLinkedList(dsLTC.nodes[i]->firstListRegister) < dsLTC.nodes[i]->studentMin)
+            if (dsLTC.nodes[i] != NULL)
             {
-                dsLTC.nodes[i]->enable = false;
+                if (countLinkedList(dsLTC.nodes[i]->firstListRegister) < dsLTC.nodes[i]->studentMin)
+                {
+                    dsLTC.nodes[i]->disable = true;
+                }
             }
         }
     }
@@ -1315,9 +1320,14 @@ void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC d
         {
             if (XacNhan(x, y + MAX_BOARD_ELEMENTS + 6, "XAC NHAN DANG KY LOP NAY?") == "YES")
             {
+                if (tempCreditList[pos]->disable == true)
+                {
+                    ShowMessage(x, y + MAX_BOARD_ELEMENTS + 6, "LOP TIN CHI KHONG CO SAN", FAST_TIME);
+                    continue;
+                }
                 if (timSinhVien_DSSVDK(tempCreditList[pos]->firstListRegister, mssv) != NULL)
                 {
-                    ShowMessage(x, y + MAX_BOARD_ELEMENTS + 6, "BAN DA DANG KY LOP NAY", 1000);
+                    ShowMessage(x, y + MAX_BOARD_ELEMENTS + 6, "BAN DA DANG KY LOP NAY", FAST_TIME);
                     continue;
                 }
                 Registration newRegis;
@@ -1926,6 +1936,25 @@ void nhapDiem(int x, int y, PTRSV firstSV, Credit *loptinchi)
 
         else if (keyType == "EXIT")
         {
+            if (XacNhan(x, y + MAX_BOARD_ELEMENTS + 6, "XAC NHAN THOAT + LUU CHINH SUA") == "NO")
+                continue;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (temp_point[i].length() == 0)
+                {
+                    listPtrDK[i]->regis.point = 0;
+                    continue;
+                }
+                if (IsFloatNumber(temp_point[i]) == false)
+                {
+                    ShowMessage(x, y + MAX_BOARD_ELEMENTS + 5, "CO DIEM KHONG HOP LE", FAST_TIME);
+                    // listPtrDK[i]->regis.point = 0;
+                    continue;
+                }
+
+                listPtrDK[i]->regis.point = std::stof(temp_point[i]);
+            }
             break;
         }
     }

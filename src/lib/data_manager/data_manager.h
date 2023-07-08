@@ -225,7 +225,7 @@ Credit *loadCreditClassInfo(FILE *filein)
     sscanf(temp_line, "%d %d %d %d", &creditClass->semester, &creditClass->group, &creditClass->studentMin, &creditClass->studentMax);
 
     fgets(temp_line, maxLengthString, filein);
-    sscanf(temp_line, "%d", &creditClass->enable);
+    sscanf(temp_line, "%d", &creditClass->disable);
 
     creditClass->firstListRegister = loadRegisStudentList(filein);
     return creditClass;
@@ -432,7 +432,7 @@ void xuatThongTinLopTinChi_File_Txt(Credit *loptinchi, FILE *fileout)
     fputs("\n", fileout);
     fprintf(fileout, "%d %d %d %d", loptinchi->semester, loptinchi->group, loptinchi->studentMin, loptinchi->studentMax);
     fputs("\n", fileout);
-    fprintf(fileout, "%d", loptinchi->enable);
+    fprintf(fileout, "%d", loptinchi->disable);
     fputs("\n", fileout);
 
     xuatDanhSachSVDK_File_Txt(loptinchi->firstListRegister, fileout);
