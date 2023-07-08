@@ -18,7 +18,7 @@ void fillCourseInfoBoard(int x, int y, std::vector<PTRMH> dsMonHoc);
 
 void inDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc);
 void fillCreditClassPointBoard(int x, int y, PTRSV FirstSV, PTRDK firstDK);
-void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC);
+void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC);
 void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC);
 void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC dsLTC, PTRMH treeMH, char *mssv);
 
@@ -28,19 +28,19 @@ void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC d
 void nhapThongTinLopTinChi_User(int x, int y, Credit *loptinchi);
 void nhapThongTinSinhVien(int x, int y, Student &sinhvien);
 void nhapThongTinMonHoc_User(int x, int y, Course &monhoc);
-void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK);
+void nhapDiem(int x, int y, PTRSV firstSV, Credit* loptinchi);
 
-void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH);                                                                                  // cau a
-void inDanhSachSinhVienDangKy(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                              // cau b
-void capNhatSinhVienLopHoc(int x, int y, PTRSV firstSV);                                                                                                 // cau c
-void inDanhSachSinhVienTheoTen(int x, int y, PTRSV FirstSV, PTRLH firstLH);                                                                              // cau d
-void capNhatDanhSachMonHoc_User(PTRMH &treeMH, int x, int y);                                                                                            // cau e
-void inDanhSachMonHocTheoTen(int x, int y, PTRMH treeMH);                                                                                                // cau f
-void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV);                                                                         // cau g
-void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC dsLTC);                                                                                          // cau h
-void nhapDiemLopTinChi(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                                     // cau i
-void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC);                                                                                                 // cau j
-void inBangDiemTrungBinhLopHoc(int x, int y, PTRSV firstSV, PTRLH firstLH, PTRMH treeMH, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC); // cau k
+void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH);                                                                                       // cau a
+void inDanhSachSinhVienDangKy(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                                   // cau b
+void capNhatSinhVienLopHoc(int x, int y, PTRSV firstSV);                                                                                                      // cau c
+void inDanhSachSinhVienTheoTen(int x, int y, PTRSV FirstSV, PTRLH firstLH);                                                                                   // cau d
+void capNhatDanhSachMonHoc_User(PTRMH &treeMH, int x, int y);                                                                                                 // cau e
+void inDanhSachMonHocTheoTen(int x, int y, PTRMH treeMH);                                                                                                     // cau f
+void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV);                                                                              // cau g
+void huyLopTinChiKhongDuDieuKien(int x, int y, LIST_LTC dsLTC);                                                                                               // cau h
+void nhapDiemLopTinChi(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                                          // cau i
+void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC);                                                                                                      // cau j
+void inBangDiemTrungBinhLopHoc(int x, int y, PTRSV firstSV, PTRLH firstLH, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC); // cau k
 //=================================
 // HAM XUAT THONG TIN
 //=================================
@@ -577,7 +577,7 @@ void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV) 
     PTRSV temp_firstSV = NULL;
     addStudentToList(temp_firstSV, ptrSV->student);
 
-    fillStudentInfoBoard(temp_firstSV, x, y);
+    fillStudentInfoBoard(temp_firstSV, 10, y);
     deleteLinkedList(temp_firstSV);
 
     while (true)
@@ -601,7 +601,7 @@ void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV) 
         break;
     }
     ShowCur(0);
-    inThongTinLopTinChi(x, y, creditListID, dsLTC, treeMH, mssv);
+    inThongTinLopTinChi(10, y, creditListID, dsLTC, treeMH, mssv);
     ShowCur(1);
 }
 
@@ -755,7 +755,7 @@ void nhapDiemLopTinChi(int x, int y, PTRSV firstSV, LIST_LTC dsLTC) // cau i
         return;
     }
 
-    nhapDiem(x, y, firstSV, loptinchi->firstListRegister);
+    nhapDiem(x, y, firstSV, loptinchi);
 }
 
 void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC) // cau j
@@ -790,7 +790,7 @@ void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC) // cau j
     }
 }
 
-void inBangDiemTrungBinhLopHoc(int x, int y, PTRSV firstSV, PTRLH firstLH, PTRMH treeMH, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC) // cau k
+void inBangDiemTrungBinhLopHoc(int x, int y, PTRSV firstSV, PTRLH firstLH, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC) // cau k
 {
     /*                      BANG DIEM THONG KE DIEM TRUNG BINH KHOA HOC
                                       Lop:     <D20CQPT01-N>
@@ -895,10 +895,10 @@ void inDanhSachSinhVienDangKy(int x, int y, PTRSV firstSV, LIST_LTC dsLTC) // ca
         return;
     }
 
-    fillRegistedStudentBoard(x, y, loptinchi->firstListRegister, firstSV);
+    fillRegistedStudentBoard(10, y, loptinchi->firstListRegister, firstSV);
 }
 
-void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<char *, std::string> anhXaMSSV_dsLTC)
+void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC)
 {
     /*
         x         x1             x2                     x3                x4
@@ -963,7 +963,7 @@ void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC
                 stt++;
 
                 if (anhXaMSSV_dsLTC.count(ptrSV->student.studentID) != 0)
-                    splitDsLTC = customSplit(anhXaMSSV_dsLTC[ptrSV->student.studentID], ',');
+                    splitDsLTC = customSplit(anhXaMSSV_dsLTC[charToString(ptrSV->student.studentID)], ',');
 
                 for (int i = 0; i < splitDsLTC.size(); i++)
                 {
@@ -1026,7 +1026,7 @@ void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC
     clearScreen(x, y - 1, tabw, MAX_BOARD_ELEMENTS + 5);
 }
 
-void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC)
+void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<std::string, std::string> anhXaMSSV_dsLTC)
 {
     /*
         <-------------------left_side--------------------->
@@ -1733,7 +1733,7 @@ void capNhatDanhSachMonHoc_User(PTRMH &treeMH, int x, int y) // cau e
     }
 }
 
-void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK)
+void nhapDiem(int x, int y, PTRSV firstSV, Credit *loptinchi)
 { // diem moi duoc nhap vao se tu dong duoc cap nhat ma khong can xac nhan
     /*
         x         x1             x2                     x3                x4
@@ -1745,7 +1745,7 @@ void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK)
         +=========+==============+======================+=================+==================+
                                         < Trang   1  /  2 >
     */
-    PTRDK pfirst = firstDK;
+    PTRDK pfirst = loptinchi->firstListRegister;
     PTRDK ptrDK = NULL;
     PTRSV ptrSV = NULL;
     PTRDK listPtrDK[MAX_BOARD_ELEMENTS + 1] = {NULL};
@@ -1753,7 +1753,7 @@ void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK)
     std::string temp_point[MAX_BOARD_ELEMENTS + 1] = {""};
 
     int currentPage = 1;
-    int pageSize = ceil((float)countLinkedList(firstDK) / MAX_BOARD_ELEMENTS);
+    int pageSize = ceil((float)countLinkedList(loptinchi->firstListRegister) / MAX_BOARD_ELEMENTS);
 
     int keyPressed = 0;
     std::string keyType = "NONE";
@@ -1871,6 +1871,7 @@ void nhapDiem(int x, int y, PTRSV firstSV, PTRDK firstDK)
                         listPtrDK[i]->regis.point = 0;
                         continue;
                     }
+
                     listPtrDK[i]->regis.point = std::stof(temp_point[i]);
                 }
                 stackDK.push(pfirst);

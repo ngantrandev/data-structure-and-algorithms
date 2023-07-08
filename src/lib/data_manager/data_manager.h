@@ -54,6 +54,8 @@ void saoChepMonHocTheoTen(PTRMH treeMH, PTRMH &newTree);
 void mappingMaLTC_MaMH(std::map<int, char *> &anhXaLTC_MH, int maLTC, char *maMH);
 void mappingMSSV_dsLTC(char *mssv, Credit *loptinchi, LIST_LTC listLTC, std::map<std::string, std::string> &anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH);
 
+void updateStudentHighestScore(PTRSV firstSV, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH);
+
 // load data from file
 
 // nhap thong tin tung mon hoc tu file
@@ -287,7 +289,6 @@ std::map<std::string, std::string> loadMapMSSV_dsLTC(char *filename)
         loaiBoDauXuongDong(mssv);
         loaiBoDauXuongDong(dsLTC);
 
-        std::cout << mssv << " " << strlen(mssv) << " " << dsLTC << " " << strlen(dsLTC) << "\n";
         mapMSSV_dsLTC[charToString(mssv)] = charToString(dsLTC);
     }
 
@@ -322,8 +323,6 @@ std::map<int, char *> loadMapMaLTC_MaMH(char *filename)
         strcpy(value, temp_line);
         loaiBoDauXuongDong(value);
         mapMaLTC_MaMH[maLTC] = value;
-
-        std::cout<<maLTC<<" "<<mapMaLTC_MaMH[maLTC]<<"\n";
     }
 
     fclose(filein);
@@ -555,7 +554,8 @@ void saveMapMaLTC_MaMH(std::map<int, char *> anhXaLTC_MH, char *filename)
 
     for (auto it = anhXaLTC_MH.begin(); it != anhXaLTC_MH.end(); it++)
     {
-        fprintf(fileout, "\n%d %s", it->first, it->second);
+        fprintf(fileout, "\n%d", it->first);
+        fprintf(fileout, "\n%s", it->second);
     }
     fclose(fileout);
 }
@@ -573,7 +573,8 @@ void saveMapMSSV_dsLTC(std::map<std::string, std::string> anhXaMSSV_dsLTC, char 
 
     for (auto it = anhXaMSSV_dsLTC.begin(); it != anhXaMSSV_dsLTC.end(); it++)
     {
-        fprintf(fileout, "\n%s %s", it->first, it->second.c_str());
+        fprintf(fileout, "\n%s", it->first);
+        fprintf(fileout, "\n%s", it->second);
     }
     fclose(fileout);
 }
@@ -920,5 +921,24 @@ void mappingMaLTC_MaMH(std::map<int, char *> &anhXaLTC_MH, int maLTC, char *maMH
     if (it == anhXaLTC_MH.end())
     {
         anhXaLTC_MH[maLTC] = maMH;
+    }
+}
+
+void updateStudentHighestScore(PTRSV firstSV, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC, std::map<int, char *> dsAnhXaMaLTCMaMH)
+{
+    PTRDK p = NULL;
+
+    for (int i = 1; i <= dsLTC.currentIndex; i++)
+    {
+        if (dsLTC.nodes[i] != NULL)
+        {
+            p = dsLTC.nodes[i]->firstListRegister;
+
+            while (p != NULL)
+            {
+                mappingMSSV_dsLTC(p->regis.studentID, dsLTC.nodes[i], dsLTC, anhXaMSSV_dsLTC, dsAnhXaMaLTCMaMH);
+                p = p->next;
+            }
+        }
     }
 }
