@@ -1,18 +1,18 @@
 27
 BKTG
-Duong Qua
+Lap trinh web java
 1 1
 MH00
-Boi Cu Ly 1000m
+Vo Judo
 2 1
 MH01
-Ke Chuyen Ma
+Lap trinh huong doi tuong
 1 1
 MH1
-Toan Lop 5
+Ky thuat lap trinh
 1 2
 MH10
-Toan Cao Cap
+Toan Cao Cap 1
 4 4
 MH11
 Lap Trinh Java
@@ -24,52 +24,52 @@ MH13
 Cau Truc Du Lieu
 3 3
 MH15
-Sinh Hoc
+Tieng anh 3
 3 3
 MH16
 Triet Hoc
 2 2
 MH17
-Vat Ly
+Vat Ly 1
 2 1
 MH19
-Marathon Km
+Tri tue nhan tao
 1 1
 MH2
-Xo So Kien Thiet
+Hoc lam ti phu
 3 2
 MH20
 Kien Truc May Tinh
 3 2
 MH21
-Sinh Hoc Phan Tu
+Ky thuat nhiep anh
 2 2
 MH4
-Anh Van
+Anh Van 2
 2 3
 MH42
 Thiet Ke Tuong Tac Dpt
 2 2
 MH45
-Ly Thuyet Can Bang
+Toan roi rac
 1 1
 MH5
-Cau Ca
+My thuat co ban
 2 2
 MH50
-Boi 1000 Met
+Quay phim nang cao
 1 1
 MH6
-Dia Ly
+Dia Ly tp.Ho Chi Minh
 3 2
 MH7
-Lich Su Loai Nguoi
+Lich su tp.Ho Chi Minh
 2 4
 MH79
-Hiha
+Vo co truyen
 1 1
 MH8
-Toan Roi Rac
+Toan Roi Rac 2
 3 3
 MH88
 Tieng Han
@@ -78,5 +78,5 @@ MH9
 Lap Trinh Web
 4 4
 TVN
-Hai Dang
+Lap trinh web python
 5 5

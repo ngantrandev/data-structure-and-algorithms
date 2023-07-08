@@ -87,9 +87,9 @@ void stringToChar(std::string a, char *b, int size_b)
 {
 	int copyLength = a.copy(b, size_b);
 	for (int i = copyLength; i < size_b; i++)
-    {
-        b[i] = '\0';
-    }
+	{
+		b[i] = '\0';
+	}
 }
 
 std::string charToString(char *a)
@@ -103,17 +103,14 @@ std::vector<int> customSplit(std::string a, char delim)
 	std::string temp = "";
 	for (int i = 0; i < a.size(); i++)
 	{
-		if (a[i] == delim)
-		{
+		if(a[i]!=',') {
+			temp.push_back(a[i]);
+		}
+		else {
 			res.push_back(std::stoi(temp));
 			temp = "";
 		}
-		else
-		{
-			temp.push_back(a[i]);
-		}
 	}
-	res.push_back(std::stoi(temp));
 	return res;
 }
 

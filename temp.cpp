@@ -10,70 +10,69 @@
 
 int main()
 {
-    float t = 0;
-    std::cout<<std::to_string(t)<<std::endl;
+   std::string a = "1,2,3,4";
+
+   int b = 1;
+
+   size_t index = a.find(std::to_string(b));
+
+   if(index != std::string::npos)   {
+    std::cout<<"Tim thay";
+   }
 
 
-    getch();
-
-
-    PTRMH treeMH = loadCourseList(fileDsMonhoc);
-
-    int x = 0, y = 0;
-    int key = 0;
-    std::string keyType = "NONE";
-    std::vector<PTRMH> dsMH;
-    getListTreeNode(treeMH, dsMH);
-
-    bool reDraw = true;
-
-    int step = 10;
-
-    ShowCur(0);
-    while (true)
-    {
-        system("cls");
-        
-
-        drawFinalScoreBoard(x,y, dsMH.size(), dsMH);
-        
-
-        key = getch();
-        keyType = getKeyType(key);
-        if (keyType == "LEFT")
-        {
-
-            x += step;
-        }
-        else if (keyType == "RIGHT")
-        {
-
-            x -= step;
-        }
-        else if (keyType == "UP")
-        {
-
-            y -= step;
-        }
-        else if (keyType == "DOWN")
-        {
-
-            y += step;
-        }
-        else if (keyType == "NHAP_VAN_BAN")
-        {
-            if (key == 'a' || key == 'A')
-            {
-                reDraw = true;
-                x += SCROOL_STEP;
-            }
-            else if (key == 'd' || key == 'D')
-            {
-                reDraw = true;
-                x -= SCROOL_STEP;
-            }
-        }
-    }
-
+   getch();
     return 0;
 }
+
+
+/*
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+N20DCPT
+
+*/

@@ -31,8 +31,8 @@ std::vector<int> getCreditList_theoMAMH_NIENKHOA(LIST_LTC dsLTC, int hocky, char
 void sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(PTRSV &FirstSV);
 
 // MERGE SORT
-void mergePTRMH(std::vector<PTRMH> dsMH, int left, int mid, int right);
-void mergeSortPTRMH(std::vector<PTRMH> dsMH, int l, int r);
+void mergePTRMH(std::vector<PTRMH> &dsMH, int left, int mid, int right);
+void mergeSortPTRMH(std::vector<PTRMH> &dsMH, int l, int r);
 
 int getNextCreditClassID(LIST_LTC dsLTC, int currindex, int step);
 int getNextCourseID(std::vector<PTRMH> dsMonhoc, int currIndex, int step);
@@ -119,8 +119,8 @@ void getListTreeNode(T tree, std::vector<T> &list)
 {
     if (tree != NULL)
     {
-        list.push_back(tree);
         getListTreeNode(tree->pLeft, list);
+        list.push_back(tree);
         getListTreeNode(tree->pRight, list);
     }
 }
@@ -467,14 +467,14 @@ void sapXepDanhSachSinhVienTheoTen_Ho_SelectionSort(PTRSV &FirstSV)
     }
 }
 
-void mergePTRMH(std::vector<PTRMH> dsMH, int left, int mid, int right)
+void mergePTRMH(std::vector<PTRMH> &dsMH, int left, int mid, int right)
 {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
     // temp array
-    std::vector<PTRMH> L;
-    std::vector<PTRMH> R;
+    std::vector<PTRMH> L(n1);
+    std::vector<PTRMH> R(n2);
 
     // copy data to temp arrays
     for (int i = 0; i < n1; i++)
@@ -520,7 +520,7 @@ void mergePTRMH(std::vector<PTRMH> dsMH, int left, int mid, int right)
     }
 }
 
-void mergeSortPTRMH(std::vector<PTRMH> dsMH, int l, int r)
+void mergeSortPTRMH(std::vector<PTRMH> &dsMH, int l, int r)
 {
     if (l < r)
     {

@@ -19,7 +19,7 @@ void fillCourseInfoBoard(int x, int y, std::vector<PTRMH> dsMonHoc);
 void inDanhSachMonHocTheoTen(int x_origin, int y_origin, PTRMH Tree_monhoc);
 void fillCreditClassPointBoard(int x, int y, PTRSV FirstSV, PTRDK firstDK);
 void fillAvgPointBoard(int x, int y, PTRSV FirstSV, PTRMH treeMH, LIST_LTC dsLTC, std::map<std::string, std::string> anhXaMSSV_dsLTC);
-void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<char *, std::string> anhXaMSSV_dsLTC);
+void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV FirstSV, PTRMH Tree_monhoc, std::map<std::string, std::string> anhXaMSSV_dsLTC);
 void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC dsLTC, PTRMH treeMH, char *mssv);
 
 /*
@@ -28,9 +28,9 @@ void inThongTinLopTinChi(int x, int y, std::vector<int> listCreditID, LIST_LTC d
 void nhapThongTinLopTinChi_User(int x, int y, Credit *loptinchi);
 void nhapThongTinSinhVien(int x, int y, Student &sinhvien);
 void nhapThongTinMonHoc_User(int x, int y, Course &monhoc);
-void nhapDiem(int x, int y, PTRSV firstSV, Credit* loptinchi);
+void nhapDiem(int x, int y, PTRSV firstSV, Credit *loptinchi);
 
-void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH);                                                                                       // cau a
+void capNhatLopTinChi_User(int x, int y, LIST_LTC &dsLTC, PTRMH treeMH);                                                                                      // cau a
 void inDanhSachSinhVienDangKy(int x, int y, PTRSV firstSV, LIST_LTC dsLTC);                                                                                   // cau b
 void capNhatSinhVienLopHoc(int x, int y, PTRSV firstSV);                                                                                                      // cau c
 void inDanhSachSinhVienTheoTen(int x, int y, PTRSV FirstSV, PTRLH firstLH);                                                                                   // cau d
@@ -497,7 +497,7 @@ void fillCourseInfoBoard(int x, int y, std::vector<PTRMH> dsMonHoc)
                 std::cout << ((stt < 10) ? "0" + std::to_string(stt) : std::to_string(stt));
                 gotoxy(x + 15, y + 2 + count);
                 std::cout << dsMonHoc[curr_index]->course.courceCode;
-                gotoxy(x + 33, y + 2 + count);
+                gotoxy(x + 27, y + 2 + count);
                 std::cout << dsMonHoc[curr_index]->course.courceName;
                 gotoxy(x + 56, y + 2 + count);
                 std::cout << dsMonHoc[curr_index]->course.STCLT;
@@ -557,10 +557,15 @@ void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV) 
     int hocky = 0;
     char mssv[Student_ID_Length] = "";
     std::vector<int> creditListID;
+    bool out = false;
     while (true)
     {
         std::string answer[1] = {""};
-        input_UI(x, y, 1, nhap_mssv, answer, "STRING");
+        out = input_UI(x, y, 1, nhap_mssv, answer, "STRING");
+        if (out == true)
+        {
+            return;
+        }
 
         stringToChar(answer[0], mssv, Student_ID_Length);
 
@@ -568,7 +573,7 @@ void dangKyLopTinChi(int x, int y, LIST_LTC dsLTC, PTRMH treeMH, PTRSV firstSV) 
 
         if (ptrSV == NULL)
         {
-            ShowMessage(x, y + 2, "SINH VIEN KHONG TON TAI", 1500);
+            ShowMessage(x, y + 2, "SINH VIEN KHONG TON TAI", FAST_TIME);
             continue;
         }
         break;
@@ -755,7 +760,7 @@ void nhapDiemLopTinChi(int x, int y, PTRSV firstSV, LIST_LTC dsLTC) // cau i
         return;
     }
 
-    nhapDiem(x, y, firstSV, loptinchi);
+    nhapDiem(10, y, firstSV, loptinchi);
 }
 
 void inBangDiemLopTinChi(PTRSV FirstSV, LIST_LTC dsLTC) // cau j
@@ -1077,6 +1082,7 @@ void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV First
         if (reDraw == true)
         {
             system("cls");
+            x3 = x + 50; // update x3
 
             gotoxy(10, y - 1);
             std::cout << "[NEXT: RIGHT ARROW]   [PREVIOUS: LEFT ARROW]    [SCROOL: A,D]    [EXIT: ESC]";
@@ -1100,7 +1106,7 @@ void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV First
                 printStringXY(x + 12, y + 2 + count, p->student.studentID, Student_ID_Length);
                 printStringXY(x + 28, y + 2 + count, charToString(p->student.lastName) + " " + charToString(p->student.firstName));
 
-                auto it = anhXaMSSV_dsLTC.find(p->student.studentID);
+                auto it = anhXaMSSV_dsLTC.find(charToString(p->student.studentID));
 
                 if (it == anhXaMSSV_dsLTC.end())
                 {
@@ -1109,9 +1115,11 @@ void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV First
                 }
 
                 splitDsLTC = customSplit(it->second, ',');
-                for (int i = 0; i <= splitDsLTC.size(); i++)
+
+                for (int i = 0; i < splitDsLTC.size(); i++)
                 {
                     loptinchi = dsLTC.nodes[splitDsLTC[i]];
+
                     nodeDK = timSinhVien_DSSVDK(loptinchi->firstListRegister, p->student.studentID);
                     // indexMaMH = std::find(dsMonHoc.begin(), dsMonHoc.end(), loptinchi->courseCode) - dsMonHoc.begin();
                     indexMaMH = std::find_if(dsMonHoc.begin(), dsMonHoc.end(), [loptinchi](PTRMH node)
@@ -1119,6 +1127,7 @@ void fillFinalPointBoard(int x_origin, int y_origin, LIST_LTC dsLTC, PTRSV First
                                 dsMonHoc.begin();
 
                     printStringXY(x3 + step * (indexMaMH + 1) - 8, y + 2 + count, round(nodeDK->regis.point * 100) / 100);
+                    // break;
                 }
 
                 p = p->next;
@@ -1354,8 +1363,8 @@ void nhapThongTinLopTinChi_User(int x, int y, Credit *loptinchi)
     }
 }
 
-void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH) // cau a
-{                                                                      // cau a
+void capNhatLopTinChi_User(int x, int y, LIST_LTC &dsLTC, PTRMH treeMH) // cau a
+{                                                                       // cau a
 
     int pos = 0, out = 0;
 
@@ -1388,6 +1397,7 @@ void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH) // cau a
                 {
                     ShowMessage(x, y + 4, "MA MON HOC KHONG TON TAI", FAST_TIME);
                     delete loptinchi;
+                    continue;
                 }
 
                 dsLTC.nodes[loptinchi->creditCode] = loptinchi;
@@ -1461,6 +1471,7 @@ void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH) // cau a
                 }
 
                 loptinchi = dsLTC.nodes[std::stoi(str_maLTC)];
+                dsLTC.nodes[std::stoi(str_maLTC)] = NULL;
                 if (loptinchi != NULL)
                 {
                     if (XacNhan(x, y + 4, "BAN CO CHAC CHAN MUON XOA?") == "YES")
@@ -1469,6 +1480,11 @@ void capNhatLopTinChi_User(int x, int y, LIST_LTC dsLTC, PTRMH treeMH) // cau a
                         delete loptinchi;
                         loptinchi = NULL;
                     }
+                }
+                else
+                {
+                    ShowMessage(x, y + 4, "MA LOP TIN CHI KHONG TON TAI", FAST_TIME);
+                    continue;
                 }
             }
         }
@@ -1867,8 +1883,8 @@ void nhapDiem(int x, int y, PTRSV firstSV, Credit *loptinchi)
                     }
                     if (IsFloatNumber(temp_point[i]) == false)
                     {
-                        ShowMessage(x, y + MAX_BOARD_ELEMENTS + 5, "CO DIEM KHONG HOP LE -> TU DONG CHUYEN VE 0.00", 100);
-                        listPtrDK[i]->regis.point = 0;
+                        ShowMessage(x, y + MAX_BOARD_ELEMENTS + 5, "CO DIEM KHONG HOP LE", FAST_TIME);
+                        // listPtrDK[i]->regis.point = 0;
                         continue;
                     }
 
@@ -1894,8 +1910,8 @@ void nhapDiem(int x, int y, PTRSV firstSV, Credit *loptinchi)
                     }
                     if (IsFloatNumber(temp_point[i]) == false)
                     {
-                        ShowMessage(x, y + MAX_BOARD_ELEMENTS + 5, "CO DIEM KHONG HOP LE -> TU DONG CHUYEN VE 0.00", 100);
-                        listPtrDK[i]->regis.point = 0;
+                        ShowMessage(x, y + MAX_BOARD_ELEMENTS + 5, "CO DIEM KHONG HOP LE", FAST_TIME);
+                        // listPtrDK[i]->regis.point = 0;
                         continue;
                     }
                     listPtrDK[i]->regis.point = std::stof(temp_point[i]);
